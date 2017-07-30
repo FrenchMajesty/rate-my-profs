@@ -1,4 +1,7 @@
 /* YOUR CUSTOM STYLES */
+body {
+	overflow-x: hidden!important;
+}
 .primary, .primary-hover:hover {
 	background-color: #607d8b!important;
 }
@@ -7,6 +10,9 @@
 }
 .marg-bottom-3 {
 	margin-bottom: 3em;
+}
+.marg-top-5 {
+	margin-top: 5em;
 }
 .marg-top-8 {
 	margin-top: 8em;
@@ -21,13 +27,15 @@
     padding-left: 10px;
 }
 .category {
-	padding-left: 0px;
+	padding-left: 1em;
 }
 .category > a {
-	width: 91%;
+	width: 70px;
+    padding: .5rem 0.5rem!important;
 }
 #side-module {
 	margin-top: 0.5em;
+	margin-left: -1.5em;
 	padding-left: 0;
 }
 #page-content {
@@ -83,6 +91,12 @@
 	padding: 1em;
     margin-top: 1.5em;
 }
+.reviews-container .card-footer {
+	font-size: .7em;
+}
+.reviews-container .card-footer > * {
+	display: inline-block;
+}
 .review .rating-box {
 	text-align: center;
 }
@@ -92,6 +106,23 @@
 }
 .review .comment {
 	margin-top: 1em;
+}
+.review .comment h5 {
+	text-transform: uppercase;
+}
+.rating-box .score {
+	text-align: left;
+}
+.rating-box .score-type {
+	margin-left: .3em;
+	line-height: 1.5em;
+	text-transform: uppercase;
+    font-size: 0.8em;
+	vertical-align: text-bottom;
+}
+.rating-box .score-value {
+	font-weight: 500;
+	font-size: 1.5em;
 }
 .student-reviews h4 {
 	line-height: 2em;
@@ -117,4 +148,62 @@
 .more-details .school-website {
 	text-transform: uppercase;
     font-size: .8em;
+}
+.about-profs .top-professor {
+	margin-top: 2em;
+}
+.about-profs .top-professor h4 {
+	font-size: 1.3em;
+    margin: 0;
+    font-weight: 400;
+}
+.about-profs .top-professor li {
+	font-size: 1.2em;
+}
+.about-profs .top-professor a {
+	color: inherit;
+}
+.about-profs .top-professor li:hover a {
+	color: #bbb;
+}
+.about-profs .top-professor label {
+	position: relative;
+    top: -0.7em;
+}
+.comment .class-info {
+	font-size: .8em;
+}
+.comment .class-info p {
+	margin: 0;
+}
+.comment-date {
+	list-style-type: none;
+    font-style: italic;
+}
+.like-buttons {
+	font-size: .7em;
+    float: right;
+    margin: 2em;
+}
+.like-buttons a {
+	color: inherit;
+}
+.vote-up {
+	margin-right: 2em;
+}
+.vote-up:hover {
+	color: green!important;
+}
+.vote-down:hover {
+	color: red!important;
+}
+#similar-profs {
+	overflow: scroll;
+	max-height: 100vh;
+}
+.teacher-list-result .badge {
+    padding-top: .9em;
+}
+.teacher-list-result small {
+	margin-top: -1em;
 }

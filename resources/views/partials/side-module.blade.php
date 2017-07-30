@@ -93,52 +93,90 @@
                                 </div>
                             </form>
                         </div>
+                </div>
+                <div class="card" data-id="profs" style="display: none">
+                    <div class="card-block">
+                    <h4 class="card-title marg-bottom-1">{{__('find prof')}}</h4>
+                    {{__('search by')}}
+                        <div class="row marg-bottom-1">
+                            <fieldset class="form-group">
+                                <input name="filter2" value="name" type="radio" id="radio2" checked="checked">
+                                <label for="radio2">{{__('name')}}</label>
+                            </fieldset>
+                            <fieldset class="form-group offset-md-1">
+                                <input name="filter2" value="school" type="radio" id="radio1">
+                                <label for="radio1">{{__('school')}}</label>
+                            </fieldset>
+                        </div>
+                        <hr><br>
+                        <form data-form="name" data-active="1">
+                            <div class="row">
+                                <div class="md-form col-md-12">
+                                    <input type="text" class="form-control" placeholder="{{__('enter school')}}">
+                                    <label>{{__('looking for prof at')}}</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="md-form col-md-12">
+                                    <input type="text" class="form-control" placeholder="{{__('prof name')}}">
+                                    <label>{{__('named')}}</label>
+                                </div>
+                            </div>
+                            <div class="row offset-md-3">
+                                <button class="btn btn-primary primary">{{__('search')}}</button>
+                            </div>
+                        </form>
+                        <form data-form="school" data-active="0" style="display: none">
+                            <div class="row">
+                                <div class="md-form col-md-12">
+                                    <input type="text" class="form-control" placeholder="{{__('enter school')}}">
+                                    <label>{{__('looking for profs at')}}</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <span class="mx-auto">{{__('in the')}}</span>
+                            </div>
+                            <div class="row col-md-12">
+                                <div class="md-form col-md-12">
+                                    <input type="text" class="form-control" placeholder="{{__('department name')}}">
+                                </div>
+                            </div>
+                            <div class="row offset-md-3">
+                                <button class="btn btn-primary primary">{{__('search')}}</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="card" data-id="profs" style="display: none">
+                </div>
+                <div class="card" data-id="review" style="display: none">
                         <div class="card-block">
-                        <h4 class="card-title marg-bottom-1">{{__('find prof')}}</h4>
-                        {{__('search by')}}
+                        <h4 class="card-title marg-bottom-1">{{__('rate a')}}</h4>
                             <div class="row marg-bottom-1">
                                 <fieldset class="form-group">
-                                    <input name="filter2" value="name" type="radio" id="radio2" checked="checked">
-                                    <label for="radio2">{{__('name')}}</label>
+                                    <input name="filter" value="prof" type="radio" id="radio2" checked="checked">
+                                    <label for="radio2">{{__('prof')}}</label>
                                 </fieldset>
                                 <fieldset class="form-group offset-md-1">
-                                    <input name="filter2" value="school" type="radio" id="radio1">
+                                    <input name="filter" value="school" type="radio" id="radio1">
                                     <label for="radio1">{{__('school')}}</label>
                                 </fieldset>
                             </div>
-                            <hr><br>
-                            <form data-form="name" data-active="1">
-                                <div class="row">
-                                    <div class="md-form col-md-12">
-                                        <input type="text" class="form-control" placeholder="{{__('enter school')}}">
-                                        <label>{{__('looking for prof at')}}</label>
-                                    </div>
-                                </div>
+                            <form data-form="prof" data-active="1">
                                 <div class="row">
                                     <div class="md-form col-md-12">
                                         <input type="text" class="form-control" placeholder="{{__('prof name')}}">
-                                        <label>{{__('named')}}</label>
+                                        <label>{{__('i want to rate')}}</label>
                                     </div>
                                 </div>
                                 <div class="row offset-md-3">
                                     <button class="btn btn-primary primary">{{__('search')}}</button>
                                 </div>
                             </form>
+
                             <form data-form="school" data-active="0" style="display: none">
                                 <div class="row">
                                     <div class="md-form col-md-12">
-                                        <input type="text" class="form-control" placeholder="{{__('enter school')}}">
-                                        <label>{{__('looking for profs at')}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <span class="mx-auto">{{__('in the')}}</span>
-                                </div>
-                                <div class="row col-md-12">
-                                    <div class="md-form col-md-12">
-                                        <input type="text" class="form-control" placeholder="{{__('department name')}}">
+                                        <input type="text" class="form-control" placeholder="{{__('school name')}}">
+                                        <label>{{__('i want to rate')}}</label>
                                     </div>
                                 </div>
                                 <div class="row offset-md-3">
@@ -146,6 +184,6 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
+                </div>
             </div>
         </div>

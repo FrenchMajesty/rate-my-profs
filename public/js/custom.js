@@ -61,16 +61,30 @@ const sideModule = (function(){
 		return false
 	}
 
+	function submitSearchSchool(e) {
+		e.preventDefault()
+		// figure out what we're searching for and submit
+		return false
+	}
+
+	/**
+	 * Bind events based on type of card
+	 * @param  {Element} card
+	 */
 	function bindEvents(card) {
 		const type = card.getAttribute('data-id')
 		
 		if(type == 'profs') {
 			card.querySelectorAll('input[type="radio"]').forEach(btn => btn.addEventListener('click',(e) => { toggleSearch(e, type) }))
-			card.querySelector('form[data-active="1"]').addEventListener('submit', submitSearchProf)
+			card.querySelectorAll('form').forEach(form => form.addEventListener('submit', submitSearchProf))
 
 		}else if(type == 'school') {
 			card.querySelectorAll('input[type="radio"]').forEach(btn => btn.addEventListener('click',(e) => { toggleSearch(e, type) }))
-			card.querySelector('form[data-active="1"]').addEventListener('submit', submitSearchSchool)
+			card.querySelectorAll('form').forEach(form => form.addEventListener('submit', submitSearchSchool))
+		
+		}else if(type == 'review') {
+			card.querySelectorAll('input[type="radio"]').forEach(btn => btn.addEventListener('click',(e) => { toggleSearch(e, type) }))
+			card.querySelectorAll('form').forEach(form => form.addEventListener('submit', submitSearchReview))	
 		}
 		
 	}
@@ -106,6 +120,10 @@ const indexComponent = (function () {
 		return false
 	}
 
+	/**
+	 * Perform operations to change view
+	 * @param  {String} new view's name
+	 */
 	function navigateView(name) {
 		const container = $('#page-container'),
 			  template = $(`div[data-view="${name}"]`),
@@ -119,6 +137,10 @@ const indexComponent = (function () {
 		bindEvents(view[0])
 	}
 
+	/**
+	 * Toggle search mode based on Switcher
+	 * @param  {MouseEvent} e
+	 */
 	function toggleSearchMode(e) {
 		if(!e.target.name) return
 
@@ -137,6 +159,10 @@ const indexComponent = (function () {
 		}
 	}
 
+	/**
+	 * Bind events based on the view
+	 * @param  {Element} view
+	 */
 	function bindEvents(view) {
 		const type = view.getAttribute('data-view')
 

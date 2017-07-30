@@ -127,7 +127,7 @@
                                 <div class="col-md-6 offset-md-3">
                                 <div class="md-form">
                                         <input type="text" class="form-control" placeholder="{{__('prof name')}}">
-                                        <label>{{__('I want to rate')}}</label>
+                                        <label>{{__('i want to rate')}}</label>
                                     </div>
                                 </div>
                               </div>

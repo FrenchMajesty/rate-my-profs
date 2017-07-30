@@ -9,9 +9,7 @@
                     <div id="similar-profs" class="card animated slideInLeft">
                         <div class="card-block">
                             <h4 class="card-title">{{__('find profs at')}}</h4>
-                            <p><b>Harvard University {{__('at :location', ['location' => 'Cambridge'])}}</b>
-                                <a href="#"><i class="material-icons">edit</i></a>
-                            </p>
+                            <p><b>Harvard University {{__('at :location', ['location' => 'Cambridge'])}}</b></p>
                             <div class="md-form col-md-12">
                                     <input type="text" class="form-control" placeholder="{{__('department name')}}" value="{{__('math')}}">
                                     <label>in</label>
@@ -19,13 +17,16 @@
                             <hr>
 
                             <section class="sort row">
-                                <span style="line-height: 64px">{{__(':count profs found', ['count' => 37])}}</span>
-                                <select class="col-md-6 mdb-select">
-                                    <option value="" disabled>{{__('sort by')}}</option>
-                                    <option value="1" selected>{{__('most rated')}}</option>
-                                    <option value="2">{{__('highest rated')}}</option>
-                                    <option value="3">{{__('least difficult')}}</option>
-                                </select>
+                                <span style="line-height: 41px">{{__(':count profs found', ['count' => 37])}}</span>
+                                <div class="btn-group col-md-6">
+                                        <button class="btn btn-primary primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{__('sort by')}}</button>
+
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">{{__('most rated')}}</a>
+                                            <a class="dropdown-item" href="#">{{__('highest rated')}}</a>
+                                            <a class="dropdown-item" href="#">{{__('least difficult')}}</a>
+                                        </div>
+                                    </div>
                             </section><br>
                                 <div class="row">
                                 <div class="md-form col-md-11">
@@ -56,23 +57,41 @@
                         {{__('search by')}}
                             <div class="row marg-bottom-1">
                                 <fieldset class="form-group">
-                                    <input name="filter" type="radio" id="radio2">
+                                    <input name="filter" value="name" type="radio" id="radio2" checked="checked">
                                     <label for="radio2">{{__('name')}}</label>
                                 </fieldset>
                                 <fieldset class="form-group offset-md-1">
-                                    <input name="filter" type="radio" id="radio1">
+                                    <input name="filter" value="location" type="radio" id="radio1">
                                     <label for="radio1">{{__('location')}}</label>
                                 </fieldset>
                             </div>
                             <hr>
-                            <div class="row">
-                                <div class="md-form col-md-12">
-                                    <input type="text" class="form-control" placeholder="{{__('school name')}}">
+                            <form data-form="name" data-active="1">
+                                <div class="row">
+                                    <div class="md-form col-md-12">
+                                        <input type="text" class="form-control" placeholder="{{__('school name')}}">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row offset-md-3">
-                                <button class="btn btn-primary primary">{{__('search')}}</button>
-                            </div>
+                                <div class="row offset-md-3">
+                                    <button class="btn btn-primary primary">{{__('search')}}</button>
+                                </div>
+                            </form>
+                            <form data-form="location" data-active="0" style="display: none">
+                                <div class="row">
+                                    <div class="btn-group col-md-12">
+                                        <button class="btn btn-primary primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%">{{__('select state')}}</button>
+
+                                        <div class="dropdown-menu" style="width: 100%">
+                                            <a class="dropdown-item" href="#">State</a>
+                                            <a class="dropdown-item" href="#">State here</a>
+                                            <a class="dropdown-item" href="#">One more state here</a>
+                                        </div>
+                                    </div>
+                                </div><br>
+                                <div class="row offset-md-3">
+                                    <button class="btn btn-primary primary">{{__('search')}}</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="card" data-id="profs" style="display: none">
@@ -81,30 +100,51 @@
                         {{__('search by')}}
                             <div class="row marg-bottom-1">
                                 <fieldset class="form-group">
-                                    <input name="filter" type="radio" id="radio2">
+                                    <input name="filter2" value="name" type="radio" id="radio2" checked="checked">
                                     <label for="radio2">{{__('name')}}</label>
                                 </fieldset>
                                 <fieldset class="form-group offset-md-1">
-                                    <input name="filter" type="radio" id="radio1">
+                                    <input name="filter2" value="school" type="radio" id="radio1">
                                     <label for="radio1">{{__('school')}}</label>
                                 </fieldset>
                             </div>
-                            <hr>
-                            <div class="row">
-                                <div class="md-form col-md-12">
-                                    <input type="text" class="form-control" placeholder="{{__('enter school')}}">
-                                    <label>{{__('looking for prof at')}}</label>
+                            <hr><br>
+                            <form data-form="name" data-active="1">
+                                <div class="row">
+                                    <div class="md-form col-md-12">
+                                        <input type="text" class="form-control" placeholder="{{__('enter school')}}">
+                                        <label>{{__('looking for prof at')}}</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="md-form col-md-12">
-                                    <input type="text" class="form-control" placeholder="{{__('prof name')}}">
-                                    <label>{{__('named')}}</label>
+                                <div class="row">
+                                    <div class="md-form col-md-12">
+                                        <input type="text" class="form-control" placeholder="{{__('prof name')}}">
+                                        <label>{{__('named')}}</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row offset-md-3">
-                                <button class="btn btn-primary primary">{{__('search')}}</button>
-                            </div>
+                                <div class="row offset-md-3">
+                                    <button class="btn btn-primary primary">{{__('search')}}</button>
+                                </div>
+                            </form>
+                            <form data-form="school" data-active="0" style="display: none">
+                                <div class="row">
+                                    <div class="md-form col-md-12">
+                                        <input type="text" class="form-control" placeholder="{{__('enter school')}}">
+                                        <label>{{__('looking for profs at')}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <span class="mx-auto">{{__('in the')}}</span>
+                                </div>
+                                <div class="row col-md-12">
+                                    <div class="md-form col-md-12">
+                                        <input type="text" class="form-control" placeholder="{{__('department name')}}">
+                                    </div>
+                                </div>
+                                <div class="row offset-md-3">
+                                    <button class="btn btn-primary primary">{{__('search')}}</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
             </div>

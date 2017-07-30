@@ -18,6 +18,7 @@
     <link href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/css/compiled.min.css?ver=4.3.2" rel="stylesheet">
     <!-- Your custom styles (optional) -->
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
+    <link href="{{asset('css/animate.css')}}" rel="stylesheet">
 </head>
 
 <body>
@@ -28,7 +29,6 @@
 
     @yield ('footer')
 
-    @yield ('js')
     <!-- SCRIPTS -->
     <!-- JQuery -->
     <script type="text/javascript" src="{{asset('js/jquery-3.1.1.min.js')}}"></script>
@@ -38,6 +38,7 @@
     <script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
+    @yield ('js')
 </body>
 
 </html>

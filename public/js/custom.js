@@ -39,11 +39,6 @@ const sideModule = (function(){
 			  active = document.querySelector(`.card[data-id="${cardId}"] form[data-active="1"]`),
 			  formAssoc = document.querySelector(`.card[data-id="${cardId}"] form[data-form="${newType}"]`)
 
-		console.log(newType)
-		console.log(active)
-		console.log(formAssoc)
-
-
 		if(newType != active.getAttribute('data-form') && formAssoc) {
 			$(active).css('display','none')
 			active.setAttribute('data-active', 0)
@@ -52,7 +47,6 @@ const sideModule = (function(){
 			formAssoc.setAttribute('data-active', 1)
 			$(formAssoc).css('display','')
 		}
-		
 	}
 
 	function submitSearchProf(e) {
@@ -83,7 +77,6 @@ const sideModule = (function(){
 
 	function bindUIEvents() {
 		module.settings.buttons.forEach(btn => btn.addEventListener('click', showSideCard))
-
 	}
 
 	module.init = () => {
@@ -93,11 +86,96 @@ const sideModule = (function(){
 	return module
 }())
 
+
+const indexComponent = (function () {
+	const m = {}
+
+	m.settings = {
+		buttons: document.querySelectorAll('#page-container .find-buttons button')
+	}
+
+	function findProfessor(e) {
+		e.preventDefault()
+
+		return false
+	}
+
+	function findSchool(e) {
+		e.preventDefault()
+
+		return false
+	}
+
+	function navigateView(name) {
+		const container = $('#page-container'),
+			  template = $(`div[data-view="${name}"]`),
+			  view = template.clone(true)
+
+		container.find('[data-view]').remove()
+		container.html(view)
+
+		const animation = name == 'index' ? 'slideInLeft' : 'slideInRight'
+		view.addClass(`animated ${animation}`)
+		bindEvents(view[0])
+	}
+
+	function toggleSearchMode(e) {
+		if(!e.target.name) return
+
+		const card = $(e.target).parents('.card-block'),
+	          check= e.target,
+	          otherCheck = check.name == 'name' ? 'location' : 'name'
+
+		document.querySelector(`input[name="${otherCheck}"]`).click()
+
+		if($(check).is(':checked')) {
+			card.find(`form[data-type="${otherCheck}"]`).css('display', 'none')[0].reset()
+			card.find(`form[data-type="${check.name}"]`).attr('style','')
+		}else {
+			card.find(`form[data-type="${check.name}"]`).css('display', 'none')[0].reset()
+			card.find(`form[data-type="${otherCheck}"]`).attr('style','')
+		}
+	}
+
+	function bindEvents(view) {
+		const type = view.getAttribute('data-view')
+
+		if(type == 'schools') {
+			view.querySelectorAll('.switch').forEach(lever => lever.addEventListener('click', toggleSearchMode))
+			view.querySelectorAll('form').forEach(form => form.addEventListener('submit', findSchool))
+			view.querySelector('.nav-back').addEventListener('click',() => { navigateView('index') })
+
+		}else if (type == 'profs') {
+			view.querySelector('.nav-back').addEventListener('click',() => { navigateView('index') })
+			view.querySelector('form').addEventListener('submit', findProfessor)
+
+		}else if(type == 'review') {
+			view.querySelector('.nav-back').addEventListener('click',() => { navigateView('index') })
+			view.querySelector('form').addEventListener('submit', findProfessor)
+
+		}else if (type == 'index') {
+			view.querySelectorAll('button').forEach(btn => btn.addEventListener('click', (e) => {
+				navigateView(e.target.getAttribute('data-type'))
+			}))
+		}
+	}
+
+	function bindUIEvents() {
+		m.settings.buttons.forEach(btn => btn.addEventListener('click', (e) => {
+			navigateView(e.target.getAttribute('data-type'))
+		}))
+	}
+
+	m.init = () => {
+		bindUIEvents()
+	}
+
+	return m
+}())
+
 $(document).ready(() => {
 
 	new WOW().init()
-	sideModule.init()
-	$('.mdb-select').material_select()
 })
 
 

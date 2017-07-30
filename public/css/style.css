@@ -207,3 +207,9 @@ body {
 .teacher-list-result small {
 	margin-top: -1em;
 }
+.nav-back {
+	text-transform: uppercase;
+    font-size: .7em;
+    position: relative;
+    top: -.3em;
+}

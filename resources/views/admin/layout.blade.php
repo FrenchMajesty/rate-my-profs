@@ -31,7 +31,7 @@
 
       <div class="logo">
         <a href="#" class="simple-text">
-          Creative Website
+          Awesome Website
         </a>
       </div>
 

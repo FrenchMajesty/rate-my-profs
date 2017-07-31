@@ -3,34 +3,28 @@ const sideModule = (function(){
 
 	module.settings = {
 		buttons: document.querySelectorAll('.category a.btn'),
-		container: document.querySelector('#side-module')
+		container: document.querySelector('#side-module'),
+		defaultCard: 'profs'
 	}
 
 	/**
 	 * Show and bind events to appropriate card based on button clicked
-	 * @param  {MouseEvent}
+	 * @param  {String}	 card type
 	 */
-	function showSideCard(e) {
-		let type = ''
-		if(e.target.classList.contains('material-icons'))
-			type = e.target.parentNode.getAttribute('data-type')
-		else 
-			type = e.target.getAttribute('data-type')
-
+	function showSideCard(type) {
 		const card = $(`[data-id="${type}"]`),
 			  newCard = card.clone(true)
 
 		newCard.addClass('wow animated slideInLeft')
-		newCard.removeAttr('style')
 
-		$(module.settings.container).find('.card:first').remove()
+		$(module.settings.container).children().first().remove()
 		module.settings.container.appendChild(newCard[0])
 
 		bindEvents(newCard[0])
 	}
 
 	/**
-	 * Toggle the forms on the cards
+	 * Toggle the search forms on the cards
 	 * @param  {Event}
 	 * @param {String} Card ID
 	 */
@@ -68,33 +62,48 @@ const sideModule = (function(){
 	}
 
 	/**
-	 * Bind events based on type of card
+	 * Bind events based on card ID
 	 * @param  {Element} card
 	 */
 	function bindEvents(card) {
-		const type = card.getAttribute('data-id')
+		const id = card.getAttribute('data-id')
 		
-		if(type == 'profs') {
-			card.querySelectorAll('input[type="radio"]').forEach(btn => btn.addEventListener('click',(e) => { toggleSearch(e, type) }))
+		if(id == 'profs') {
+			card.querySelectorAll('input[type="radio"]').forEach(btn => btn.addEventListener('click',(e) => { toggleSearch(e, id) }))
 			card.querySelectorAll('form').forEach(form => form.addEventListener('submit', submitSearchProf))
 
-		}else if(type == 'school') {
-			card.querySelectorAll('input[type="radio"]').forEach(btn => btn.addEventListener('click',(e) => { toggleSearch(e, type) }))
+		}else if(id == 'school') {
+			card.querySelectorAll('input[type="radio"]').forEach(btn => btn.addEventListener('click',(e) => { toggleSearch(e, id) }))
 			card.querySelectorAll('form').forEach(form => form.addEventListener('submit', submitSearchSchool))
 		
-		}else if(type == 'review') {
-			card.querySelectorAll('input[type="radio"]').forEach(btn => btn.addEventListener('click',(e) => { toggleSearch(e, type) }))
+		}else if(id == 'review') {
+			card.querySelectorAll('input[type="radio"]').forEach(btn => btn.addEventListener('click',(e) => { toggleSearch(e, id) }))
 			card.querySelectorAll('form').forEach(form => form.addEventListener('submit', submitSearchReview))	
-		}
 		
+		}else if(id == 'similar') {
+
+		}
 	}
 
 	function bindUIEvents() {
-		module.settings.buttons.forEach(btn => btn.addEventListener('click', showSideCard))
+		module.settings.buttons.forEach(btn => btn.addEventListener('click',(e) => {
+
+		if(e.target.classList.contains('material-icons'))
+			showSideCard(e.target.parentNode.getAttribute('data-type'))
+		else 
+			showSideCard(e.target.getAttribute('data-type'))
+		}))
 	}
 
-	module.init = () => {
+	module.init = (card) => {
 		bindUIEvents()
+
+		if(card == 'none')
+			return // No show 
+		else if(card)
+			showSideCard(card)
+		else
+			showSideCard(module.settings.defaultCard)
 	}
 
 	return module
@@ -190,6 +199,155 @@ const indexComponent = (function () {
 		m.settings.buttons.forEach(btn => btn.addEventListener('click', (e) => {
 			navigateView(e.target.getAttribute('data-type'))
 		}))
+	}
+
+	m.init = () => {
+		bindUIEvents()
+	}
+
+	return m
+}())
+
+
+const signUp = (function () {
+	const m = {}
+
+	m.settings = {
+		form: document.querySelectorAll('form'),
+		signUpContainer: $('#signup-container'),
+		switcher : document.querySelector('.switch'),
+		defaultCard: $('.card[data-card="student"]')
+	}
+
+	function handleSubmit(e) {
+		e.preventDefault()
+
+		return false
+	}
+
+	function changeSignup(e) {
+		if(!e.target.type) return
+		let card = null
+
+		if($(e.target).is(':checked'))
+			card = $('.card[data-card="prof"]').clone(true)
+		else
+			card = $('.card[data-card="student"]').clone(true)
+
+		replaceSignup(card)
+	}
+
+	function replaceSignup(card) {
+		m.settings.signUpContainer.children().first().remove()
+		m.settings.signUpContainer.html(card)
+		card.addClass('wow animated fadeInDown')
+
+		// Hide all, show the one wanted
+		document.querySelectorAll('ul[data-id]').forEach(list => $(list).css('display','none'))
+		$(`ul[data-id="${card.attr('data-card')}"]`).css('display','')
+	}
+
+	function bindUIEvents() {
+		m.settings.form.forEach(form => form.addEventListener('submit', handleSubmit))
+		m.settings.switcher.addEventListener('click', changeSignup)
+	}
+
+	m.init = () => {
+		bindUIEvents()
+		replaceSignup(m.settings.defaultCard.clone(true))
+	}
+
+	return m
+}())
+
+const loginScript = (function() {
+	const m = {}
+
+	m.settings = {
+		container: $('#card-container')
+	}
+
+	function handleLogin(e) {
+		e.preventDefault()
+
+		return false
+	}
+
+	function handlePwdReset(e) {
+		e.preventDefault()
+
+		return false
+	}
+
+	function setVue(name) {
+		const container = m.settings.container,
+			  template = document.querySelector(`#temp div[data-card="${name}"]`),
+			  vue = $(template).clone(true),
+			  animation = name == 'login' ? 'slideInLeft' : 'slideInRight'
+
+		container.children().first().remove()
+		container.html(vue)
+		vue.addClass(`animated ${animation}`)
+		bindEvents(vue[0])
+	}
+
+	function bindEvents(vue) {
+
+		vue.querySelector('a[data-type="nav"]').addEventListener('click', (e) => { 
+			setVue(e.target.getAttribute('data-id')) 
+		})
+
+		if(vue.getAttribute('data-card') == 'login')
+			vue.querySelector('form').addEventListener('submit', handleLogin)
+		else
+			vue.querySelector('form').addEventListener('submit', handlePwdReset)
+	}
+
+	m.init = () => {
+		setVue('login')
+	}
+
+	return m
+
+}())
+
+
+const addProfessor = (function() {
+	const m = {}
+
+	m.settings = {
+		form: document.querySelector('form')
+	}
+
+	function handleSubmit(e) {
+		e.preventDefault()
+	}
+
+	function bindUIEvents() {
+		m.settings.form.addEventListener('submit', handleSubmit)
+	}
+
+	m.init = () => {
+		bindUIEvents()
+	}
+
+	return m
+}())
+
+
+const addSchool = (function() {
+	const m = {}
+
+	m.settings = {
+		form: document.querySelector('form')
+	}
+
+	function handleSubmit(e) {
+		e.preventDefault()
+	}
+
+	function bindUIEvents() {
+		m.settings.form.addEventListener('submit', handleSubmit)
 	}
 
 	m.init = () => {

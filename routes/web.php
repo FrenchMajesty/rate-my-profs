@@ -33,4 +33,7 @@ Route::get('/add/school', function () {
     return view('add.school');
 });
 
+Route::get('/search', function () {
+    return view('search');
+});
 

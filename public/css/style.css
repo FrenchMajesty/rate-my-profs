@@ -1,6 +1,11 @@
 /* YOUR CUSTOM STYLES */
+:root {
+	--primaryCol: #607d8b;
+	--secCol: #03b257;
+}
 body {
 	overflow-x: hidden!important;
+	background-color: #f1f1f1;
 }
 .primary, .primary-hover:hover {
 	background-color: #607d8b!important;
@@ -13,6 +18,12 @@ body {
 }
 .marg-top-5 {
 	margin-top: 5em;
+}
+.marg-top-3 {
+	margin-top: 3em;
+}
+.marg-top-4 {
+	margin-top: 4em;
 }
 .marg-top-8 {
 	margin-top: 8em;
@@ -212,4 +223,30 @@ body {
     font-size: .7em;
     position: relative;
     top: -.3em;
+}
+.md-form .prefix.active {
+	color: var(--secCol);
+}
+input[type=date]:focus:not([readonly]), input[type=datetime-local]:focus:not([readonly]), input[type=email]:focus:not([readonly]), input[type=number]:focus:not([readonly]), input[type=password]:focus:not([readonly]), input[type=search-md]:focus:not([readonly]), input[type=search]:focus:not([readonly]), input[type=tel]:focus:not([readonly]), input[type=text]:focus:not([readonly]), input[type=time]:focus:not([readonly]), input[type=url]:focus:not([readonly]), textarea.md-textarea:focus:not([readonly]) {
+	border-bottom: 1px solid #4285F4;
+	border-bottom-color: var(--secCol);
+    -webkit-box-shadow: 0 1px 0 0 #4285F4;
+    box-shadow: 0 1px 0 0 var(--secCol);
+}
+input[type=date]:focus:not([readonly])+label, input[type=datetime-local]:focus:not([readonly])+label, input[type=email]:focus:not([readonly])+label, input[type=number]:focus:not([readonly])+label, input[type=password]:focus:not([readonly])+label, input[type=search-md]:focus:not([readonly])+label, input[type=search]:focus:not([readonly])+label, input[type=tel]:focus:not([readonly])+label, input[type=text]:focus:not([readonly])+label, input[type=time]:focus:not([readonly])+label, input[type=url]:focus:not([readonly])+label, textarea.md-textarea:focus:not([readonly])+label {
+	color: var(--secCol);
+}
+.options {
+	padding: 0em 1em;
+	padding-bottom: 1em;
+	font-size: .7em;
+}
+.search-results p {
+	font-size: 2em;
+	margin-left: 1em;
+	margin-bottom: .5em!important;
+}
+.scrollable {
+	overflow: scroll;
+    height: 90vh;
 }

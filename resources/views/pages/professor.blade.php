@@ -9,7 +9,7 @@
 		
 	<div class="row" style="margin-top: 5em">
         @include ('partials.side-module')
-        <div id="page-content" class="col-md-8">
+        <div class="col-md-8 scrollable">
             <div class="card professor-details">
                 <div class="row">
                     <div class="overall-rating col-md-4">
@@ -28,7 +28,8 @@
                             <h2>Trump,<br> Donald</h2>
                             <p>{{__('prof of')}} {{__('math')}} {{__('and')}} {{__('politics')}} at <a href="#">Havard University</a>, Cambridge, MA.</p>
                         </div>
-                        <a href="#" class="self-identify">{{__('are you :name', ['name' => 'Donald'])}}</a>
+                        <a href="#" class="self-identify">{{__('are you :name', ['name' => 'Donald'])}}</a><br>
+                        <a class="school-website" data-toggle="modal" data-target="#submitCorrection" href="#">{{__('submit correction')}}</a>
                     </div>
                      <div class="colleagues col-md-4">
                         <div class="card-block">
@@ -90,6 +91,49 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="submitCorrection" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-warning modal-side modal-top-right" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">{{__('submit correction')}}</p>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+
+            <form>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="fa fa-check fa-4x mb-1 animated rotateIn"></i>
+                        <p>{{__(':name, prof in :dept at :school, :location', [
+                        'name' => 'Donald Trump', 'dept' => 'Mathematics', 'school' => 'Harvard University',
+                        'location' => 'Cambridge, MA'])}}</p>
+                    </div>
+                    <section class="col-md-10 marg-top-3">
+                        <div class="md-form">
+                            <textarea type="text" class="md-textarea"></textarea>
+                            <label>{{__('whats the problem')}}</label>
+                        </div>
+                        <div class="md-form">
+                            <input type="text" class="form-control">
+                            <label>{{__('your email')}}</label>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Add captcha here -->
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-primary-modal">{{__('submit')}}</i></button>
+                    <a type="button" class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">{{__('cancel')}}</a>
+                </div>
+            </form>
+        </div>
+        <!--/.Content-->
+        </div>
+    </div>
 
 @endsection
 
@@ -97,7 +141,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js" type="text/javascript"></script>
     <script type="text/javascript">
     $(document).ready(() => {
-        sideModule.init()
+        sideModule.init('similar')
     })
     </script>
 @endsection

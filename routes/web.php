@@ -25,5 +25,12 @@ Route::get('/account', function () {
     return view('account.profile');
 });
 
+Route::get('/add/prof', function () {
+    return view('add.prof');
+});
+
+Route::get('/add/school', function () {
+    return view('add.school');
+});
 
 

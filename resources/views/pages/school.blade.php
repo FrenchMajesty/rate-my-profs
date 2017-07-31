@@ -11,7 +11,7 @@
 
         @include ('partials.side-module')
 
-        <div id="page-content" class="col-md-8">
+        <div class="col-md-8 scrollable">
             <div class="card school-details">
                 <div class="row">
 
@@ -40,7 +40,7 @@
                             <button class="col-md-12 btn btn-primary primary marg-top-5">
                         {{__('rate this school')}}
                         </button>
-                        <a class="school-website" href="#">{{__('submit correction')}}</a>
+                        <a class="school-website" data-toggle="modal" data-target="#submitCorrection" href="#">{{__('submit correction')}}</a>
                         </div>
                     </div>
 
@@ -116,14 +116,54 @@
             </div>
         </div>
     </div>
+<div class="modal fade" id="submitCorrection" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-notify modal-warning modal-side modal-top-right" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">{{__('submit correction')}}</p>
 
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+
+            <form>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="fa fa-check fa-4x mb-1 animated rotateIn"></i>
+                        <p>{{__(':school at :location', ['school' => 'Harvard University', 'location' => 'Cambridge, MA'])}}</p>
+                    </div>
+                    <section class="col-md-10 marg-top-3">
+                        <div class="md-form">
+                            <textarea type="text" class="md-textarea"></textarea>
+                            <label>{{__('whats the problem')}}</label>
+                        </div>
+                        <div class="md-form">
+                            <input type="text" class="form-control">
+                            <label>{{__('your email')}}</label>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Add captcha here -->
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-primary-modal">{{__('submit')}}</i></button>
+                    <a type="button" class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">{{__('cancel')}}</a>
+                </div>
+            </form>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
 @endsection
 
 @section ('js')
     <script src="//cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js" type="text/javascript"></script>
     <script type="text/javascript">
     $(document).ready(() => {
-        sideModule.init()
+        sideModule.init('school')
     })
     </script>
 @endsection

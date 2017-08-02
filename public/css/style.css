@@ -1,14 +1,15 @@
 /* YOUR CUSTOM STYLES */
 :root {
-	--primaryCol: #607d8b;
-	--secCol: #03b257;
+	--primaryCol: #a6dd2c;
+	--secCol: #67a9d8;
 }
 body {
 	overflow-x: hidden!important;
 	background-color: #f1f1f1;
+	background: url('../img/blue.png');
 }
 .primary, .primary-hover:hover {
-	background-color: #607d8b!important;
+	background-color: #a6dd2c!important;
 }
 .marg-bottom-1 {
 	margin-bottom: 1em;

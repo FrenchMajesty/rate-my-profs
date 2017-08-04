@@ -75,6 +75,10 @@
 	</section>
 @endsection
 
+@section ('footer')
+    @include ('partials.footer')
+@endsection
+
 @section ('js')
 <script type="text/javascript">
 	loginScript.init()

@@ -96,7 +96,7 @@
 
 			<div class="modal-footer">
 			    <div class="options">
-			        <p>{{__('already a member?')}} <a href="#">{{__('sign in here')}}</a></p>
+			        <p>{{__('already a member?')}} <a href="./login">{{__('sign in here')}}</a></p>
 			    </div>
 			</div>
 		</div>
@@ -152,11 +152,15 @@
 
 			<div class="modal-footer">
 			    <div class="options">
-			        <p>{{__('already a member?')}} <a href="#">{{__('sign in here')}}</a></p>
+			        <p>{{__('already a member?')}} <a href="./login">{{__('sign in here')}}</a></p>
 			    </div>
 			</div>
 		</div>
 	</section>
+@endsection
+
+@section ('footer')
+    @include ('partials.footer')
 @endsection
 
 @section ('js')

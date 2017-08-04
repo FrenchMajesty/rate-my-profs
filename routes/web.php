@@ -37,7 +37,24 @@ Route::get('/search', function () {
     return view('search');
 });
 
-Route::get('/adm', function () {
-    return view('admin.index');
+Route::group(['prefix' => '/admin'], function() {
+
+	Route::get('//', function () {
+	    return view('admin.index');
+	});
+
+	Route::get('/prof', function () {
+	    return view('admin.profs');
+	});
+
+	Route::get('/school', function () {
+	    return view('admin.schools');
+	});
+
+	Route::get('/users', function () {
+	    return view('admin.users');
+	});
+
 });
+
 

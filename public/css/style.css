@@ -5,11 +5,15 @@
 }
 body {
 	overflow-x: hidden!important;
+	color: #fff;
 	background-color: #f1f1f1;
 	background: url('../img/blue.png');
 }
+.card, .card-block {
+	color: #292b2c;
+}
 .primary, .primary-hover:hover {
-	background-color: #a6dd2c!important;
+	background-color: #c3c3c3!important;
 }
 .marg-bottom-1 {
 	margin-bottom: 1em;
@@ -34,7 +38,7 @@ body {
 }
 .navbar .search-bar {
 	width: 100%;
-    background-color: #cccccc;
+    background-color: #7b7b7b;
     border-radius: 1em;
     padding-left: 10px;
 }
@@ -138,6 +142,7 @@ body {
 }
 .student-reviews h4 {
 	line-height: 2em;
+	color: #fff;
 }
 .school-details .overall-rating h1 {
 	font-size: 2em;

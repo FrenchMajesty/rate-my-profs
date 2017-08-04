@@ -50,6 +50,7 @@
 	"math": "Mathematics",
 	"science": "Science",
 	"politics": "Politics",
+	"engineering": "Engineering",
 	"class": "class",
 	"and": "and",
 	"or": "or",
@@ -152,13 +153,16 @@
 	"all rights reserved": "All rights reserved",
 	"made by": "Made by",
 	"dashboard": "Dashboard",
-	"users": "Users",
+	"Users": "Users",
+	"users": "users",
 	"new users": "New users",
 	"settings": "Settings",
 	"visitors": "Visitors",
 	"just updated": "Just updated",
 	"last :time": "last :time",
 	"since :date": "Since :date",
+	"member since": "Member since",
+	"date added": "Date added",
 	"min": "minutes",
 	"hours": "hours",
 	"days": "days",
@@ -172,7 +176,13 @@
 	"review on": "Review on",
 	"author": "Author",
 	"anon": "Anonymous",
-	"review rating": "Review rating"
+	"account type": "Account type",
+	"review rating": "Review rating",
+	"toggle navigation": "Toggle navigation",
+	"profile": "Profile",
+	"view and edit": "View and edit",
+	"edit": "Edit",
+	"delete": "Delete"
 }
 
 

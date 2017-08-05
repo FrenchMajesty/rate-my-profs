@@ -55,7 +55,7 @@ const sideModule = (function(){
 		return false
 	}
 
-	function submitSearchSchool(e) {
+	function submitSearchReview(e) {
 		e.preventDefault()
 		// figure out what we're searching for and submit
 		return false
@@ -244,7 +244,9 @@ const signUp = (function () {
 		const errorDiv = elem.querySelector('.alert-danger')
 			  errorDiv.removeAttribute('style')
 
-		Object.keys(errors).forEach(err => errorDiv.innerHTML += `<li>${errors[err]}</li>`)
+		Object.keys(errors).forEach(err => {
+			errors[err].forEach(err => errorDiv.innerHTML += `<li>${err}</li>`)
+		})
 	}
 
 	/**
@@ -302,7 +304,8 @@ const loginScript = (function() {
 
 	m.settings = {
 		container: $('#card-container'),
-		successLoginRedirectUrl: './account'
+		successLoginRedirectUrl: './account',
+		successEmailLinkRedirectUrl : './login'
 	}
 
 	function handleLogin(e) {
@@ -317,7 +320,7 @@ const loginScript = (function() {
 			contentType: false,
 			processData: false
 		})
-		.then(response => window.location.replace(m.settings.successLoginRedirectUrl))
+		.then(_ => window.location.replace(m.settings.successLoginRedirectUrl))
 		.fail(response => displayErrors(e.target, response.responseJSON))
 	}
 
@@ -333,8 +336,11 @@ const loginScript = (function() {
 			contentType: false,
 			processData: false
 		})
-		.then(response => console.log(response))
-		.fail(response => displayErrors(e.target, response.responseJSON))
+		.then(_ => { 
+			alert('A reset link associated with that email has been sent.')
+			window.location.replace(m.settings.successEmailLinkRedirectUrl)
+		})
+		.fail(response => displayErrors(e.target, response))
 	}
 
 	/**
@@ -346,7 +352,9 @@ const loginScript = (function() {
 		const errorDiv = elem.querySelector('.alert-danger')
 			  errorDiv.removeAttribute('style')
 
-		Object.keys(errors).forEach(err => errorDiv.innerHTML += `<li>${errors[err]}</li>`)
+		Object.keys(errors).forEach(err => {
+			errors[err].forEach(msg => errorDiv.innerHTML += `<li>${msg}</li>`)	
+		})
 	}
 
 	/**
@@ -367,7 +375,7 @@ const loginScript = (function() {
 		const container = m.settings.container,
 			  template = document.querySelector(`#temp div[data-card="${name}"]`),
 			  vue = $(template).clone(true),
-			  animation = name == 'login' ? 'slideInLeft' : 'slideInRight'
+			  animation = name == 'login' ? 'fadeInDown' : 'fadeInDown'
 
 		container.children().first().remove()
 		container.html(vue)
@@ -402,6 +410,68 @@ const loginScript = (function() {
 
 }())
 
+const resetPasswordScript = (function() {
+	const m = {}
+
+	m.settings = {
+		form: document.querySelector('.card-block form'),
+		successUpdatePasswordRedirectUrl: '../../login'
+	}
+
+	function handleSubmit(e) {
+		e.preventDefault()
+
+		const url = e.target.getAttribute('action'),
+			   formData = new FormData(e.target)
+
+		$.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(response => {
+			console.log(response)
+			alert('Your password was succesfully updated!')
+			window.location.replace(m.settings.successUpdatePasswordRedirectUrl)
+		})
+		.fail(response => displayErrors(response.responseJSON))
+	}
+
+	/**
+	 * Display AJAX form errors on page
+	 * @param  {JSON} errors
+	 */
+	function displayErrors(errors) {
+		const errorDiv = m.settings.form.querySelector('.alert-danger')
+			  errorDiv.removeAttribute('style')
+
+		Object.keys(errors).forEach(err => {
+			errors[err].forEach(err => errorDiv.innerHTML += `<li>${err}</li>`)
+		})
+	}
+
+	/**
+	 * Clear the errors on page
+	 */
+	function clearErrors() {
+		const errorDiv = m.settings.form.querySelector('.alert-danger')
+			  errorDiv.setAttribute('style', 'display: none')
+			  errorDiv.innerHTML = ''
+	}
+
+	function bindUIEvents() {
+		m.settings.form.addEventListener('submit', handleSubmit)
+		$(m.settings.form).find('input').on('change keypress keydown', clearErrors)
+	}
+
+	m.init = () => {
+		bindUIEvents()
+	}
+
+	return m
+}())
+
 
 const addProfessor = (function() {
 	const m = {}
@@ -412,6 +482,8 @@ const addProfessor = (function() {
 
 	function handleSubmit(e) {
 		e.preventDefault()
+
+
 	}
 
 	function bindUIEvents() {
@@ -430,15 +502,51 @@ const addSchool = (function() {
 	const m = {}
 
 	m.settings = {
-		form: document.querySelector('form')
+		form: document.querySelector('form'),
+		successCreateRedirectUrl: './school'
 	}
 
 	function handleSubmit(e) {
 		e.preventDefault()
+
+		const url = e.target.getAttribute('action'),
+			   formData = new FormData(e.target)
+
+		$.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(response => window.location.replace(m.settings.successCreateRedirectUrl))
+		.fail(response => displayErrors(response.responseJSON))
+	}
+
+	/**
+	 * Display AJAX form errors on page
+	 * @param  {JSON} errors
+	 */
+	function displayErrors(errors) {
+		const errorDiv = m.settings.form.querySelector('.alert-danger')
+			  errorDiv.removeAttribute('style')
+
+		Object.keys(errors).forEach(err => {
+			errors[err].forEach(err => errorDiv.innerHTML += `<li>${err}</li>`)
+		})
+	}
+
+	/**
+	 * Clear the errors on page
+	 */
+	function clearErrors() {
+		const errorDiv = m.settings.form.querySelector('.alert-danger')
+			  errorDiv.setAttribute('style', 'display: none')
+			  errorDiv.innerHTML = ''
 	}
 
 	function bindUIEvents() {
 		m.settings.form.addEventListener('submit', handleSubmit)
+		$(m.settings.form).find('input').on('change keydown keypress', clearErrors)
 	}
 
 	m.init = () => {

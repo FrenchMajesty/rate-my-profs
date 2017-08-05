@@ -44,48 +44,54 @@
 			    <div class="form-header primary darken-4">
 			        <h3><i class="fa fa-user-plus"></i> {{__('sign up')}}</h3>
 			    </div>
-			    <form>
+			    <form method="POST" action="{{ route('register') }}">
+			    {{ csrf_field() }}
+
 			    	<div class="md-form">
 				        <i class="fa fa-user prefix"></i>
-				        <input type="text" class="form-control">
+				        <input type="text" name="first" value="{{ old('first') }}" class="form-control" required>
 				        <label>{{__('first name')}}</label>
 				    </div>
 
 				    <div class="md-form">
 				        <i class="fa fa-user prefix"></i>
-				        <input type="text" class="form-control">
+				        <input type="text" name="last" value="{{ old('last') }}" class="form-control" required>
 				        <label>{{__('last name')}}</label>
 				    </div>
 
 				    <div class="md-form">
 				        <i class="fa fa-envelope prefix"></i>
-				        <input type="text" class="form-control">
+				        <input type="email" name="email" value="{{ old('email') }}" class="form-control" required>
 				        <label>{{__('email')}}</label>
 				    </div>
 
 				    <div class="md-form">
 				        <i class="fa fa-envelope prefix"></i>
-				        <input type="text" class="form-control">
+				        <input type="email" name="email_confirmation" class="form-control" required>
 				        <label>{{__('confirm email')}}</label>
 				    </div>
 
 				    <div class="md-form">
 				        <i class="fa fa-lock prefix"></i>
-				        <input type="password" class="form-control">
+				        <input type="password" name="password" class="form-control" required>
 				        <label >{{__('Password')}}</label>
 				    </div>
 
 				    <div class="md-form">
 				        <i class="fa fa-lock prefix"></i>
-				        <input type="password" class="form-control">
+				        <input type="password" name="password_confirmation" class="form-control" required>
 				        <label>{{__('confirm password')}}</label>
 				    </div>
 
 				    <div class="md-form">
 				        <i class="fa fa-graduation-cap prefix"></i>
-				        <input type="text" class="form-control">
+				        <input type="text" name="school" value="{{ old('school') }}" class="form-control">
 				        <label>{{__('school')}} ({{__('optional')}})</label>
 				    </div>
+				    <input type="hidden" name="school-id" value="0">
+				    <input type="hidden" name="account_type" value="student">
+
+				    <div class="alert alert-danger" style="display: none"></div>
 
 				    <!-- add captcha and TOS -->
 				    <div class="text-center">
@@ -106,42 +112,53 @@
 			    <div class="form-header primary darken-4">
 			        <h3><i class="fa fa-user-plus"></i> {{__('sign up')}}</h3>
 			    </div>
-			    <form>
+			    <form method="POST" action="{{ route('register') }}">
+			    {{ csrf_field() }}
 			    	<div class="md-form">
 				        <i class="fa fa-user prefix"></i>
-				        <input type="text" class="form-control">
-				        <label>{{__('your name')}}</label>
+				        <input type="text" name="first" value="{{ old('first') }}" class="form-control" required>
+				        <label>{{__('first name')}}</label>
+				    </div>
+
+				    <div class="md-form">
+				        <i class="fa fa-user prefix"></i>
+				        <input type="text" name="last" value="{{ old('last') }}" class="form-control" required>
+				        <label>{{__('last name')}}</label>
 				    </div>
 
 				    <div class="md-form">
 				        <i class="fa fa-envelope prefix"></i>
-				        <input type="text" class="form-control">
+				        <input type="email" name="email" value="{{ old('email') }}" class="form-control" required>
 				        <label>{{__('email')}}</label>
 				    </div>
 
 				    <div class="md-form">
 				        <i class="fa fa-envelope prefix"></i>
-				        <input type="text" class="form-control">
+				        <input type="text" name="email_confirmation" class="form-control" required>
 				        <label>{{__('confirm email')}}</label>
 				    </div>
 
 				    <div class="md-form">
 				        <i class="fa fa-lock prefix"></i>
-				        <input type="password" class="form-control">
+				        <input type="password" name="password" class="form-control" required>
 				        <label >{{__('Password')}}</label>
 				    </div>
 
 				    <div class="md-form">
 				        <i class="fa fa-lock prefix"></i>
-				        <input type="password" class="form-control">
+				        <input type="password" name="password_confirmation" class="form-control" required>
 				        <label>{{__('confirm password')}}</label>
 				    </div>
 
-				    <div class="md-form">
+				    <!--div class="md-form">
 				        <i class="fa fa-graduation-cap prefix"></i>
-				        <input type="text" class="form-control">
+				        <input type="text" name="faculty_listing" class="form-control">
 				        <label>{{__('faculty directory listing')}}</label>
-				    </div>
+				    </div-->
+				    <input type="hidden" name="school-id" value="0">
+				    <input type="hidden" name="account_type" value="professor">
+
+				   	<div class="alert alert-danger" style="display: none"></div>
 
 				    <!-- add captcha and terms of use -->
 				    <div class="text-center">

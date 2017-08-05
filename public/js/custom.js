@@ -213,16 +213,48 @@ const signUp = (function () {
 	const m = {}
 
 	m.settings = {
-		form: document.querySelectorAll('form'),
-		signUpContainer: $('#signup-container'),
 		switcher : document.querySelector('.switch'),
-		defaultCard: $('.card[data-card="student"]')
+		signUpContainer: $('#signup-container'),
+		defaultCard: $('.card[data-card="student"]'),
+		successRegisterRedirectUrl: './account'
 	}
 
 	function handleSubmit(e) {
 		e.preventDefault()
 
-		return false
+		const url = e.target.getAttribute('action'),
+			   formData = new FormData(e.target)
+
+		$.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(response => window.location.replace(m.settings.successRegisterRedirectUrl))
+		.fail(response => displayErrors(e.target, response.responseJSON))
+	}
+
+	/**
+	 * Display AJAX form errors in card
+	 * @param  {Element} elem
+	 * @param  {JSON} errors
+	 */
+	function displayErrors(elem, errors) {
+		const errorDiv = elem.querySelector('.alert-danger')
+			  errorDiv.removeAttribute('style')
+
+		Object.keys(errors).forEach(err => errorDiv.innerHTML += `<li>${errors[err]}</li>`)
+	}
+
+	/**
+	 * Clear the errors in card
+	 * @param  {Element} elem
+	 */
+	function clearErrors(elem) {
+		const errorDiv = elem.querySelector('.alert-danger')
+			  errorDiv.setAttribute('style', 'display: none')
+			  errorDiv.innerHTML = ''
 	}
 
 	function changeSignup(e) {
@@ -237,10 +269,16 @@ const signUp = (function () {
 		replaceSignup(card)
 	}
 
+	/**
+	 * Replace the current sign up card
+	 * @param  {Element} new card
+	 */
 	function replaceSignup(card) {
 		m.settings.signUpContainer.children().first().remove()
 		m.settings.signUpContainer.html(card)
 		card.addClass('wow animated fadeInDown')
+		card.find('form').on('submit', handleSubmit)
+		card.find('input').on('change keydown keypress',(e) => clearErrors(card[0]))
 
 		// Hide all, show the one wanted
 		document.querySelectorAll('ul[data-id]').forEach(list => $(list).css('display','none'))
@@ -248,7 +286,6 @@ const signUp = (function () {
 	}
 
 	function bindUIEvents() {
-		m.settings.form.forEach(form => form.addEventListener('submit', handleSubmit))
 		m.settings.switcher.addEventListener('click', changeSignup)
 	}
 
@@ -264,21 +301,68 @@ const loginScript = (function() {
 	const m = {}
 
 	m.settings = {
-		container: $('#card-container')
+		container: $('#card-container'),
+		successLoginRedirectUrl: './account'
 	}
 
 	function handleLogin(e) {
 		e.preventDefault()
 
-		return false
+		const formData = new FormData(e.target),
+			  url = e.target.getAttribute('action')
+		
+		$.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(response => window.location.replace(m.settings.successLoginRedirectUrl))
+		.fail(response => displayErrors(e.target, response.responseJSON))
 	}
 
 	function handlePwdReset(e) {
 		e.preventDefault()
 
-		return false
+		const formData = new FormData(e.target),
+			  url = e.target.getAttribute('action')
+		
+		$.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(response => console.log(response))
+		.fail(response => displayErrors(e.target, response.responseJSON))
 	}
 
+	/**
+	 * Display AJAX form errors in vue
+	 * @param  {Element} elem
+	 * @param  {JSON} errors
+	 */
+	function displayErrors(elem, errors) {
+		const errorDiv = elem.querySelector('.alert-danger')
+			  errorDiv.removeAttribute('style')
+
+		Object.keys(errors).forEach(err => errorDiv.innerHTML += `<li>${errors[err]}</li>`)
+	}
+
+	/**
+	 * Clear the errors in vue
+	 * @param  {Element} elem
+	 */
+	function clearErrors(elem) {
+		const errorDiv = elem.querySelector('.alert-danger')
+			  errorDiv.setAttribute('style', 'display: none')
+			  errorDiv.innerHTML = ''
+	}
+
+	/**
+	 * Change the current view
+	 * @param {String} name
+	 */
 	function setVue(name) {
 		const container = m.settings.container,
 			  template = document.querySelector(`#temp div[data-card="${name}"]`),
@@ -291,19 +375,26 @@ const loginScript = (function() {
 		bindEvents(vue[0])
 	}
 
+	/**
+	 * Attach the events on a newly generated vue
+	 * @param  {String} vue
+	 */
 	function bindEvents(vue) {
 
 		vue.querySelector('a[data-type="nav"]').addEventListener('click', (e) => { 
 			setVue(e.target.getAttribute('data-id')) 
 		})
 
-		if(vue.getAttribute('data-card') == 'login')
+		if(vue.getAttribute('data-card') == 'login') {
 			vue.querySelector('form').addEventListener('submit', handleLogin)
-		else
+			$(vue).find('input').on('change keydown keypress',(e) => { clearErrors(vue) })
+		}else {
 			vue.querySelector('form').addEventListener('submit', handlePwdReset)
+			$(vue).find('input').on('change keydown keypress',(e) => { clearErrors(vue) })
+		}
 	}
 
-	m.init = () => {
+	m.init = (config) => {
 		setVue('login')
 	}
 
@@ -358,8 +449,13 @@ const addSchool = (function() {
 }())
 
 $(document).ready(() => {
-
 	new WOW().init()
+
+	$.ajaxSetup({
+	    headers: {
+	        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	    }
+	})
 })
 
 

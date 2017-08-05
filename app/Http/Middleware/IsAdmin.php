@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class IsAdmin
 {
@@ -15,7 +16,7 @@ class IsAdmin
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user()->account_type != 'admin') {
+        if (!Auth::check() || $request->user()->account_type != 'admin') {
             return redirect('home');
         }
 

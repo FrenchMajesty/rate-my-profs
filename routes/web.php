@@ -1,8 +1,10 @@
 <?php
 
+// add token in login password reset 
+
 Route::get('/', function () {
     return view('index');
-});
+})->name('index');
 
 
 Route::get('/prof', function () {
@@ -17,7 +19,7 @@ Route::get('/signup', function () {
     return view('account.signup');
 });
 
-Route::get('/login', function () {
+Route::get('/signin', function () {
     return view('account.login');
 });
 
@@ -34,12 +36,12 @@ Route::get('/add/school', function () {
 });
 
 Route::get('/search', function () {
-    return view('search');
+    return view('pages.search');
 });
 
-Route::group(['prefix' => '/admin'], function() {
+Route::group(['prefix' => '/admin', 'as' => 'admin', 'middleware' => '\App\Http\Middleware\IsAdmin'], function() {
 
-	Route::get('//', function () {
+	Route::get('/', function () {
 	    return view('admin.index');
 	});
 
@@ -58,3 +60,7 @@ Route::group(['prefix' => '/admin'], function() {
 });
 
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

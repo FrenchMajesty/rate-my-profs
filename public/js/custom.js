@@ -477,17 +477,49 @@ const addProfessor = (function() {
 	const m = {}
 
 	m.settings = {
-		form: document.querySelector('form')
+		form: document.querySelector('.card-block form'),
+		schoolIDField: document.querySelector('input[name="school-id"]'),
+		schoolField: $('.card-block input[name="school"]'),
+		schoolData: []
 	}
 
 	function handleSubmit(e) {
 		e.preventDefault()
+	}
 
+	function loadSchoolData() {
+		m.settings.schoolData = [
+			{ id: 1, name: 'item1' },
+			{ id: 2, name: 'item2' },
+			{ id: 3, name: 'item3' }
+		]		
+	}
 
+	/**
+	 * Activate type ahead and bind events
+	 */
+	function activateTypeahead() {
+		
+		m.settings.schoolField.typeahead({
+			source: m.settings.schoolData,
+			minLength: 3,
+			items: 5,
+			afterSelect: function(item) {
+				m.settings.schoolIDField.value = item.id
+			}
+		})
+
+		// If school does not exist
+		m.settings.schoolField.on('blur',(e) => {
+			const isFound = m.settings.schoolData.some(item => e.target.value == item.name)
+			if(!isFound) m.settings.schoolIDField.value = -1
+		})
 	}
 
 	function bindUIEvents() {
 		m.settings.form.addEventListener('submit', handleSubmit)
+		loadSchoolData()
+		activateTypeahead()
 	}
 
 	m.init = () => {

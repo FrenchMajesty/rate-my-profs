@@ -39,6 +39,11 @@ Route::get('/search', function () {
     return view('pages.search');
 });
 
+
+Route::post('/add/prof', 'ProfessorController@create')->name('prof');
+
+Route::post('/add/school', 'SchoolController@create')->name('add.school');	
+
 Route::group(['prefix' => '/admin', 'as' => 'admin', 'middleware' => '\App\Http\Middleware\IsAdmin'], function() {
 
 	Route::get('/', function () {

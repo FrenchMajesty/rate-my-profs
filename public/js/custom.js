@@ -534,8 +534,8 @@ const addSchool = (function() {
 	const m = {}
 
 	m.settings = {
-		form: document.querySelector('form'),
-		successCreateRedirectUrl: './school'
+		form: document.querySelector('#add-school'),
+		successCreateRedirectUrl: '.././school'
 	}
 
 	function handleSubmit(e) {

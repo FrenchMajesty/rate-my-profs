@@ -9,11 +9,11 @@ Route::get('/', function () {
 
 Route::get('/prof', function () {
     return view('pages.professor');
-});
+})->name('view.prof');
 
 Route::get('/school', function () {
     return view('pages.school');
-});
+})->name('view.school');
 
 Route::get('/signup', function () {
     return view('account.signup');
@@ -39,6 +39,9 @@ Route::get('/search', function () {
     return view('pages.search');
 });
 
+Route::get('/fetch/schools', 'SchoolController@loadAll')->name('fetch.schools');
+
+Route::get('/fetch/departments', 'DepartmentController@loadAll')->name('fetch.departments');
 
 Route::post('/add/prof', 'ProfessorController@create')->name('prof');
 

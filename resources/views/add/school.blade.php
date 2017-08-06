@@ -71,7 +71,11 @@
 
 @section ('js')
 <script type="text/javascript">
+	const config = {
+		successAddMessage: '{{__('school successfully added')}}',
+		successAddRedirectUrl: '{{ route('view.school') }}'
+	}
+	addSchool.init(config)
 	sideModule.init('none')
-	addSchool.init()
 </script>
 @endsection

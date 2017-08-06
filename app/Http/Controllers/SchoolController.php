@@ -19,9 +19,12 @@ class SchoolController extends Controller
         $errors = [];
 
         $this->validate($request, [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:schools',
             'nickname' => 'required|alpha',
+            'city' => 'required|string',
+            'state' => 'required|string',
             'email' => 'required|email',
+            'website' => 'required|url'
         ]);
 
         return School::create([
@@ -30,6 +33,10 @@ class SchoolController extends Controller
             'location' => $state . ',' . $city,
             'website' => $website
         ]);
+    }
+
+    public function loadAll() {
+        return School::all();
     }
 }
 

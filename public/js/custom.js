@@ -612,12 +612,14 @@ const addProfessor = (function() {
 
 
 const addSchool = (function() {
-	const m = {}
-
-	m.settings = {
-		form: document.querySelector('#add-school'),
-		successAddRedirectUrl: '.././school',
-		successAddMessage: 'success'
+	const m = {
+		settings: {
+			form: document.querySelector('#add-school'),
+		},
+		successAdd: {
+			redirectUrl: null,
+			message: null
+		}
 	}
 
 	function handleSubmit(e) {
@@ -633,8 +635,8 @@ const addSchool = (function() {
 			processData: false
 		})
 		.then(response => {
-			alert(m.settings.successAddMessage)
-			window.location.replace(m.settings.successAddRedirectUrl)
+			alert(m.successAdd.message)
+			window.location.replace(m.successAdd.redirectUrl)
 		})
 		.fail(response => displayErrors(response.responseJSON))
 	}
@@ -671,12 +673,104 @@ const addSchool = (function() {
 
 		// Configs
 		Object.keys(config).forEach(key => {
-			if(m.settings[key]) m.settings[key] = config[key]
+			if(m[key]) Object.assign(m[key], config[key])
 		})
 	}
 
 	return m
 }())
+
+
+const professorView = (function() {
+	const m = {
+		settings: {
+			form: {
+				rating: document.querySelector('#rateProfessor form'),
+				correction: document.querySelector('#submitCorrection form')
+			}
+		},
+		successRate: {
+			redirectUrl: null,
+			message: null
+		},
+		slider: document.querySelectorAll('input[type="range"]'),
+	}
+
+	function handleSubmitRating(e) {
+		e.preventDefault()
+
+		const url = e.target.getAttribute('action'),
+			   formData = new FormData(e.target)
+
+		$.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(response => {
+			alert(m.successRate.message)
+			window.location.replace(m.successRate.redirectUrl)
+		})
+		.fail(response => displayErrors(e.target, response.responseJSON))
+	}
+
+	function handleSubmitCorrection(e) {
+		e.preventDefault()
+	}
+
+	function updateSlider(e) {
+		const text = document.querySelector(`span[data-id="${e.target.name}"]`)
+		text.innerText = e.target.value
+		e.target.setAttribute('value', e.target.value)
+	}
+
+	/**
+	 * Display AJAX form errors on page
+	 * @param {Element} elem
+	 * @param  {JSON} errors
+	 */
+	function displayErrors(elem, errors) {
+		const errorDiv = elem.querySelector('.alert-danger')
+			  errorDiv.removeAttribute('style')
+
+		Object.keys(errors).forEach(err => {
+			errors[err].forEach(err => errorDiv.innerHTML += `<li>${err}</li>`)
+		})
+	}
+
+	/**
+	 * Clear the errors on form
+	 * @param {Element} elem
+	 */
+	function clearErrors(elem) {
+		const errorDiv = elem.querySelector('.alert-danger')
+			  errorDiv.setAttribute('style', 'display: none')
+			  errorDiv.innerHTML = ''
+	}
+
+	function bindUIEvents() {
+		m.settings.form.rating.addEventListener('submit', handleSubmitRating)
+		m.settings.form.correction.addEventListener('submit', handleSubmitCorrection)
+		m.slider.forEach(ranger => ranger.addEventListener('input', updateSlider))
+		$(m.settings.form.correction).find('input')
+				.on('change keydown keypress',() => { clearErrors(m.settings.form.correction) })
+		$(m.settings.form.rating).find('input')
+				.on('change keydown keypress input', () => { clearErrors(m.settings.form.rating) })
+	}
+
+	m.init = (config) => {
+		bindUIEvents()
+		console.log(m.slider)
+		// Configs
+		Object.keys(config).forEach(key => {
+			if(m[key]) Object.assign(m[key], config[key])
+		})
+	}
+
+	return m
+}())
+
 
 $(document).ready(() => {
 	new WOW().init()

@@ -13,17 +13,19 @@ Route::get('/', function () {
 })->name('index');
 
 
-Route::get('/prof', function () {
+/*Route::get('/prof', function () {
     return view('pages.professor');
-})->name('view.prof');
+})->name('view.prof');*/
 
-Route::get('/prof/{id}', ['as' => 'view.school', 'uses' => 'ProfessorController@load']);
+Route::get('/prof/{id?}', ['as' => 'view.prof', 'uses' => 'ProfessorController@load']);
 
-Route::get('/school/{id}',['as' => 'view.school', 'uses' => 'SchoolController@load']);
+Route::get('/school/{id?}',['as' => 'view.school', 'uses' => 'SchoolController@load']);
 
-Route::get('/school', function () {
+Route::post('/prof/{id?}', ['as' => 'rate.prof', 'uses' => 'ProfessorController@rate']);
+
+/*Route::get('/school', function () {
     return view('pages.school');
-})->name('view.school');
+})->name('view.school');*/
 
 Route::get('/signup', function () {
     return view('account.signup');

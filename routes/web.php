@@ -1,6 +1,7 @@
 <?php
 
-// add token in login password reset 
+// - add token in login password reset 
+// - report to admin in professor controller
 
 Route::get('/', function () {
     return view('index');
@@ -10,6 +11,10 @@ Route::get('/', function () {
 Route::get('/prof', function () {
     return view('pages.professor');
 })->name('view.prof');
+
+Route::get('/prof/{id}', ['as' => 'view.school', 'uses' => 'ProfessorController@load']);
+
+Route::get('/school/{id}',['as' => 'view.school', 'uses' => 'SchoolController@load']);
 
 Route::get('/school', function () {
     return view('pages.school');
@@ -43,7 +48,9 @@ Route::get('/fetch/schools', 'SchoolController@loadAll')->name('fetch.schools');
 
 Route::get('/fetch/departments', 'DepartmentController@loadAll')->name('fetch.departments');
 
-Route::post('/add/prof', 'ProfessorController@create')->name('prof');
+Route::get('/fetch/profs', 'ProfessorController@loadAll')->name('fetch.profs');
+
+Route::post('/add/prof', 'ProfessorController@create')->name('add.prof');
 
 Route::post('/add/school', 'SchoolController@create')->name('add.school');	
 

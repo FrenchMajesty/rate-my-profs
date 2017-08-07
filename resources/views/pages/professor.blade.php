@@ -23,22 +23,25 @@
                             </section>
                         </div>
                     </div>
+
                      <div class="more-details col-md-4">
                         <div class="card-block">
-                            <h2>Trump,<br> Donald</h2>
-                            <p>{{__('prof of')}} {{__('math')}} {{__('and')}} {{__('politics')}} at <a href="#">Havard University</a>, Cambridge, MA.</p>
+                            <h2>{{ $professor->name }},<br> {{ $professor->lastname }}</h2>
+                            <p>
+                            {{__('prof of')}} {{ strtolower($department) }}
+                            at <a href="{{ route('view.school') }}/{{ $school->id }}">{{ $school->name }}</a>, {{ $school->location }}.</p>
                         </div>
                         <a href="#" class="self-identify">{{__('are you :name', ['name' => 'Donald'])}}</a><br>
                         <a class="school-website" data-toggle="modal" data-target="#submitCorrection" href="#">{{__('submit correction')}}</a>
                     </div>
                      <div class="colleagues col-md-4">
                         <div class="card-block">
-                            <h4>Harvard University</h4>
-                            <span>{{__('located in :location',['location' => 'Cambrige, MA'])}}.</span>
+                            <h4>{{ $school->name }}</h4>
+                            <span>{{__('located in :location',['location' => $school->location])}}.</span>
                             <p><a href="#">{{__('check out :count profs at school', ['count' => 7])}}</a></p>
                             <div class="dropdown-divider"></div><br>
                             <span>{{__('prof in dep of')}}</span>
-                            <b>{{__('math')}} {{__('and')}} {{__('politics')}}</b>
+                            <b>{{ $professor->department }}</b>
                             <p><a href="#">{{__('check out :count profs at department', ['count' => 4])}}</a></p>
                         </div>
                     </div>

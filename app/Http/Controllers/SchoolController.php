@@ -30,7 +30,7 @@ class SchoolController extends Controller
         return School::create([
             'name' => $name,
             'nickname' => $nickname,
-            'location' => $state . ',' . $city,
+            'location' => $city . ',' . $state,
             'website' => $website
         ]);
     }

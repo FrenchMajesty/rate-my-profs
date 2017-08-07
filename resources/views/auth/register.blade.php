@@ -102,7 +102,7 @@
 
             <div class="modal-footer">
                 <div class="options">
-                    <p>{{__('already a member?')}} <a href="./login">{{__('sign in here')}}</a></p>
+                    <p>{{__('already a member?')}} <a href="{{route('login')}}">{{__('sign in here')}}</a></p>
                 </div>
             </div>
         </div>
@@ -169,7 +169,7 @@
 
             <div class="modal-footer">
                 <div class="options">
-                    <p>{{__('already a member?')}} <a href="./login">{{__('sign in here')}}</a></p>
+                    <p>{{__('already a member?')}} <a href="{{route('login')}}">{{__('sign in here')}}</a></p>
                 </div>
             </div>
         </div>

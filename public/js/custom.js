@@ -431,7 +431,6 @@ const resetPasswordScript = (function() {
 			processData: false
 		})
 		.then(response => {
-			console.log(response)
 			alert('Your password was succesfully updated!')
 			window.location.replace(m.settings.successUpdatePasswordRedirectUrl)
 		})
@@ -474,68 +473,30 @@ const resetPasswordScript = (function() {
 
 
 const addProfessor = (function() {
-	const m = {}
-
-	m.settings = {
-		form: document.querySelector('.card-block form'),
-		schoolIDField: document.querySelector('input[name="school-id"]'),
-		schoolField: $('.card-block input[name="school"]'),
-		schoolData: []
-	}
-
-	function handleSubmit(e) {
-		e.preventDefault()
-	}
-
-	function loadSchoolData() {
-		m.settings.schoolData = [
-			{ id: 1, name: 'item1' },
-			{ id: 2, name: 'item2' },
-			{ id: 3, name: 'item3' }
-		]		
-	}
-
-	/**
-	 * Activate type ahead and bind events
-	 */
-	function activateTypeahead() {
-		
-		m.settings.schoolField.typeahead({
-			source: m.settings.schoolData,
-			minLength: 3,
-			items: 5,
-			afterSelect: function(item) {
-				m.settings.schoolIDField.value = item.id
-			}
-		})
-
-		// If school does not exist
-		m.settings.schoolField.on('blur',(e) => {
-			const isFound = m.settings.schoolData.some(item => e.target.value == item.name)
-			if(!isFound) m.settings.schoolIDField.value = -1
-		})
-	}
-
-	function bindUIEvents() {
-		m.settings.form.addEventListener('submit', handleSubmit)
-		loadSchoolData()
-		activateTypeahead()
-	}
-
-	m.init = () => {
-		bindUIEvents()
-	}
-
-	return m
-}())
-
-
-const addSchool = (function() {
-	const m = {}
-
-	m.settings = {
-		form: document.querySelector('#add-school'),
-		successCreateRedirectUrl: '.././school'
+	const m = {
+		settings: {
+			form: document.querySelector('#add-prof'),
+		},
+		IDField: {
+			school: document.querySelector('input[name="school_id"]'),
+			dept: document.querySelector('input[name="department_id"]')
+		},
+		field: {
+			school: $('.card-block input[name="school"]'),
+			dept: $('.card-block input[name="department"]')
+		},
+		data: {
+			school: null,
+			dept: null
+		},
+		url: {
+			fetchSchool: null,
+			fetchDept: null
+		},
+		successAdd: {
+			message: null,
+			redirectUrl: null
+		}
 	}
 
 	function handleSubmit(e) {
@@ -550,7 +511,131 @@ const addSchool = (function() {
 			contentType: false,
 			processData: false
 		})
-		.then(response => window.location.replace(m.settings.successCreateRedirectUrl))
+		.then(response => {
+			alert(m.successAdd.message)
+			window.location.replace(m.successAdd.redirectUrl+`/${response.id}`)
+		})
+		.fail(response => displayErrors(response.responseJSON))		
+	}
+
+	function loadSchoolData() {
+		if(m.data.school)
+			activateTypeahead(m.field.school, m.data.school)
+		else{
+	 		$.ajax(m.url.fetchSchool)
+			.then(response => activateTypeahead(m.field.school, response))
+		}
+	}
+
+	function loadDepartmentsData() {
+		if(m.data.dept)
+			activateTypeahead(m.field.dept, m.data.dept)
+		else{
+	 		$.ajax(m.url.fetchDept)
+			.then(response => activateTypeahead(m.field.dept, response))
+		}
+	}
+
+	/**
+	 * Activate type ahead and bind events
+	 * @param {JQuery} input
+	 * @param {Array} data
+	 */
+	function activateTypeahead(elem, data) {
+		let IDField = null
+
+		if(elem.attr('name') == 'school')
+			IDField = m.IDField.school
+		else
+			IDField = m.IDField.dept
+
+		elem.typeahead({
+			source: data,
+			minLength: 3,
+			items: 5,
+			afterSelect: function(item) {
+				IDField.value = item.id
+			}
+		})
+
+		// If entry does not exist
+		elem.on('blur',(e) => {
+			const isFound = data.filter(item => item.name == e.target.value)
+			if(isFound.length > 0)
+				IDField.value = isFound[0].id 
+			else
+				IDField.value = -1
+		})
+	}
+
+	/**
+	 * Display AJAX form errors on page
+	 * @param  {JSON} errors
+	 */
+	function displayErrors(errors) {
+		const errorDiv = m.settings.form.querySelector('.alert-danger')
+			  errorDiv.removeAttribute('style')
+
+		Object.keys(errors).forEach(err => {
+			errors[err].forEach(err => errorDiv.innerHTML += `<li>${err}</li>`)
+		})
+	}
+
+	/**
+	 * Clear the errors on page
+	 */
+	function clearErrors() {
+		const errorDiv = m.settings.form.querySelector('.alert-danger')
+			  errorDiv.setAttribute('style', 'display: none')
+			  errorDiv.innerHTML = ''
+	}
+
+	function bindUIEvents() {
+		m.settings.form.addEventListener('submit', handleSubmit)
+		$(m.settings.form).on('change keypress keydown', clearErrors)
+	}
+
+	m.init = (config) => {
+
+		// Configs
+		Object.keys(config).forEach(key => {
+			if(m.hasOwnProperty(key)) Object.assign(m[key], config[key])
+ 		})
+
+		loadSchoolData()
+		loadDepartmentsData()
+		bindUIEvents()
+	}
+
+	return m
+}())
+
+
+const addSchool = (function() {
+	const m = {}
+
+	m.settings = {
+		form: document.querySelector('#add-school'),
+		successAddRedirectUrl: '.././school',
+		successAddMessage: 'success'
+	}
+
+	function handleSubmit(e) {
+		e.preventDefault()
+
+		const url = e.target.getAttribute('action'),
+			   formData = new FormData(e.target)
+
+		$.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(response => {
+			alert(m.settings.successAddMessage)
+			window.location.replace(m.settings.successAddRedirectUrl)
+		})
 		.fail(response => displayErrors(response.responseJSON))
 	}
 
@@ -581,8 +666,13 @@ const addSchool = (function() {
 		$(m.settings.form).find('input').on('change keydown keypress', clearErrors)
 	}
 
-	m.init = () => {
+	m.init = (config) => {
 		bindUIEvents()
+
+		// Configs
+		Object.keys(config).forEach(key => {
+			if(m.settings[key]) m.settings[key] = config[key]
+		})
 	}
 
 	return m

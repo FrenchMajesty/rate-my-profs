@@ -1,7 +1,12 @@
 <?php
 
-// - add token in login password reset 
-// - report to admin in professor controller
+// - report anomality to admin in professor controller
+// - submit correction popup
+// - 'are you :professor'? link
+// -  add captcha and TOS on sign up
+// - Page for TOS, privacy policy
+// - Consider space for ads
+// - Fix slider on rate prof module
 
 Route::get('/', function () {
     return view('index');

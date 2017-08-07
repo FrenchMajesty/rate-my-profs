@@ -24,7 +24,7 @@
                                     <div class="btn-group col-md-6">
                                             <button class="btn btn-primary primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{__('sort by')}}</button>
 
-                                            <div class="dropdown-menu">
+                                            <div class="dropdown-menu dropdown-primary">
                                                 <a class="dropdown-item" href="#">{{__('most rated')}}</a>
                                                 <a class="dropdown-item" href="#">{{__('highest rated')}}</a>
                                                 <a class="dropdown-item" href="#">{{__('least difficult')}}</a>

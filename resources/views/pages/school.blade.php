@@ -34,8 +34,8 @@
 
                      <div class="more-details col-md-4">
                         <div class="card-block">                           
-                            <h2>Harvard University</h2>
-                            <p>Cambridge, MA.</p>
+                            <h2>{{ $school->name }}</h2>
+                            <p>{{ $school->location }}</p>
                             <a class="school-website" href="#">{{__('website')}}</a>
                             <button class="col-md-12 btn btn-primary primary marg-top-5">
                         {{__('rate this school')}}

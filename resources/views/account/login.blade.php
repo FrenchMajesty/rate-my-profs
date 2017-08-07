@@ -78,7 +78,6 @@
 						    </div>
 
 						    <div class="alert alert-danger" style="display: none"></div>
-						    <!-- input token hidden -->
 						    <div class="text-center">
 						        <button type="submit" class="btn primary">{{__('send email')}}</button>
 						    </div>

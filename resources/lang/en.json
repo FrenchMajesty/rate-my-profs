@@ -183,7 +183,9 @@
 	"profile": "Profile",
 	"view and edit": "View and edit",
 	"edit": "Edit",
-	"delete": "Delete"
+	"delete": "Delete",
+	"school submitted for review": "This school was succesfully submitted for reviewing by our moderators.",
+	"prof submitted for review": "This professor was succesfully submitted for reviewing by our moderators."
 }
 
 

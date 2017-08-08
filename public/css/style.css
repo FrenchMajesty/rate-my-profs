@@ -36,6 +36,9 @@ body {
 .marg-top-8 {
 	margin-top: 8em;
 }
+.marg-right-2 {
+	margin-right: 2em;
+}
 .float-r {
 	float: right;
 }
@@ -44,6 +47,9 @@ body {
     background-color: #828282;
     border-radius: 1em;
     padding-left: 10px;
+}
+.marg-navbar {
+	margin-top: 4.5em;
 }
 .category {
 	padding-left: 1em;
@@ -210,9 +216,6 @@ body {
 }
 .like-buttons a {
 	color: inherit;
-}
-.vote-up {
-	margin-right: 2em;
 }
 .vote-up:hover {
 	color: green!important;

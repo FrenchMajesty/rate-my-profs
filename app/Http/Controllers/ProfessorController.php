@@ -84,12 +84,23 @@ class ProfessorController extends Controller
            // report to admin
         }
 
+        $ratings = DB::table($this->ratingsTable)->where('prof_id', $prof->id);
+
+        if($ratings->count() > 0) {
+            $total['overall'] = $ratings->avg('overall_rating');
+            $total['difficulty'] = $ratings->avg('difficulty_rating');
+        }else {
+            $total = null;
+        }
+
         $department = Department::find($prof->department_id)->name;
 
         return view('pages.professor', [
             'professor' => $prof,
             'department' => $department,
-            'school' => $school
+            'school' => $school,
+            'ratings' => $ratings->get(),
+            'total' => $total
         ]);
     }
 

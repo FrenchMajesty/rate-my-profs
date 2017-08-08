@@ -686,7 +686,8 @@ const professorView = (function() {
 		settings: {
 			form: {
 				rating: document.querySelector('#rateProfessor form'),
-				correction: document.querySelector('#submitCorrection form')
+				correction: document.querySelector('#submitCorrection form'),
+				ratingsContainer: $('.student-reviews')
 			}
 		},
 		successRate: {

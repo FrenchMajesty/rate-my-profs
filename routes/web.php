@@ -7,6 +7,7 @@
 // - Page for TOS, privacy policy
 // - Consider space for ads
 // - Fix slider on rate prof module
+// -- add search query on pages links
 
 Route::get('/', function () {
     return view('index');

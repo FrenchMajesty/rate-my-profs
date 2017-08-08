@@ -13,13 +13,21 @@
             <div class="card professor-details">
                 <div class="row">
                     <div class="overall-rating col-md-4">
-                        <div class="card-block">               
+                        <div class="card-block">             
                             <i class="material-icons smiley green-text">tag_faces</i>
                             <section class="row rating">
-                                <h1 class="score green-text">5.0</h1> <span>{{__('avg rating')}}</span>
+                                <h1 class="score green-text">
+                                @if($total) {{ number_format($total['overall'],1) }} 
+                                @else --
+                                @endif
+                                </h1> <span>{{__('avg rating')}}</span>
                             </section>
                             <section class="row rating">
-                                <h1 class="score green-text">4.5</h1> <span>{{__('avg difficulty')}}</span>
+                                <h1 class="score green-text">
+                                @if($total) {{ number_format($total['difficulty'],1) }}
+                                @else --
+                                @endif
+                                </h1> <span>{{__('avg difficulty')}}</span>
                             </section>
                         </div>
                     </div>
@@ -49,47 +57,70 @@
             </div>
             <div class="student-reviews">
                 <div class="card-block">
-                    <h4 class="card-title">{{__('student reviews')}}<span class="float-r">
-                        <button class="btn btn-primary primary" data-toggle="modal" data-target="#rateProfessor" >{{__('rate this prof')}}</button>
-                    </span></h4>
+                    <h4 class="card-title">{{__('student reviews')}}
 
-                    <div class="reviews-container">
-                        <section class="card review">
-                            <div class="row">
-                                <div class="rating-box col-md-2">
-                                    {{__('rating')}}<br>
-                                    <h3>5</h3>
-                                    {{__('difficulty')}}<br>
-                                    <h3>3.5</h3>
-                                </div>
-                                <div class="comment col-md-10 row">
-                                    <div class="class-info col-md-3">
-                                    <h5>{{__('class')}}: MATH2018</h5><br>
-                                    <p><b>{{__('txtbook used')}}</b>: {{__('no')}}</p>
-                                    <p><b>{{__('would take again')}}</b>: {{__('yes')}}</p>
-                                    <p><b>{{__('grade received')}}</b>: B+</p>
+                    @if(count($ratings) > 0)
+                        <span class="float-r">
+                        <button class="btn btn-primary primary" data-toggle="modal" data-target="#rateProfessor">{{__('rate this prof')}}</button>
+                        </span>
+                    @endif
+                    </h4>
+                    @if(count($ratings) > 0)
+                        @foreach ($ratings as $rating)
+                        <?php $class = json_decode($rating->class_details, true); ?>
+                            <div class="reviews-container">
+                                <section class="card review">
+                                    <div class="row">
+                                        <div class="rating-box col-md-2">
+                                            {{__('rating')}}<br>
+                                            <h3>{{ $rating->overall_rating }}</h3>
+                                            {{__('difficulty')}}<br>
+                                            <h3>{{ $rating->difficulty_rating }}</h3>
+                                        </div>
+                                        <div class="comment col-md-10 row">
+                                            <div class="class-info col-md-3">
+                                            <h5>{{__('class')}}: {{ $class['code'] }}</h5><br>
+                                            <p><b>{{__('txtbook used')}}</b>: {{__($class['textbook'] ? 'yes' : 'no')}}</p>
+                                            <p><b>{{__('would take again')}}</b>: {{__($class['retake'] ? 'yes' : 'no')}}</p>
+                                            <p><b>{{__('grade received')}}</b>: {{ $class['grade'] }} </p>
+                                            </div>
+                                            <div class="col-md-9" style="position: relative;">
+                                                {{ $rating->comment }}
+                                                <section class="like-buttons row">
+                                                    <a href="#" class="vote-up">
+                                                        {{__(':count ppl found helpful', ['count' => 0])}} 
+                                                        <i class="material-icons">thumb_up</i>
+                                                    </a>
+                                                    <a href="#" class="vote-down">
+                                                        {{__(':count ppl found unhelpful', ['count' => 0])}} 
+                                                        <i class="material-icons">thumb_down</i>
+                                                    </a>
+                                                </section>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-9">
-                                        Most amazing, caring teacher. She goes out of her way to help her students pass, but you do have to put in the effort and time. I hate math and it hates me back, it is very challenging for me. Her encouragement and is the only thing that kept me going and I passed. Thank you , Thank you Vicki Gatewood!!!
-                                        <section class="like-buttons row">
-                                            <a href="#" class="vote-up">
-                                                {{__(':count ppl found helpful', ['count' => 3])}} 
-                                                <i class="material-icons">thumb_up</i>
-                                            </a>
-                                            <a href="#" class="vote-down">
-                                                {{__(':count ppl found unhelpful', ['count' => 0])}} 
-                                                <i class="material-icons">thumb_down</i>
-                                            </a>
-                                        </section>
+                                    <div class="card-footer">
+                                        <li class="comment-date"><i class="fa fa-clock-o"></i>{{ date('m-d-Y',strtotime($rating->created_at)) }}</li>
+                                        <a class="float-right" href="#">{{__('report rating')}} </a>
                                     </div>
+                                </section>
+                            </div>
+                        @endforeach
+                        <div class="row marg-top-2">
+                            <button class="btn primary mx-auto" data-toggle="modal" data-target="#rateProfessor">{{__('rate this prof')}}</button>
+                        </div>
+                    @else
+                        <div class="row">
+                            <div class="card col-md-12">
+                                <div class="card-block text-center">
+                                    <h4 class="black-text">{{__('no ratings for this prof yet')}}</h4>
+                                    <button class="btn amber mx-auto">
+                                        {{__('be the first')}}
+                                    </button>
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <li class="comment-date"><i class="fa fa-clock-o"></i> 08/10/2015</li>
-                                <a class="float-right" href="#">{{__('report rating')}} </a>
-                            </div>
-                        </section>
-                    </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -24,6 +24,9 @@ body {
 .marg-top-5 {
 	margin-top: 5em;
 }
+.marg-top-2 {
+	margin-top: 2em;
+}
 .marg-top-3 {
 	margin-top: 3em;
 }
@@ -80,16 +83,16 @@ body {
 	text-align: center;
 }
 .overall-rating .rating {
-	padding: 0 2em;
 	margin-top: 1em;
 }
 .overall-rating .rating .score {
+	margin-left: 20%;
 	line-height: 50px;
     font-size: 4em;
     font-weight: 400;
 }
 .professor-details .overall-rating .rating > span {
-	width: 40%;
+	width: 30%;
 	margin-left: 1.5em;
 	color: black;
 }
@@ -201,6 +204,9 @@ body {
 	font-size: .7em;
     float: right;
     margin: 2em;
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }
 .like-buttons a {
 	color: inherit;

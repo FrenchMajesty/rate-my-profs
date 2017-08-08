@@ -6,17 +6,11 @@
 // -  add captcha and TOS on sign up
 // - Page for TOS, privacy policy
 // - Consider space for ads
-// - Fix slider on rate prof module
-// -- add search query on pages links
+// - add search query on pages links
 
 Route::get('/', function () {
     return view('index');
 })->name('index');
-
-
-/*Route::get('/prof', function () {
-    return view('pages.professor');
-})->name('view.prof');*/
 
 Route::get('/prof/{id?}', ['as' => 'view.prof', 'uses' => 'ProfessorController@load']);
 
@@ -24,17 +18,9 @@ Route::get('/school/{id?}',['as' => 'view.school', 'uses' => 'SchoolController@l
 
 Route::post('/prof/{id?}', ['as' => 'rate.prof', 'uses' => 'ProfessorController@rate']);
 
-/*Route::get('/school', function () {
-    return view('pages.school');
-})->name('view.school');*/
+Route::post('/prof/rate/review', ['as' => 'rate.review.prof', 'uses' => 'RatingController@rateProfReview']);
 
-Route::get('/signup', function () {
-    return view('account.signup');
-});
-
-Route::get('/signin', function () {
-    return view('account.login');
-});
+//Route::post('/school/rate', ['as' => 'rate.review.school', 'uses' => 'RatingController@rateSchoolReview']);
 
 Route::get('/account', function () {
     return view('account.profile');

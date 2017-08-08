@@ -46,7 +46,7 @@
                         <div class="card-block">
                             <h4>{{ $school->name }}</h4>
                             <span>{{__('located in :location',['location' => $school->location])}}.</span>
-                            <p><a href="#">{{__('check out :count profs at school', ['count' => 7])}}</a></p>
+                            <p><a href="#">{{__('check out :count profs at school', ['count' => 8])}}</a></p>
                             <div class="dropdown-divider"></div><br>
                             <span>{{__('prof in dep of')}}</span>
                             <b>{{ $department }}</b>
@@ -61,14 +61,14 @@
 
                     @if(count($ratings) > 0)
                         <span class="float-r">
-                        <button class="btn btn-primary primary" data-toggle="modal" data-target="#rateProfessor">{{__('rate this prof')}}</button>
+                        <button class="btn amber" data-toggle="modal" data-target="#rateProfessor">{{__('rate this prof')}}</button>
                         </span>
                     @endif
                     </h4>
                     @if(count($ratings) > 0)
                         @foreach ($ratings as $rating)
                         <?php $class = json_decode($rating->class_details, true); ?>
-                            <div class="reviews-container">
+                            <div class="reviews-container" data-id="{{ $rating->id }}" data-prof="{{ $rating->prof_id }}">
                                 <section class="card review">
                                     <div class="row">
                                         <div class="rating-box col-md-2">
@@ -87,13 +87,13 @@
                                             <div class="col-md-9" style="position: relative;">
                                                 {{ $rating->comment }}
                                                 <section class="like-buttons row">
-                                                    <a href="#" class="vote-up">
-                                                        {{__(':count ppl found helpful', ['count' => 0])}} 
-                                                        <i class="material-icons">thumb_up</i>
+                                                    <a href="#" class="vote-up marg-right-2">
+                                                        {{__(':count ppl found helpful', ['count' => $rating->upvote])}} 
+                                                        <i class="material-icons vote-up">thumb_up</i>
                                                     </a>
                                                     <a href="#" class="vote-down">
-                                                        {{__(':count ppl found unhelpful', ['count' => 0])}} 
-                                                        <i class="material-icons">thumb_down</i>
+                                                        {{__(':count ppl found unhelpful', ['count' => $rating->downvote])}} 
+                                                        <i class="material-icons vote-down">thumb_down</i>
                                                     </a>
                                                 </section>
                                             </div>
@@ -107,7 +107,7 @@
                             </div>
                         @endforeach
                         <div class="row marg-top-2">
-                            <button class="btn primary mx-auto" data-toggle="modal" data-target="#rateProfessor">{{__('rate this prof')}}</button>
+                            <button class="btn amber mx-auto" data-toggle="modal" data-target="#rateProfessor">{{__('rate this prof')}}</button>
                         </div>
                     @else
                         <div class="row">
@@ -275,6 +275,9 @@
             successRate: {
                 message: '{{__('rating sucessfully sent')}}',
                 redirectUrl: '{{route('view.prof')}}/{{ $professor->id }}'
+            },
+            settings: {
+                voteUrl: '{{route('rate.review.prof')}}'
             }
         }
         professorView.init(config)

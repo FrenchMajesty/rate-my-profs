@@ -84,11 +84,20 @@ class ProfessorController extends Controller
            // report to admin
         }
 
-        $ratings = DB::table($this->ratingsTable)->where('prof_id', $prof->id);
+        $ratings2 = DB::table($this->ratingsTable)->where('prof_id', $prof->id);
+        $ratings = DB::select('SELECT r.id, r.prof_id,r.overall_rating, r.difficulty_rating, 
+            r.class_details, r.comment, r.created_at, SUM(CASE WHEN v.value > 0 THEN v.value ELSE 0 END) AS upvote,
+            SUM(CASE WHEN v.value < 0 THEN 1 ELSE 0 END) AS downvote
+                FROM prof_ratings r 
+                LEFT OUTER JOIN ratings_votes v 
+                ON r.id=v.rating_id 
+                WHERE r.prof_id = 2
+                GROUP BY r.id, r.prof_id, r.overall_rating, r.difficulty_rating, r.class_details, r.comment, r.created_at
+                ORDER BY r.id DESC', [$id]);
 
-        if($ratings->count() > 0) {
-            $total['overall'] = $ratings->avg('overall_rating');
-            $total['difficulty'] = $ratings->avg('difficulty_rating');
+        if($ratings2->count() > 0) {
+            $total['overall'] = $ratings2->avg('overall_rating');
+            $total['difficulty'] = $ratings2->avg('difficulty_rating');
         }else {
             $total = null;
         }
@@ -99,7 +108,7 @@ class ProfessorController extends Controller
             'professor' => $prof,
             'department' => $department,
             'school' => $school,
-            'ratings' => $ratings->get(),
+            'ratings' => $ratings,
             'total' => $total
         ]);
     }

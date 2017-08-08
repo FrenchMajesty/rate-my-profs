@@ -688,7 +688,8 @@ const professorView = (function() {
 				rating: document.querySelector('#rateProfessor form'),
 				correction: document.querySelector('#submitCorrection form'),
 				ratingsContainer: $('.student-reviews')
-			}
+			},
+			voteUrl: null
 		},
 		successRate: {
 			redirectUrl: null,
@@ -718,6 +719,26 @@ const professorView = (function() {
 
 	function handleSubmitCorrection(e) {
 		e.preventDefault()
+	}
+
+	function handleVote(e) {
+		e.preventDefault()
+
+		let parent = $(e.target).parents('.reviews-container'),
+			value = e.target.classList.contains('vote-up') ? 1 : -1
+			formData = new FormData()
+
+		formData.append('prof_id', parent.data('prof'))
+		formData.append('rating_id', parent.data('id'))
+		formData.append('value', value)
+
+		$.ajax(m.settings.voteUrl, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(_ => e.target.classList.add(value > 0 ? 'green-text' : 'red-text'))
 	}
 
 	function updateSlider(e) {
@@ -758,11 +779,12 @@ const professorView = (function() {
 				.on('change keydown keypress',() => { clearErrors(m.settings.form.correction) })
 		$(m.settings.form.rating).find('input')
 				.on('change keydown keypress input', () => { clearErrors(m.settings.form.rating) })
+		$('.vote-up, .vote-down').on('click', handleVote)
 	}
 
 	m.init = (config) => {
 		bindUIEvents()
-		console.log(m.slider)
+
 		// Configs
 		Object.keys(config).forEach(key => {
 			if(m[key]) Object.assign(m[key], config[key])

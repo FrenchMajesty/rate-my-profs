@@ -7,7 +7,7 @@
 
 @section ('content')
 		
-	<div class="row" style="margin-top: 5em">
+	<div class="row marg-navbar">
         @include ('partials.side-module')
         <div class="col-md-8 scrollable">
             <div class="card professor-details">

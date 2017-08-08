@@ -5,7 +5,7 @@
 @endsection
 
 @section ('content')
-	<section class="row" style="margin-top: 5em">
+	<section class="row marg-navbar">
 
 		@include ('partials.side-module')
 

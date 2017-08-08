@@ -113,6 +113,22 @@ class ProfessorController extends Controller
         ]);
     }
 
+    public function submitCorrection(Request $request) {
+
+        $this->validate($request, [
+            'problem' => 'required|string|min:10',
+            'email' => 'required|email',
+            'prof_id' => 'required|exists:professors,id'
+        ]);
+
+
+        return DB::table('corrections')->insertGetId([
+            'prof_id' => $request->prof_id,
+            'problem' => $request->problem,
+            'user' => $request->email
+        ]);
+    }
+
     public function loadAll() {
         return Professor::all();
     }

@@ -37,7 +37,7 @@
                             <h2>{{ $professor->name }},<br> {{ $professor->lastname }}</h2>
                             <p>
                             {{__('prof of')}} {{ strtolower($department) }}
-                            at <a href="{{ route('view.school') }}/{{ $school->id }}">{{ $school->name }}</a>, {{ $school->location }}.</p>
+                            at <a href="{{ route('school.view') }}/{{ $school->id }}">{{ $school->name }}</a>, {{ $school->location }}.</p>
                         </div>
                         <a href="#" class="self-identify">{{__('are you :name', ['name' => $professor->name])}}</a><br>
                         <a class="school-website" data-toggle="modal" data-target="#submitCorrection" href="#">{{__('submit correction')}}</a>
@@ -84,8 +84,8 @@
                                             <p><b>{{__('would take again')}}</b>: {{__($class['retake'] ? 'yes' : 'no')}}</p>
                                             <p><b>{{__('grade received')}}</b>: {{ $class['grade'] }} </p>
                                             </div>
-                                            <div class="col-md-9" style="position: relative;">
-                                                {{ $rating->comment }}
+                                            <div data-id="comment" class="col-md-9" style="position: relative;">
+                                                <span>{{ $rating->comment }}</span>
                                                 <section class="like-buttons row">
                                                     <a href="#" class="vote-up marg-right-2">
                                                         {{__(':count ppl found helpful', ['count' => $rating->upvote])}} 
@@ -100,8 +100,8 @@
                                         </div>
                                     </div>
                                     <div class="card-footer">
-                                        <li class="comment-date"><i class="fa fa-clock-o"></i>{{ date('m-d-Y',strtotime($rating->created_at)) }}</li>
-                                        <a class="float-right" href="#">{{__('report rating')}} </a>
+                                        <li class="comment-date"><i class="fa fa-clock-o"></i>{{ date('d M Y',strtotime($rating->created_at)) }}</li>
+                                        <a data-id="report" data-toggle="modal" data-target="#reportRating" class="float-right" href="#">{{__('report rating')}} </a>
                                     </div>
                                 </section>
                             </div>
@@ -125,7 +125,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="submitCorrection" tabindex="-1" role="dialog" aria-labelledby="{{__('send correction')}}" aria-hidden="true">
+    <div class="modal fade" id="submitCorrection" tabindex="-1" role="dialog" aria-labelledby="{{__('prof.correct')}}" aria-hidden="true">
         <div class="modal-dialog modal-notify modal-warning modal-side modal-top-right" role="document">
         <!--Content-->
         <div class="modal-content">
@@ -138,8 +138,9 @@
                 </button>
             </div>
 
-            <form method="POST" action="">
+            <form method="POST" action="{{route('prof.correction')}}">
             {{ csrf_field() }}
+            <input type="hidden" name="prof_id" value="{{ $professor->id }}">
                 <div class="modal-body">
                     <div class="text-center">
                         <i class="fa fa-check fa-4x mb-1 animated rotateIn"></i>
@@ -149,15 +150,56 @@
                     </div>
                     <section class="col-md-10 marg-top-3">
                         <div class="md-form">
-                            <textarea type="text" class="md-textarea"></textarea>
+                            <textarea type="text" name="problem" class="md-textarea" required></textarea>
                             <label>{{__('whats the problem')}}</label>
                         </div>
                         <div class="md-form">
-                            <input type="text" class="form-control">
+                            <input type="email" name="email" class="form-control" required>
                             <label>{{__('your email')}}</label>
                         </div>
                     </section>
                 </div>
+                <div class="alert alert-danger" style="display: none"></div>
+
+                <!-- Add captcha here -->
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-primary-modal">{{__('submit')}}</i></button>
+                    <button class="btn btn-outline-secondary-modal waves-effect" data-dismiss="modal">{{__('cancel')}}</button>
+                </div>
+            </form>
+        </div>
+        <!--/.Content-->
+        </div>
+    </div>
+
+    <div class="modal fade" id="reportRating" tabindex="-1" role="dialog" aria-labelledby="{{__('report this rating')}}" aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-warning modal-side modal-top-right" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">{{__('report rating')}}</p>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{route('prof.reportRating')}}">
+            {{ csrf_field() }}
+            <input type="hidden" name="rating_id">
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="fa fa-check fa-4x mb-1 animated rotateIn"></i>
+                        <p></p>
+                    </div>
+                    <section class="col-md-10 marg-top-3">
+                        <div class="md-form">
+                            <textarea type="text" name="issue" class="md-textarea" required></textarea>
+                            <label>{{__('whats wrong with rating')}}</label>
+                        </div>
+                    </section>
+                </div>
+                <div class="alert alert-danger" style="display: none"></div>
 
                 <!-- Add captcha here -->
                 <div class="modal-footer justify-content-center">
@@ -183,7 +225,7 @@
                 </button>
             </div>
 
-            <form method="POST" action="{{route('rate.prof')}}">
+            <form method="POST" action="{{route('prof.rate')}}">
             {{ csrf_field() }}
             <input type="hidden" name="prof_id" value="{{ $professor->id }}">
                 <div class="modal-body">
@@ -274,10 +316,10 @@
         const config = {
             successRate: {
                 message: '{{__('rating sucessfully sent')}}',
-                redirectUrl: '{{route('view.prof')}}/{{ $professor->id }}'
+                redirectUrl: '{{route('prof.view')}}/{{ $professor->id }}'
             },
             settings: {
-                voteUrl: '{{route('rate.review.prof')}}'
+                voteUrl: '{{route('prof.rateRating')}}'
             }
         }
         professorView.init(config)

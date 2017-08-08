@@ -687,15 +687,17 @@ const professorView = (function() {
 			form: {
 				rating: document.querySelector('#rateProfessor form'),
 				correction: document.querySelector('#submitCorrection form'),
+				report: document.querySelector('#reportRating form'),
 				ratingsContainer: $('.student-reviews')
 			},
-			voteUrl: null
+			voteUrl: null,
+			reportUrl : null
 		},
 		successRate: {
 			redirectUrl: null,
 			message: null
 		},
-		slider: document.querySelectorAll('input[type="range"]'),
+		slider: document.querySelectorAll('input[type="range"]')
 	}
 
 	function handleSubmitRating(e) {
@@ -719,6 +721,34 @@ const professorView = (function() {
 
 	function handleSubmitCorrection(e) {
 		e.preventDefault()
+
+		const formData = new FormData(e.target),
+			  url = e.target.getAttribute('action')
+
+		$.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(_ => $('#submitCorrection').modal('hide'))
+		.fail(response => displayErrors(e.target, response.responseJSON))
+	}
+
+	function handleReportRating(e) {
+		e.preventDefault()
+
+		const formData = new FormData(e.target),
+			  url = e.target.getAttribute('action')
+
+		$.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(_ => $('#reportRating').modal('hide'))
+		.fail(response => displayErrors(e.target, response.responseJSON))
 	}
 
 	function handleVote(e) {
@@ -739,6 +769,18 @@ const professorView = (function() {
 			processData: false
 		})
 		.then(_ => e.target.classList.add(value > 0 ? 'green-text' : 'red-text'))
+	}
+
+	/**
+	 * Update content of the modal
+	 * @param  {MouseEvent} event
+	 */
+	function prepareReportModal(e) {
+		const rating = $(e.target).parents('.reviews-container'),
+			  modal = document.querySelector('#reportRating')
+
+		modal.querySelector('.modal-body p').innerText = rating.find('div[data-id="comment"] span').text()
+		modal.querySelector('input[name="rating_id"]').value = rating.data('id')
 	}
 
 	function updateSlider(e) {
@@ -774,12 +816,16 @@ const professorView = (function() {
 	function bindUIEvents() {
 		m.settings.form.rating.addEventListener('submit', handleSubmitRating)
 		m.settings.form.correction.addEventListener('submit', handleSubmitCorrection)
+		m.settings.form.report.addEventListener('submit', handleReportRating)
 		m.slider.forEach(ranger => ranger.addEventListener('input', updateSlider))
-		$(m.settings.form.correction).find('input')
-				.on('change keydown keypress',() => { clearErrors(m.settings.form.correction) })
-		$(m.settings.form.rating).find('input')
-				.on('change keydown keypress input', () => { clearErrors(m.settings.form.rating) })
+		document.querySelectorAll('a[data-id="report"]').forEach(link => link.addEventListener('click', prepareReportModal))
 		$('.vote-up, .vote-down').on('click', handleVote)
+		$(m.settings.form.correction).find('input, textarea')
+				.on('change keydown keypress',() => { clearErrors(m.settings.form.correction) })
+		$(m.settings.form.rating).find('input, textarea')
+				.on('change keydown keypress input', () => { clearErrors(m.settings.form.rating) })
+		$(m.settings.form.report).find('input, textarea')
+				.on('change keydown keypress input', () => { clearErrors(m.settings.form.report) })
 	}
 
 	m.init = (config) => {

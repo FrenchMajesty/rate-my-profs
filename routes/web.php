@@ -3,7 +3,7 @@
 // - report anomality to admin in professor controller
 // - submit correction popup
 // - 'are you :professor'? link
-// -  add captcha and TOS on sign up
+// -  add captcha and TOS on sign up, ratings, corrections, report
 // - Page for TOS, privacy policy
 // - Consider space for ads
 // - add search query on pages links
@@ -12,13 +12,17 @@ Route::get('/', function () {
     return view('index');
 })->name('index');
 
-Route::get('/prof/{id?}', ['as' => 'view.prof', 'uses' => 'ProfessorController@load']);
+Route::get('/prof/{id?}', ['as' => 'prof.view', 'uses' => 'ProfessorController@load']);
 
-Route::get('/school/{id?}',['as' => 'view.school', 'uses' => 'SchoolController@load']);
+Route::get('/school/{id?}',['as' => 'school.view', 'uses' => 'SchoolController@load']);
 
-Route::post('/prof/{id?}', ['as' => 'rate.prof', 'uses' => 'ProfessorController@rate']);
+Route::post('/prof/{id?}', ['as' => 'prof.rate', 'uses' => 'ProfessorController@rate']);
 
-Route::post('/prof/rate/review', ['as' => 'rate.review.prof', 'uses' => 'RatingController@rateProfReview']);
+Route::post('/report/correction/prof', ['as' => 'prof.correction', 'uses' => 'ProfessorController@submitCorrection']);
+
+Route::post('/prof/rating/rate', ['as' => 'prof.rateRating', 'uses' => 'RatingController@rateProfReview']);
+
+Route::post('/prof/rating/report', ['as' =>'prof.reportRating', 'uses' => 'RatingController@reportRating']);
 
 //Route::post('/school/rate', ['as' => 'rate.review.school', 'uses' => 'RatingController@rateSchoolReview']);
 

@@ -1,12 +1,16 @@
 {
 	"rating": "Rating",
 	"ratings": "Rating",
+	"submit rating": "Submit rating",
+	"overall rating": "Overall rating",
+	"rating successfully sent": "Your rating succesfully submitted.",
 	"review": "Review",
 	"reviews": "Reviews",
 	"visitors": "Visitors",
 	"avg rating": "Average Rating",
 	"avg difficulty": "Average Difficulty",
 	"difficulty": "Difficulty",
+	"class difficulty": "Class difficulty",
 	":count reviews": ":count reviews",
 	"student reviews": "Student reviews",
 	"rate this prof": "Rate this professor",
@@ -69,6 +73,7 @@
 	"view all": "View all",
 	"search": "Search",
 	"submit correction": "Submit a correction",
+	"send correction": "Send correction",
 	"website": "Website",
 	":count profs found": ":count professors found",
 	":count schools found": ":count schools found",
@@ -185,7 +190,15 @@
 	"edit": "Edit",
 	"delete": "Delete",
 	"school submitted for review": "This school was succesfully submitted for reviewing by our moderators.",
-	"prof submitted for review": "This professor was succesfully submitted for reviewing by our moderators."
+	"prof submitted for review": "This professor was succesfully submitted for reviewing by our moderators.",
+	"your chance to be more specific": "Here's your chance to be more specific",
+	"your class code": "Your class code",
+	"class code eg": "e.g: STAT3404",
+	"your grade earned": "Your grade earned",
+	"textbook used": "Textbook used",
+	"would take again": "Would take again",
+	"no ratings for this prof yet": "There are no ratings for this professor yet.",
+	"be the first": "Be the first!"
 }
 
 

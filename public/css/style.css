@@ -57,6 +57,7 @@ body {
 .category > a {
 	width: 70px;
     padding: .5rem 0.5rem!important;
+    transition: .2s ease-out;
 }
 #side-module {
 	margin-top: 0.5em;
@@ -264,4 +265,8 @@ input[type=date]:focus:not([readonly])+label, input[type=datetime-local]:focus:n
 .scrollable {
 	overflow: scroll;
     height: 90vh;
+}
+.no-links {
+	color: #a5a5a5;
+    font-style: italic;
 }

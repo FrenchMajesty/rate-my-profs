@@ -39,18 +39,33 @@
                             {{__('prof of')}} {{ strtolower($department) }}
                             at <a href="{{ route('school.view') }}/{{ $school->id }}">{{ $school->name }}</a>, {{ $school->location }}.</p>
                         </div>
-                        <a href="#" class="self-identify">{{__('are you :name', ['name' => $professor->name])}}</a><br>
+                        <a href="{{route('register')}}" class="self-identify">{{__('are you :name', ['name' => $professor->name])}}</a><br>
                         <a class="school-website" data-toggle="modal" data-target="#submitCorrection" href="#">{{__('submit correction')}}</a>
                     </div>
                      <div class="colleagues col-md-4">
                         <div class="card-block">
                             <h4>{{ $school->name }}</h4>
                             <span>{{__('located in :location',['location' => $school->location])}}.</span>
-                            <p><a href="#">{{__('check out :count profs at school', ['count' => 8])}}</a></p>
+                            <p>
+                            @if($similar['school'] > 0)
+                                <a href="#">
+                                    {{__('check out :count profs at school', ['count' => $similar['school']])}}
+                                </a>
+                            @else
+                                <span class="no-links">{{__('no other prof in this school')}}.</span>
+                            @endif</p>
                             <div class="dropdown-divider"></div><br>
                             <span>{{__('prof in dep of')}}</span>
                             <b>{{ $department }}</b>
-                            <p><a href="#">{{__('check out :count profs at department', ['count' => 4])}}</a></p>
+                            <p>
+                            @if($similar['dept'] > 0)
+                                <a href="#">
+                                {{__('check out :count profs at department', ['count' => $similar['dept']])}}
+                                </a>
+                            @else
+                                <span class="no-links">{{__('no other prof in this dept')}}.</span>
+                            @endif
+                            </p>
                         </div>
                     </div>
                 </div>

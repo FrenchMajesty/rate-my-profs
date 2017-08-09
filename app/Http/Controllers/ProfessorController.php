@@ -84,6 +84,10 @@ class ProfessorController extends Controller
            // report to admin
         }
 
+        $query = DB::table('professors')->where('school_id', $prof->school_id);
+        $count['school'] = $query->count() -1;
+        $count['dept'] = $query->where('department_id', $prof->department_id)->count() -1;
+
         $ratings2 = DB::table($this->ratingsTable)->where('prof_id', $prof->id);
         $ratings = DB::select('SELECT r.id, r.prof_id,r.overall_rating, r.difficulty_rating, 
             r.class_details, r.comment, r.created_at, SUM(CASE WHEN v.value > 0 THEN v.value ELSE 0 END) AS upvote,
@@ -109,6 +113,7 @@ class ProfessorController extends Controller
             'department' => $department,
             'school' => $school,
             'ratings' => $ratings,
+            'similar' => $count,
             'total' => $total
         ]);
     }

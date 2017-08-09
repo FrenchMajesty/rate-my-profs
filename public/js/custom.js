@@ -15,12 +15,29 @@ const sideModule = (function(){
 		const card = $(`[data-id="${type}"]`),
 			  newCard = card.clone(true)
 
-		newCard.addClass('wow animated slideInLeft')
+		newCard.addClass('wow animated fadeIn')
 
-		$(module.settings.container).children().first().remove()
-		module.settings.container.appendChild(newCard[0])
+		$(module.settings.container).children().css('display','none').remove()
+		setTimeout(() => { 
+			module.settings.container.appendChild(newCard[0]) 
+			updateButtons(type)
+			bindEvents(newCard[0])
+		}, 100)
 
-		bindEvents(newCard[0])
+	}
+
+	/**
+	 * Update color state of buttons
+	 * @param  {String} current card
+	 */
+	function updateButtons(type) {
+		module.settings.buttons.forEach(btn => {
+			btn.classList.add('primary')
+			btn.classList.remove('blue')
+		})
+		const active = document.querySelector(`.category a[data-type="${type}"]`)
+			  active.classList.add('blue')
+			  active.classList.remove('primary')
 	}
 
 	/**

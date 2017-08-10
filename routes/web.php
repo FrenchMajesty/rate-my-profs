@@ -1,7 +1,6 @@
 <?php
 
 // - report anomality to admin in professor controller
-// - submit correction popup
 // - 'are you :professor'? link
 // -  add captcha and TOS on sign up, ratings, corrections, report
 // - Page for TOS, privacy policy
@@ -16,9 +15,10 @@ Route::get('/prof/{id?}', ['as' => 'prof.view', 'uses' => 'ProfessorController@l
 
 Route::get('/school/{id?}',['as' => 'school.view', 'uses' => 'SchoolController@load']);
 
-Route::post('/prof/{id?}', ['as' => 'prof.rate', 'uses' => 'ProfessorController@rate']);
+Route::post('/prof/{id?}', ['as' => 'prof.rate', 'uses' => 'RatingController@rateProf']);
 
-Route::post('/report/correction/prof', ['as' => 'prof.correction', 'uses' => 'ProfessorController@submitCorrection']);
+Route::post('/report/correction/prof', ['as' => 'prof.correction', 
+			'uses' => 'ProfessorController@submitCorrection']);
 
 Route::post('/prof/rating/rate', ['as' => 'prof.rateRating', 'uses' => 'RatingController@rateProfReview']);
 

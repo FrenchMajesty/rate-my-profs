@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\ProfRating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class RatingController extends Controller
 {
@@ -29,6 +31,36 @@ class RatingController extends Controller
 			]);
 		}
 	}
+
+	public function rateProf(Request $request) {
+
+        $user = Auth::check() ? $request->user()->email : NULL;
+        $ip = $request->ip();
+        $classInfo = [
+            'code' => $request->class_code,
+            'grade' => $request->class_grade,
+            'textbook' => $request->textbook || NULL,
+            'retake' => $request->retake || NULL
+        ];
+        $this->validate($request, [
+            'class_code' => 'required|string',
+            'class_grade' => 'required|string|max:5',
+            'overall' => 'required|numeric',
+            'difficulty' => 'required|numeric',
+            'prof_id' => 'required|exists:professors,id|unique:prof_ratings,prof_id,NULL,NULL,address_ip,'.$ip,
+            'comment' => 'required|string|min:15|max:350'
+        ]);
+
+        return ProfRating::create([
+            'user' => $user,
+            'prof_id' => $request->prof_id,
+            'overall_rating' => $request->overall,
+            'difficulty_rating' => $request->difficulty,
+            'class_details' => json_encode($classInfo),
+            'comment' => $request->comment,
+            'address_ip' => $ip
+        ]);
+    }
 
 	public function reportRating(Request $request) {
 

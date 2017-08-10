@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\Professor;
 use App\Department;
 use App\School;
-use Illuminate\Validation\Rule;
+use App\ProfRating;
+use App\Correction;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
 class ProfessorController extends Controller
 {   
@@ -17,7 +16,6 @@ class ProfessorController extends Controller
 
     public function create(Request $request) {
 
-    	$prof = new Professor;
     	$first = $request->first;
     	$middle = $request->middle?: '';
     	$last = $request->last;
@@ -44,36 +42,6 @@ class ProfessorController extends Controller
     	]);
     }
 
-    public function rate(Request $request) {
-
-        $user = Auth::check() ? $request->user()->email : NULL;
-        $ip = $request->ip();
-        $classInfo = [
-            'code' => $request->class_code,
-            'grade' => $request->class_grade,
-            'textbook' => $request->textbook || NULL,
-            'retake' => $request->retake || NULL
-        ];
-        $this->validate($request, [
-            'class_code' => 'required|string',
-            'class_grade' => 'required|string|max:5',
-            'overall' => 'required|numeric',
-            'difficulty' => 'required|numeric',
-            'prof_id' => 'required|exists:professors,id|unique:prof_ratings,prof_id,NULL,NULL,address_ip,'.$ip,
-            'comment' => 'required|string|min:15|max:350'
-        ]);
-
-        return DB::table($this->ratingsTable)->insertGetId([
-            'user' => $user,
-            'prof_id' => $request->prof_id,
-            'overall_rating' => $request->overall,
-            'difficulty_rating' => $request->difficulty,
-            'class_details' => json_encode($classInfo),
-            'comment' => $request->comment,
-            'address_ip' => $ip
-        ]);
-    }
-
     public function load($id) {
         $prof = Professor::where('id', $id)->where('approved', 1)->first();
         if(!$prof) abort(404);
@@ -84,20 +52,12 @@ class ProfessorController extends Controller
            // report to admin
         }
 
-        $query = DB::table('professors')->where('school_id', $prof->school_id);
+        $query = Professor::where('school_id', $prof->school_id);
         $count['school'] = $query->count() -1;
         $count['dept'] = $query->where('department_id', $prof->department_id)->count() -1;
 
-        $ratings2 = DB::table($this->ratingsTable)->where('prof_id', $prof->id);
-        $ratings = DB::select('SELECT r.id, r.prof_id,r.overall_rating, r.difficulty_rating, 
-            r.class_details, r.comment, r.created_at, SUM(CASE WHEN v.value > 0 THEN v.value ELSE 0 END) AS upvote,
-            SUM(CASE WHEN v.value < 0 THEN 1 ELSE 0 END) AS downvote
-                FROM prof_ratings r 
-                LEFT OUTER JOIN ratings_votes v 
-                ON r.id=v.rating_id 
-                WHERE r.prof_id = 2
-                GROUP BY r.id, r.prof_id, r.overall_rating, r.difficulty_rating, r.class_details, r.comment, r.created_at
-                ORDER BY r.id DESC', [$id]);
+        $ratings2 = ProfRating::where('prof_id', $prof->id);
+        $ratings = ProfRating::getAllRatings($prof->id);
 
         if($ratings2->count() > 0) {
             $total['overall'] = $ratings2->avg('overall_rating');
@@ -127,7 +87,7 @@ class ProfessorController extends Controller
         ]);
 
 
-        return DB::table('corrections')->insertGetId([
+        return Correction::create([
             'prof_id' => $request->prof_id,
             'problem' => $request->problem,
             'user' => $request->email

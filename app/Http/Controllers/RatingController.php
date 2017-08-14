@@ -65,6 +65,7 @@ class RatingController extends Controller
 	public function reportRating(Request $request) {
 
 		$this->validate($request, [
+			'type' => 'required|string',
 			'rating_id' => 'required',
 			'issue' => 'required|min:10'
 		]);

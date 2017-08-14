@@ -202,6 +202,7 @@
             <form method="POST" action="{{route('prof.reportRating')}}">
             {{ csrf_field() }}
             <input type="hidden" name="rating_id">
+            <input type="hidden" name="type" value="prof">
                 <div class="modal-body">
                     <div class="text-center">
                         <i class="fa fa-check fa-4x mb-1 animated rotateIn"></i>

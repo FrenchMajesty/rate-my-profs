@@ -511,8 +511,7 @@ const addProfessor = (function() {
 			fetchDept: null
 		},
 		successAdd: {
-			message: null,
-			redirectUrl: null
+			message: null
 		}
 	}
 
@@ -528,10 +527,7 @@ const addProfessor = (function() {
 			contentType: false,
 			processData: false
 		})
-		.then(response => {
-			alert(m.successAdd.message)
-			window.location.replace(m.successAdd.redirectUrl+`/${response.id}`)
-		})
+		.then(response => alert(m.successAdd.message))
 		.fail(response => displayErrors(response.responseJSON))		
 	}
 
@@ -852,6 +848,168 @@ const professorView = (function() {
 		Object.keys(config).forEach(key => {
 			if(m[key]) Object.assign(m[key], config[key])
 		})
+	}
+
+	return m
+}())
+
+
+const schoolView = (function() {
+	const m = {
+		settings: {
+			form: {
+				rating: document.querySelector('#rateSchool form'),
+				correction: document.querySelector('#submitCorrection form'),
+				report: document.querySelector('#reportRating form'),
+				ratingsContainer: $('.student-reviews')
+			},
+		},
+		url: {
+			vote: null
+		},
+		successRate: {
+			redirectUrl: null,
+			message: null
+		},
+		slider: document.querySelectorAll('input[type="range"]')
+	}
+
+	function handleSubmitRating(e) {
+		e.preventDefault()
+
+		const url = e.target.getAttribute('action'),
+			   formData = new FormData(e.target)
+
+		$.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(response => {
+			alert(m.successRate.message)
+			window.location.reload(true)
+		})
+		.fail(response => displayErrors(e.target, response.responseJSON))
+	}
+
+	function handleSubmitCorrection(e) {
+		e.preventDefault()
+
+		const formData = new FormData(e.target),
+			  url = e.target.getAttribute('action')
+
+		$.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(_ => $('#submitCorrection').modal('hide'))
+		.fail(response => displayErrors(e.target, response.responseJSON))
+	}
+
+	function handleReportRating(e) {
+		e.preventDefault()
+
+		const formData = new FormData(e.target),
+			  url = e.target.getAttribute('action')
+
+		$.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(_ => $('#reportRating').modal('hide'))
+		.fail(response => displayErrors(e.target, response.responseJSON))
+	}
+
+	function handleVote(e) {
+		e.preventDefault()
+
+		let parent = $(e.target).parents('rating'),
+			value = e.target.classList.contains('vote-up') ? 1 : -1
+			formData = new FormData()
+
+		formData.append('school_id', parent.data('school'))
+		formData.append('rating_id', parent.data('id'))
+		formData.append('value', value)
+
+		$.ajax(m.url.vote, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+		.then(_ => e.target.classList.add(value > 0 ? 'green-text' : 'red-text'))
+	}
+
+	/**
+	 * Update content of the reporting modal
+	 * @param  {MouseEvent} event
+	 */
+	function prepareReportModal(e) {
+		const rating = $(e.target).parents('rating'),
+			  modal = document.querySelector('#reportRating')
+
+		modal.querySelector('.modal-body p').innerText = rating.find('div.comment span').text()
+		modal.querySelector('input[name="rating_id"]').value = rating.data('id')
+	}
+
+	function updateSlider(e) {
+		const text = document.querySelector(`span[data-id="${e.target.name}"]`)
+			  text.innerText = e.target.value
+		e.target.setAttribute('value', e.target.value)
+	}
+
+	/**
+	 * Display AJAX form errors on page
+	 * @param {Element} elem
+	 * @param  {JSON} errors
+	 */
+	function displayErrors(elem, errors) {
+		const errorDiv = elem.querySelector('.alert-danger')
+			  errorDiv.removeAttribute('style')
+
+		Object.keys(errors).forEach(err => {
+			errors[err].forEach(err => errorDiv.innerHTML += `<li>${err}</li>`)
+		})
+	}
+
+	/**
+	 * Clear the errors on form
+	 * @param {Element} elem
+	 */
+	function clearErrors(elem) {
+		const errorDiv = elem.querySelector('.alert-danger')
+			  errorDiv.setAttribute('style', 'display: none')
+			  errorDiv.innerHTML = ''
+	}
+
+	function bindUIEvents() {
+		m.settings.form.rating.addEventListener('submit', handleSubmitRating)
+		m.settings.form.correction.addEventListener('submit', handleSubmitCorrection)
+		m.settings.form.report.addEventListener('submit', handleReportRating)
+		m.slider.forEach(ranger => ranger.addEventListener('input', updateSlider))
+		document.querySelectorAll('a[data-id="report"]').forEach(link => link.addEventListener('click', prepareReportModal))
+		$('.vote-up, .vote-down').on('click', handleVote)
+		$(m.settings.form.correction).find('input, textarea')
+				.on('change keydown keypress',() => { clearErrors(m.settings.form.correction) })
+		$(m.settings.form.rating).find('input, textarea')
+				.on('change keydown keypress input', () => { clearErrors(m.settings.form.rating) })
+		$(m.settings.form.report).find('input, textarea')
+				.on('change keydown keypress input', () => { clearErrors(m.settings.form.report) })
+	}
+
+	m.init = (config) => {
+		bindUIEvents()
+
+		if(config) {
+			Object.keys(config).forEach(key => {
+				if(m[key]) Object.assign(m[key], config[key])
+			})
+		}
 	}
 
 	return m

@@ -6,6 +6,8 @@
 // - Page for TOS, privacy policy
 // - Consider space for ads
 // - add search query on pages links
+// - work on mobile version
+// - use query builder on School ORM, SchoolRating ORM, 
 
 Route::get('/', function () {
     return view('index');
@@ -17,14 +19,21 @@ Route::get('/school/{id?}',['as' => 'school.view', 'uses' => 'SchoolController@l
 
 Route::post('/prof/{id?}', ['as' => 'prof.rate', 'uses' => 'RatingController@rateProf']);
 
+Route::post('/school/{id?}', ['as' => 'school.rate', 'uses' => 'RatingController@rateSchool']);
+
 Route::post('/report/correction/prof', ['as' => 'prof.correction', 
 			'uses' => 'ProfessorController@submitCorrection']);
+
+Route::post('/report/correction/school', ['as' => 'school.correction', 
+			'uses' => 'SchoolController@submitCorrection']);
 
 Route::post('/prof/rating/rate', ['as' => 'prof.rateRating', 'uses' => 'RatingController@rateProfReview']);
 
 Route::post('/prof/rating/report', ['as' =>'prof.reportRating', 'uses' => 'RatingController@reportRating']);
 
-//Route::post('/school/rate', ['as' => 'rate.review.school', 'uses' => 'RatingController@rateSchoolReview']);
+Route::post('/school/rating/rate', ['as' => 'school.rateRating', 'uses' => 'RatingController@rateSchoolReview']);
+
+Route::post('/school/rating/report', ['as' =>'school.reportRating', 'uses' => 'RatingController@reportRating']);
 
 Route::get('/account', function () {
     return view('account.profile');

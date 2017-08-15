@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\School;
+use App\Professor;
+use App\Correction;
+use App\SchoolRating;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SchoolController extends Controller
 {
+    protected $ratingsTable = 'school_ratings';
+
     public function create(Request $request) {
 
         $school = new School;
@@ -32,6 +38,49 @@ class SchoolController extends Controller
             'nickname' => $nickname,
             'location' => $city . ',' . $state,
             'website' => $website
+        ]);
+    }
+
+    public function submitCorrection(Request $request) {
+
+        $this->validate($request, [
+            'problem' => 'required|string|min:10',
+            'email' => 'required|email',
+            'school_id' => 'required|exists:schools,id'
+        ]);
+
+
+        return Correction::create([
+            'school_id' => $request->school_id,
+            'problem' => $request->problem,
+            'user' => $request->email
+        ]);
+    }
+
+    public function load($id) {
+        $school = School::where('id', $id)->where('approved', 1)->first();
+        if(!$school) abort(404);
+
+        $top = Professor::loadTopAtSchool($id);
+
+        $ratings2 = DB::table($this->ratingsTable)->where('school_id', $school->id)->get();
+        $ratings = SchoolRating::getAllRatings($school->id);
+
+        if($ratings2->count() > 0) {
+            $total['overall'] = $ratings2->avg('overall_rating');
+            $total['location'] = $ratings2->avg('location');
+            $total['facility'] = $ratings2->avg('facility');
+            $total['opportunity'] = $ratings2->avg('opportunity');
+            $total['social'] = $ratings2->avg('social');
+        }else {
+            $total = null;
+        }
+
+        return view('pages.school', [
+            'school' => $school,
+            'ratings' => $ratings,
+            'top' => $top,
+            'total' => $total
         ]);
     }
 

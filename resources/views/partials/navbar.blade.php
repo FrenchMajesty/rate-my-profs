@@ -6,7 +6,7 @@
         <strong>{{env('APP_NAME')}}</strong>
     </a>
     <div class="collapse navbar-collapse">
-        <form class="form-inline mr-auto col-md-4 offset-md-3">
+        <form class="form-inline mr-auto col-md-4 mx-auto">
             <input class="form-control search-bar" type="text" placeholder="Search">
         </form>
         <ul class="navbar-nav">

@@ -1,5 +1,9 @@
 @extends ('layout')
 
+@section ('navbar')
+  @include ('partials.navbar')
+@endsection
+
 @section ('content')
 	<div class="container marg-top-8">
         <div class="row">

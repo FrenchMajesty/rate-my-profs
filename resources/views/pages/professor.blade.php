@@ -140,7 +140,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="submitCorrection" tabindex="-1" role="dialog" aria-labelledby="{{__('prof.correct')}}" aria-hidden="true">
+    <div class="modal fade" id="submitCorrection" tabindex="-1" role="dialog" aria-labelledby="{{__('submit correction')}}" aria-hidden="true">
         <div class="modal-dialog modal-notify modal-warning modal-side modal-top-right" role="document">
         <!--Content-->
         <div class="modal-content">
@@ -331,8 +331,8 @@
     $(document).ready(() => {
         const config = {
             successRate: {
-                message: '{{__('rating sucessfully sent')}}',
-                redirectUrl: '{{route('prof.view')}}/{{ $professor->id }}'
+                message: '{{__('rating successfully sent')}}',
+                redirectUrl: '{{route('prof.view', [$professor->id])}}'
             },
             settings: {
                 voteUrl: '{{route('prof.rateRating')}}'

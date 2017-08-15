@@ -42,6 +42,9 @@ body {
 .float-r {
 	float: right;
 }
+.weight-500 {
+	font-weight: 500;
+}
 .navbar .search-bar {
 	width: 100%;
     background-color: #828282;
@@ -168,6 +171,9 @@ body {
 }
 .school-details .overall-rating .rating {
 	margin-left: 2em;
+}
+.school-details .more-details {
+	height: 350px;
 }
 .school-details .more-details p {
 	margin: 0;

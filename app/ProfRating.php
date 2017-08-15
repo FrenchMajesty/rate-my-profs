@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProfRating extends Model {
 	protected $fillable = ['user', 'prof_id', 'overall_rating', 'difficulty_rating','class_details',
-							'comment', 'address_ip'];
+					'comment', 'address_ip'];
 	protected $table = 'prof_ratings';
 
 	public static function getAllRatings($id) {

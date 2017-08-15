@@ -14,7 +14,7 @@
                                 <h4 class="card-title">{{__('find profs at')}}</h4>
                                 <p><b>Harvard University {{__('at :location', ['location' => 'Cambridge'])}}</b></p>
                                 <div class="md-form col-md-12">
-                                        <input type="text" class="form-control" placeholder="{{__('department name')}}" value="{{__('math')}}">
+                                        <input type="text" class="form-control" placeholder="{{__('department name')}}" value="{{__('math')}}" autofocus>
                                         <label>{{__('in dept of')}}</label>
                                     </div>
                                 <hr>

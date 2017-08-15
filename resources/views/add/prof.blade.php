@@ -79,8 +79,7 @@
 			fetchDept: '{{ route('fetch.departments') }}'
 		},
 		successAdd: {
-			message : '{{ __('prof submitted for review') }}',
-			redirectUrl : '{{ route('view.prof') }}'
+			message : '{{ __('prof submitted for review') }}'
 		}
 	}
 	addProfessor.init(config)

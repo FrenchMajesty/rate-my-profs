@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class SchoolRating extends Model {
 	protected $fillable = ['user', 'school_id', 'overall_rating', 'location','facility', 'opportunity',
-							'social', 'comment'];
+							'social', 'comment', 'address_ip'];
 	protected $table = 'school_ratings';
 
 	public static function getAllRatings($id) {

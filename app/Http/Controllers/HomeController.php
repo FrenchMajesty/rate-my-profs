@@ -65,4 +65,12 @@ class HomeController extends Controller
             'schools' => $qry->get()
         ]);
     }
+
+    public function fetchAll() {
+
+        $schools = School::where('approved','1')->get();
+        $profs = Professor::where('approved','1')->get();
+
+        return $schools->merge($profs);
+    }
 }

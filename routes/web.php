@@ -9,7 +9,9 @@
 // - work on mobile version
 // - use query builder on School ORM, SchoolRating ORM, 
 // - fix animation on side module
-// -standardize first 3 module on custom.js 
+// -standardize first 3 module on custom.js
+// - change links color 
+// - typeahead custom template
 
 Route::get('/', function () {
     return view('index');
@@ -50,6 +52,8 @@ Route::get('/add/school', function () {
 });
 
 Route::get('/search', 'HomeController@search')->name('pages.search');
+
+Route::get('/fetch/all', 'HomeController@fetchAll')->name('fetch.all');
 
 Route::get('/fetch/schools', 'SchoolController@loadAll')->name('fetch.schools');
 

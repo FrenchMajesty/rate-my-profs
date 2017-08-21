@@ -5,9 +5,9 @@
     <a class="navbar-brand" href="{{ route('index') }}">
         <strong>{{env('APP_NAME')}}</strong>
     </a>
-    <div class="collapse navbar-collapse">
-        <form class="form-inline mr-auto col-md-4 mx-auto">
-            <input class="form-control search-bar" type="text" placeholder="Search">
+    <div class="navbar-collapse">
+        <form action="{{route('pages.search')}}" class="form-inline col-md-4 mx-auto" style="position: static">
+            <input class="form-control search-bar" type="text" name="search" placeholder="{{__('search')}}" autocomplete="off">
         </form>
         <ul class="navbar-nav">
             <li class="nav-item active">

@@ -26,7 +26,6 @@
 					<div class="list-group">
 					<?$itemCounter = 1 ?>
 					@foreach($profs as $prof)
-					<?php for($i = 0; $i < 3; $i++) { ?>
 					<a href="{{route('prof.view',[$prof->id])}}" data-pos={{$itemCounter}} class="list-group-item list-group-item-action flex-column align-items-start">
 					    <div class="d-flex w-100 justify-content-between">
 					      <h5 class="mb-1"><i class="material-icons">person</i> {{__('prof')}}</h5>
@@ -36,10 +35,8 @@
 					    <small>{{$prof->school}}, {{$prof->department}}</small>
 					  </a>
 					  <? $itemCounter++ ?>
-					  <?php } ?>
 					@endforeach
 					@foreach($schools as $school)
-					<?php for($i = 0; $i < 3; $i++) { ?>
 					<a href="{{route('school.view',[$school->id])}}" data-pos={{$itemCounter}} class="list-group-item list-group-item-action flex-column align-items-start">
 					    <div class="d-flex w-100 justify-content-between">
 					      <h5 class="mb-1"><i class="material-icons">school</i> {{__('school')}}</h5>
@@ -49,7 +46,6 @@
 					    <small>{{__('located in :location', ['location' => $school->location])}}</small>
 					  </a>
 					  <? $itemCounter++ ?>
-					  <?php } ?>
 					@endforeach
 					</div><br>
 					<nav class="col-md-12 card card-body">
@@ -81,7 +77,7 @@
 <script type="text/javascript">
 	$(document).ready(() => {
 		const config = {
-			settings: { pageLength: 2, maxPagination: 3 }
+			settings: { pageLength: 15, maxPagination: 3 }
 		}
 		sideModule.init()
 		searchResults.init(config)

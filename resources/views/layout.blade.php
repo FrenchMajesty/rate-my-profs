@@ -42,6 +42,14 @@
     <script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/bootstrap-typeahead.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/custom.js')}}"></script>
+    <script type="text/javascript">
+        $(document).ready(() => {
+            const config = {
+                search: { fetchUrl: '{{route('fetch.all')}}' }
+            }
+        if(document.querySelector('.search-bar')) searchBar.init(config)
+        })
+    </script>
     @yield ('js')
 </body>
 

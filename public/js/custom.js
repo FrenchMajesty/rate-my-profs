@@ -1237,7 +1237,7 @@ const searchResults = (function () {
 			  btns = {
 				first: visibleBtns[1].querySelector('b').innerText,
 				last: visibleBtns[visibleBtns.length-2].querySelector('b').innerText,
-				current: from //.find('b').text()
+				current: from
 			}
 
 		if(direction == 'right') {
@@ -1292,4 +1292,48 @@ const searchResults = (function () {
 	return m
 }())
 
+
+/*
+    |--------------------------------------------------------------------------
+    | Search Bar Module
+    |--------------------------------------------------------------------------
+    |
+    | This module is for all the operations performed on the search list page
+    | like the pagination
+    |
+    */
+   
+const searchBar = (function () {
+	const m = {
+		search: { data: null, fetchUrl: null }
+	}
+
+	function loadData() {
+		if(m.search.data)
+			activateTypeahead(m.search.data)
+		else
+			$.ajax(m.search.fetchUrl).then(activateTypeahead)
+	}
+
+	function activateTypeahead(data) {
+		const template = `<a href="school/{{id}}">{{name}} - {{id}}</a>`
+
+		$('input[name="search"]').typeahead({
+			source: data,
+			minLength: 3,
+			items: 7
+		})
+	}
+
+	m.init = (config) => {
+		if(config) {
+			Object.keys(config).forEach(key => {
+				if(m[key]) Object.assign(m[key], config[key])
+			})
+		}
+
+		loadData()
+	}
+	return m
+}())
 

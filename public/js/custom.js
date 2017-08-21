@@ -1,3 +1,22 @@
+$(document).ready(() => {
+	new WOW().init()
+
+	$.ajaxSetup({
+	    headers: {
+	        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	    }
+	})
+})
+
+/*
+    |--------------------------------------------------------------------------
+    |  Side Module Module
+    |--------------------------------------------------------------------------
+    |
+    | This module contains all operations performed on the side module like
+    | the animation and the search functions
+    |
+    */
 const sideModule = (function(){
 	const module = {}
 
@@ -127,6 +146,15 @@ const sideModule = (function(){
 }())
 
 
+/*
+    |--------------------------------------------------------------------------
+    | Index Component Module
+    |--------------------------------------------------------------------------
+    |
+    | This module is used for all operations performed on the main index page
+    | container like the animation and search functions
+    |
+    */
 const indexComponent = (function () {
 	const m = {}
 
@@ -226,6 +254,15 @@ const indexComponent = (function () {
 }())
 
 
+/*
+    |--------------------------------------------------------------------------
+    | Sign Up Module
+    |--------------------------------------------------------------------------
+    |
+    | This module is for all the operations performed on the registration page
+    | like changing card and form handling
+    |
+    */
 const signUp = (function () {
 	const m = {}
 
@@ -316,6 +353,16 @@ const signUp = (function () {
 	return m
 }())
 
+
+/*
+    |--------------------------------------------------------------------------
+    | Login Script Module
+    |--------------------------------------------------------------------------
+    |
+    | This module is for all operations performed on the login page like the
+    | form handling and the animation
+    |
+    */
 const loginScript = (function() {
 	const m = {}
 
@@ -427,6 +474,15 @@ const loginScript = (function() {
 
 }())
 
+/*
+    |--------------------------------------------------------------------------
+    | Reset Password Script Module
+    |--------------------------------------------------------------------------
+    |
+    | This module is for all the operations performed on the reset password page
+    | like form handling
+    |
+    */
 const resetPasswordScript = (function() {
 	const m = {}
 
@@ -489,6 +545,15 @@ const resetPasswordScript = (function() {
 }())
 
 
+/*
+    |--------------------------------------------------------------------------
+    | Add Professor Module
+    |--------------------------------------------------------------------------
+    |
+    | This module is for all the operations performed on the page to add a
+    | professor like pre loading data and form handling 
+    |
+    */
 const addProfessor = (function() {
 	const m = {
 		settings: {
@@ -624,6 +689,15 @@ const addProfessor = (function() {
 }())
 
 
+/*
+    |--------------------------------------------------------------------------
+    | Add School Module
+    |--------------------------------------------------------------------------
+    |
+    | This module is for all the operations performed on the page to add a 
+    | school like form handling
+    |
+    */
 const addSchool = (function() {
 	const m = {
 		settings: {
@@ -694,6 +768,15 @@ const addSchool = (function() {
 }())
 
 
+/*
+    |--------------------------------------------------------------------------
+    | Professor View Module
+    |--------------------------------------------------------------------------
+    |
+    | This module is for all the operations performed on the viewing page of a
+    | professor like form handling for ratings, reporting corrections and
+    | interacting with other ratings
+    */
 const professorView = (function() {
 	const m = {
 		settings: {
@@ -854,6 +937,15 @@ const professorView = (function() {
 }())
 
 
+/*
+    |--------------------------------------------------------------------------
+    | School View Module
+    |--------------------------------------------------------------------------
+    |
+    | This module is for all the operations performed on the viewing page for
+    | a school like form handling for rating, reporting and interacting with
+    | other ratings
+    */
 const schoolView = (function() {
 	const m = {
 		settings: {
@@ -1016,15 +1108,188 @@ const schoolView = (function() {
 }())
 
 
-$(document).ready(() => {
-	new WOW().init()
+/*
+    |--------------------------------------------------------------------------
+    | Search Results Module
+    |--------------------------------------------------------------------------
+    |
+    | This module is for all the operations performed on the search list page
+    | like the pagination
+    |
+    */
+   
+const searchResults = (function () {
+	const m = {
+		settings: { shiftSize: 2, pageLength: null, maxPagination: null },
+		page: 1,
+		count: null
+	}
 
-	$.ajaxSetup({
-	    headers: {
-	        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-	    }
-	})
-})
+	/**
+	 * Show and hide the appropriate results on the page
+	 */
+	function formatResults() {
+		const results = document.querySelectorAll('a[data-pos]')
+		if(results.length == 0) return
 
+		$(results).css('display','none')
+		results.forEach(item => {
+			const pos = item.getAttribute('data-pos')
+
+			if(m.page == 1 && pos <= m.settings.pageLength)
+				item.removeAttribute('style')
+			else if(pos > (m.page - 1) * m.settings.pageLength && pos <= m.page * m.settings.pageLength)
+				item.removeAttribute('style')
+		})
+	}
+
+	/**
+	 * Initialize pagination
+	 */
+	function setPaginator() {
+		const pageBtns = Array.from(document.querySelectorAll('.pagination .page-item')),
+		      pageCount = Math.ceil(m.count / m.settings.pageLength)
+
+		if(pageCount == 0) {
+			$('.pagination').parents('nav').remove()
+		}else if(pageCount > 1) {
+
+			for(i = 2; i <= pageCount; i++) {
+				newButton = $(pageBtns[1]).clone(true)
+				newButton.find('b').text(i)
+				if(i >= 2 + m.settings.maxPagination) newButton.css('display','none')
+				document.querySelector('.pagination').insertBefore(newButton[0], pageBtns[pageBtns.length-1])
+			}		
+		}
+	}
+
+	/**
+	 * Animate and update the pagination
+	 * @param  {Event} e
+	 */
+	function updatePagination(e) {
+		if(!e.target.classList.contains('page-item') && !e.target.classList.contains('page-link')) return
+		if(e.target.classList.contains('disabled')) return
+
+		const pageBtns = Array.from(document.querySelectorAll('.pagination .page-item')),
+			  visibleBtns = $('.pagination .page-item:visible'),
+			  maxPage = Math.ceil(m.count / m.settings.pageLength),
+			  btn = $(e.target)
+
+		// Update page number
+		if(btn.data('type') == 'next'){
+			m.page = maxPage
+			shiftPagination(m.page-1, 'right')
+		}else if(btn.data('type') == 'previous'){
+			m.page = 1
+			shiftPagination(m.page+1, 'left')
+		}else
+			m.page = btn.find('b').text()
+		
+		// Update disabled state
+		if(m.page != 1)
+			pageBtns[0].classList.remove('disabled')
+		else
+			pageBtns[0].classList.add('disabled')
+
+		if(m.page != maxPage)
+			pageBtns[pageBtns.length-1].classList.remove('disabled')
+		else
+			pageBtns[pageBtns.length-1].classList.add('disabled')
+
+		// Handle shifts of page buttons
+		if(m.settings.shiftSize < m.settings.maxPagination) {
+			btns = {
+				first: visibleBtns[1].querySelector('b').innerText,
+				last: visibleBtns[visibleBtns.length-2].querySelector('b').innerText,
+				current: btn.find('b').text()
+			}
+
+			if(btns.current > btns.last - m.settings.shiftSize && btns.current < maxPage)
+				shiftPagination(btn.find('b').text(), 'right')
+			else if(btns.current <= btns.first + m.settings.shiftSize)
+				shiftPagination(btn.find('b').text(), 'left')
+		}
+
+		// update results
+		formatResults()		 
+
+		// Set active class
+		pageBtns.map(pageButton => {
+			const num = pageButton.querySelector('b').innerText
+			if(m.page == num)
+				pageButton.classList.add('active')
+			else
+				pageButton.classList.remove('active')
+		})
+	}
+
+	/**
+	 * Shift the 'visible spectrum' of the pagination
+	 * @param  {String} from      from page number
+	 * @param  {String} direction direction shifted toward
+	 * @param  {Number} step      shift size
+	 */
+	function shiftPagination(from, direction, step = 2) {
+		const pageBtns = Array.from(document.querySelectorAll('.pagination .page-item')),
+			  visibleBtns = $('.pagination .page-item:visible'),
+			  maxPage = Math.ceil(m.count / m.settings.pageLength),
+			  btns = {
+				first: visibleBtns[1].querySelector('b').innerText,
+				last: visibleBtns[visibleBtns.length-2].querySelector('b').innerText,
+				current: from //.find('b').text()
+			}
+
+		if(direction == 'right') {
+			// Hide first buttons
+			visibleBtns.each((i,btn) => {
+				const val = btn.querySelector('b').innerText
+				if(i > 0 && maxPage - val > 1+step && i <= step)
+					btn.setAttribute('style','display: none')
+			})
+			// Show next buttons
+			pageBtns.some(btn => {
+				const val = btn.querySelector('b').innerText
+				if(!isNaN(val) && val > btns.last && val <= Number(btns.last) + step)
+					btn.removeAttribute('style')
+			})
+		}else if(direction == 'left') {
+			// Hide last buttons
+			visibleBtns.each((i, btn) => {
+				const val = btn.querySelector('b').innerText
+				if(i < visibleBtns.length-1 && i > visibleBtns.length - (2+step)
+					&& val > 2+step)
+					btn.setAttribute('style','display: none')
+			})
+			// Show first buttons				
+			pageBtns.some(btn => {
+				const val = btn.querySelector('b').innerText
+				if(!isNaN(val) && val < btns.first && val >= btns.first - step)
+					btn.removeAttribute('style')
+			})
+		}
+	}
+
+	function bindUIEvents() {
+		document.querySelector('.pagination').addEventListener('click', updatePagination)
+	}
+
+	m.init = (config) => {
+		if(config) {
+			Object.keys(config).forEach(key => {
+				if(m[key]) Object.assign(m[key], config[key])
+			})
+		}
+
+		const lastItem = document.querySelector('a[data-pos]:last-of-type')
+		m.count = lastItem ? lastItem.getAttribute('data-pos') : 0
+
+		bindUIEvents()
+		formatResults()
+		setPaginator()
+		document.querySelectorAll('.pagination .page-item')[1].classList.add('active')
+	}
+	return m
+}())
 
 

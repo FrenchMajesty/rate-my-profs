@@ -8,6 +8,8 @@
 // - add search query on pages links
 // - work on mobile version
 // - use query builder on School ORM, SchoolRating ORM, 
+// - fix animation on side module
+// -standardize first 3 module on custom.js 
 
 Route::get('/', function () {
     return view('index');
@@ -47,9 +49,7 @@ Route::get('/add/school', function () {
     return view('add.school');
 });
 
-Route::get('/search', function () {
-    return view('pages.search');
-});
+Route::get('/search', 'HomeController@search')->name('pages.search');
 
 Route::get('/fetch/schools', 'SchoolController@loadAll')->name('fetch.schools');
 

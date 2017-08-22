@@ -9,9 +9,9 @@
 // - work on mobile version
 // - use query builder on School ORM, SchoolRating ORM, 
 // - fix animation on side module
-// -standardize first 3 module on custom.js
+// - standardize first 3 module on custom.js
 // - change links color 
-// - typeahead custom template
+// - re organize search results order
 
 Route::get('/', function () {
     return view('index');

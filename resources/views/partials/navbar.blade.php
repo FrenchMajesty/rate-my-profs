@@ -11,7 +11,7 @@
         </form>
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a href="./school" class="nav-link">{{__('home')}} <span class="sr-only">(current)</span></a>
+                <a href="{{route('index')}}" class="nav-link">{{__('home')}} <span class="sr-only">(current)</span></a>
             </li>
             @if (Auth::guest())
                 <li class="nav-item">

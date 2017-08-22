@@ -2,6 +2,7 @@
 :root {
 	--primaryCol: #a6dd2c;
 	--secCol: #67a9d8;
+	--searchBarTypeAheadWidth: 50%;
 }
 body {
 	overflow-x: hidden!important;
@@ -270,9 +271,12 @@ input[type=date]:focus:not([readonly])+label, input[type=datetime-local]:focus:n
 }
 .scrollable {
 	overflow: scroll;
-    height: 90vh;
+    height: calc(100vh - 0px);
 }
 .no-links {
 	color: #a5a5a5;
     font-style: italic;
+}
+.navbar-collapse .typeahead {
+	width: var(--searchBarTypeAheadWidth);
 }

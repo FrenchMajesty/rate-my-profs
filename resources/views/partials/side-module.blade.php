@@ -12,15 +12,15 @@
                     <div class="card scrollable" data-id="similar">
                             <div class="card-block">
                                 <h4 class="card-title">{{__('find profs at')}}</h4>
-                                <p><b>Harvard University {{__('at :location', ['location' => 'Cambridge'])}}</b></p>
+                                <p><b>{{isset($school) ? $school->name : ''}} {{__('in :location', ['location' => isset($school) ? $school->location : ''])}}</b></p>
                                 <div class="md-form col-md-12">
-                                        <input type="text" class="form-control" placeholder="{{__('department name')}}" value="{{__('math')}}" autofocus>
+                                        <input type="text" name="department" data-provide="typeahead" class="form-control" placeholder="{{__('department name')}}" value="{{__('math')}}" autocomplete="off" autofocus>
                                         <label>{{__('in dept of')}}</label>
                                     </div>
                                 <hr>
-
+                                @if(count($suggestions) > 0)
                                 <section class="sort row">
-                                    <span style="line-height: 41px">{{__(':count profs found', ['count' => 37])}}</span>
+                                    <span style="line-height: 41px">{{__(':count profs found', ['count' => count($suggestions)])}}</span>
                                     <div class="btn-group col-md-6">
                                             <button class="btn btn-primary primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{__('sort by')}}</button>
 
@@ -31,25 +31,29 @@
                                             </div>
                                         </div>
                                 </section><br>
-                                    <div class="row">
+                                <div class="row">
                                     <div class="md-form col-md-11">
-                                        <input type="text" class="input-alternate" placeholder="{{__('prof name')}}">
+                                        <input type="text" name="prof" data-provide="typeahead" class="input-alternate" placeholder="{{__('prof name')}}">
                                     </div>
                                 </div>
                                 <ul class="teacher-list">
-                                <?php $i = 0; while($i < 20) { ?>
-                                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start teacher-list-result">
+                                    @foreach($suggestions as $prof)
+                                    <a href="{{route('prof.view',[$prof->id])}}" class="list-group-item list-group-item-action flex-column align-items-start teacher-list-result">
                                         <div class="d-flex w-100 justify-content-between">
-                                            <h5 class="mb-1">Barrack Obama</h5>
-                                            <span class="badge badge-primary badge-pill primary">4.8</span>
+                                            <h4 class="mb-1">{{$prof->name}} {{$prof->lastname}}</h4>
+                                            <span class="badge badge-primary badge-pill primary">{{number_format($prof->rating,1)}}</span>
                                           <!--small class="text-muted">3 days ago</small-->
                                         </div>
-                                        <small class="text-muted">{{__(':count reviews', ['count' => 23])}}</small>
+                                        <small class="text-muted">{{__(':count reviews', ['count' => $prof->ratings_count])}}</small>
                                     </a>
-                                    <?php $i++; } ?>
+                                    @endforeach
                                     <br>
-                                    <button class="col-md-12 btn btn-primary primary">{{__('load more')}}</button>
+                                    <button class="col-md-12 btn btn-primary primary">{{__('load more')}}
+                                    </button>
                                 </ul>
+                                @else
+                                    <h6 class="text-center">{{__('no similar prof')}}.</h6>
+                                @endif
 
                             </div>
                     </div>
@@ -68,10 +72,11 @@
                                     </fieldset>
                                 </div>
                                 <hr>
-                                <form data-form="name" data-active="1">
+                                <form action="{{route('pages.search')}}" class="school-search" data-form="name" data-active="1">
                                     <div class="row">
                                         <div class="md-form col-md-12">
-                                            <input type="text" class="form-control" placeholder="{{__('school name')}}">
+                                            <input type="text" name="school" data-provide="typeahead" class="form-control" placeholder="{{__('school name')}}" autocomplete="off">
+                                            <input type="hidden" name="sID">
                                         </div>
                                     </div>
                                     <div class="row offset-md-3">
@@ -84,15 +89,10 @@
                                             <button class="btn btn-primary primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%">{{__('select state')}}</button>
 
                                             <div class="dropdown-menu" style="width: 100%">
-                                                <a class="dropdown-item" href="#">State</a>
-                                                <a class="dropdown-item" href="#">State here</a>
-                                                <a class="dropdown-item" href="#">One more state here</a>
+                                                <a class="dropdown-item" href="#">{{__('no school yet')}}</a>
                                             </div>
                                         </div>
                                     </div><br>
-                                    <div class="row offset-md-3">
-                                        <button class="btn btn-primary primary">{{__('search')}}</button>
-                                    </div>
                                 </form>
                             </div>
                     </div>
@@ -111,16 +111,18 @@
                                 </fieldset>
                             </div>
                             <hr><br>
-                            <form data-form="name" data-active="1">
+                            <form action="{{route('pages.search')}}" data-form="name" data-active="1">
                                 <div class="row">
                                     <div class="md-form col-md-12">
-                                        <input type="text" class="form-control" placeholder="{{__('enter school')}}">
+                                        <input type="text" name="school" data-provide="typeahead" class="form-control" autocomplete="off">
+                                        <input type="hidden" name="sID">
                                         <label>{{__('looking for prof at')}}</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="md-form col-md-12">
-                                        <input type="text" class="form-control" placeholder="{{__('prof name')}}">
+                                        <input type="text" name="prof" data-provide="typeahead" class="form-control" autocomplete="off">
+                                        <input type="hidden" name="pID">
                                         <label>{{__('named')}}</label>
                                     </div>
                                 </div>
@@ -128,10 +130,11 @@
                                     <button class="btn btn-primary primary">{{__('search')}}</button>
                                 </div>
                             </form>
-                            <form data-form="school" data-active="0" style="display: none">
+                            <form action="{{route('pages.search')}}" data-form="school" data-active="0" style="display: none">
                                 <div class="row">
                                     <div class="md-form col-md-12">
-                                        <input type="text" class="form-control" placeholder="{{__('enter school')}}">
+                                        <input type="text" name="school" data-provide="typeahead" class="form-control" autocomplete="off">
+                                        <input type="hidden" name="sID">
                                         <label>{{__('looking for profs at')}}</label>
                                     </div>
                                 </div>
@@ -140,7 +143,9 @@
                                 </div>
                                 <div class="row col-md-12">
                                     <div class="md-form col-md-12">
-                                        <input type="text" class="form-control" placeholder="{{__('department name')}}">
+                                        <select name="dept" class="browser-default form-control">
+                                        <option selected disabled>{{__('department name')}}</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row offset-md-3">
@@ -162,10 +167,11 @@
                                         <label for="radio1">{{__('school')}}</label>
                                     </fieldset>
                                 </div>
-                                <form data-form="prof" data-active="1">
+                                <form action="{{route('pages.search')}}" data-form="prof" data-active="1">
                                     <div class="row">
                                         <div class="md-form col-md-12">
-                                            <input type="text" class="form-control" placeholder="{{__('prof name')}}">
+                                            <input type="text" name="prof" data-provide="typeahead" class="form-control" placeholder="{{__('prof name')}}" autocomplete="off">
+                                            <input type="hidden" name="pID">
                                             <label>{{__('i want to rate')}}</label>
                                         </div>
                                     </div>
@@ -174,10 +180,11 @@
                                     </div>
                                 </form>
 
-                                <form data-form="school" data-active="0" style="display: none">
+                                <form action="{{route('pages.search')}}" data-form="school" data-active="0" style="display: none">
                                     <div class="row">
                                         <div class="md-form col-md-12">
-                                            <input type="text" class="form-control" placeholder="{{__('school name')}}">
+                                            <input type="text" name="school" data-provide="typeahead" class="form-control" placeholder="{{__('school name')}}" autocomplete="off">
+                                            <input type="hidden" name="sID">
                                             <label>{{__('i want to rate')}}</label>
                                         </div>
                                     </div>

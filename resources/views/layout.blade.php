@@ -43,6 +43,13 @@
     <script type="text/javascript" src="{{asset('js/bootstrap-typeahead.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/custom.js')}}"></script>
     <script type="text/javascript">
+        const SIDE_MODULE_URL = {
+            url: {
+                search: '{{route('pages.search')}}',
+                fetchAll: '{{route('fetch.all')}}',
+                departments: '{{route('fetch.departments')}}'
+            }
+        }
         $(document).ready(() => {
             const config = {
                 search: { fetchUrl: '{{route('fetch.all')}}' }

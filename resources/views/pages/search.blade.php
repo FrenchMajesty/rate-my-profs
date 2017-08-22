@@ -79,7 +79,7 @@
 		const config = {
 			settings: { pageLength: 15, maxPagination: 3 }
 		}
-		sideModule.init()
+		sideModule.init(null, SIDE_MODULE_URL)
 		searchResults.init(config)
 	})
 </script>

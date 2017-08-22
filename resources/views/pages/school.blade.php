@@ -334,7 +334,7 @@
             }
         }
         schoolView.init(config)
-        sideModule.init('school')
+        sideModule.init('school', SIDE_MODULE_URL)
     })
     </script>
 @endsection

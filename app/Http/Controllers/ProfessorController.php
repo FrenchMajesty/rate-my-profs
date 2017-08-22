@@ -66,6 +66,15 @@ class ProfessorController extends Controller
             $total = null;
         }
 
+        $suggestions = (new Professor ())->selectRaw('professors.id, professors.name, professors.lastname,
+            AVG(prof_ratings.overall_rating) as rating, COUNT(prof_ratings.overall_rating) as ratings_count')
+                        ->leftJoin('prof_ratings','professors.id','=','prof_ratings.prof_id')
+                        ->groupBy('professors.id','professors.name','professors.lastname')
+                        ->where('school_id', $prof->school_id)
+                        ->where('department_id', $prof->department_id)
+                        ->whereNotIn('professors.id',[$prof->id])->get();
+
+
         $department = Department::find($prof->department_id)->name;
 
         return view('pages.professor', [
@@ -74,7 +83,8 @@ class ProfessorController extends Controller
             'school' => $school,
             'ratings' => $ratings,
             'similar' => $count,
-            'total' => $total
+            'total' => $total,
+            'suggestions' => $suggestions
         ]);
     }
 

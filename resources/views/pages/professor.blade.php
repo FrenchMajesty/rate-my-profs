@@ -339,7 +339,7 @@
             }
         }
         professorView.init(config)
-        sideModule.init('similar')
+        sideModule.init('{{count($suggestions) > 0 ? 'similar' : 'profs'}}', SIDE_MODULE_URL)
     })
     </script>
 @endsection

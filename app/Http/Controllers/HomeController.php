@@ -31,6 +31,7 @@ class HomeController extends Controller
     public function search(Request $request) {
 
         $schoolID = $request->input('sID');
+        $profID = $request->input('pID');
         $dept = $request->input('dept');
         $location = $request->input('location');
         $search = $request->input('search');
@@ -54,6 +55,11 @@ class HomeController extends Controller
             $qry = $qry->where('id', $schoolID);
         }
 
+        if($profID) { 
+            $query = $query->where('professors.id', $profID);
+            $qry = $qry->where('id','-1');
+        }
+
         if($dept)
             $query = $query->where('professors.department_id', $dept);
 
@@ -68,9 +74,14 @@ class HomeController extends Controller
 
     public function fetchAll() {
 
-        $schools = School::where('approved','1')->get();
-        $profs = Professor::where('approved','1')->get();
+        $schools = (new School ())->where('approved','1')->get();
+        $profs = (new Professor())->select('professors.id', 'professors.name', 'professors.lastname', 
+            'professors.school_id','schools.name as school','schools.id as schoolID')
+                ->where('professors.approved','1')->leftJoin('schools','professors.school_id','=','schools.id')->get();
 
-        return $schools->merge($profs);
+        $profs->each(function($item, $key) use ($schools) {
+            $schools->push($item);
+        });
+        return $schools;
     }
 }

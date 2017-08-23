@@ -89,7 +89,11 @@ const common = () => {
             return {
                 source: data.profs, minLength: 3,items: 4,
                 displayText: function(item) {
-                    return `${item.name} ${item.lastname}`
+                    const format = card.find('input[name="prof"]').data('format')
+
+                    return format == 'full' ?
+                              `${item.name} ${item.lastname} - ${item.school}`
+                            : `${item.name} ${item.lastname}`
                 },
                 afterSelect: function (item) {
                     profID.val(item.id)
@@ -134,7 +138,7 @@ const common = () => {
     _this.loadLocations = (data, options) => {
         let locations = data.filter(item => item.location)
             locations = Array.from(new Set(locations))
-        
+
         if(locations.length > 0) options.dropdown.html('')
         locations.forEach(itm => {
             options.dropdown.append(`<a class="dropdown-item" href="${options.searchUrl}?search=${itm.location}">

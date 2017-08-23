@@ -42,6 +42,7 @@
     <script type="text/javascript" sr="{{asset('js/compiled.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/bootstrap-typeahead.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/common.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/custom.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/custom-modules.js')}}"></script>
     <script type="text/javascript">

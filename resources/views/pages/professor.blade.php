@@ -326,7 +326,6 @@
 @endsection
 
 @section ('js')
-<script src="//cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js" type="text/javascript"></script>
     <script type="text/javascript">
     $(document).ready(() => {
         const config = {

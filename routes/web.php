@@ -5,17 +5,28 @@
 // -  add captcha and TOS on sign up, ratings, corrections, report
 // - Page for TOS, privacy policy
 // - Consider space for ads
-// - add search query on pages links
 // - work on mobile version
 // - use query builder on School ORM, SchoolRating ORM, 
 // - fix animation on side module
 // - standardize first 3 module on custom.js
 // - change links color 
 // - re organize search results order
+// - connect index component
+// - ENTIRE ADMIN PANEL
+// - USER PROFILE: test update on professor join account
 
 Route::get('/', function () {
     return view('index');
 })->name('index');
+
+Route::group(['middleware' => 'auth'], function() {
+
+	Route::get('/profile','UserController@profile')->name('profile');
+
+	Route::post('/profile/password','UserController@updatePassword')->name('profile.password');
+
+	Route::post('/profile/details','UserController@updateAccount')->name('profile.details');
+});
 
 Route::get('/prof/{id?}', ['as' => 'prof.view', 'uses' => 'ProfessorController@load']);
 
@@ -65,23 +76,23 @@ Route::post('/add/prof', 'ProfessorController@create')->name('add.prof');
 
 Route::post('/add/school', 'SchoolController@create')->name('add.school');	
 
-Route::group(['prefix' => '/admin', 'as' => 'admin', 'middleware' => '\App\Http\Middleware\IsAdmin'], function() {
+Route::group(['prefix' => '/admin', 'middleware' => '\App\Http\Middleware\IsAdmin'], function() {
 
 	Route::get('/', function () {
 	    return view('admin.index');
-	});
+	})->name('admin.index');
 
 	Route::get('/prof', function () {
 	    return view('admin.profs');
-	});
+	})->name('admin.profs');
 
 	Route::get('/school', function () {
 	    return view('admin.schools');
-	});
+	})->name('admin.schools');
 
 	Route::get('/users', function () {
 	    return view('admin.users');
-	});
+	})->name('admin.users');
 
 });
 

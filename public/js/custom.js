@@ -9,6 +9,62 @@ $(document).ready(() => {
 })
 
 /*
+    ###########################################################################
+    ## Common
+    ###########################################################################
+    #
+    # This object is used for all basic and repetitive operations performed in
+    # the application to avoid code repeat
+    #
+    */
+const common =  {
+
+	/**
+	 * Handle the submit of a general form
+	 * @param  {Event} e 
+	 */
+	handleSubmit: (e) => {
+		e.preventDefault()
+
+		const url = e.target.getAttribute('action'),
+			  formData = new FormData(e.target)
+
+		return $.ajax(url, {
+			type: 'POST',
+			data: formData,
+			contentType: false,
+			processData: false
+		})
+	},
+
+	/**
+	 * Show errors in an element
+	 * @param  {Element} elem   
+	 * @param  {JSON} errors
+	 */
+	displayErrors: (elem, errors) => {
+		const errorDiv = elem.querySelector('.error')
+		errorDiv.classList.add('alert','alert-danger')
+
+		Object.keys(errors).forEach(key => {
+			if(typeof key == 'string') 
+				errorDiv.innerHTML += `<li>${errors[key]}</li>`
+			else
+				errors[key].forEach(err => errorDiv.innerHTML += `<li>${err}</li>`)
+		})	
+	},
+
+	/**
+	 * Clear the errors shown in a form if any
+	 * @param  {Event} e
+	 */
+	clearErrors: (e) => {
+		const errorDiv = $(e.target).parents('form').find('.error')
+		errorDiv.removeClass('alert alert-danger').html('')
+	}
+}
+
+/*
     |--------------------------------------------------------------------------
     | Index Component Module
     |--------------------------------------------------------------------------
@@ -18,10 +74,11 @@ $(document).ready(() => {
     |
     */
 const indexComponent = (function () {
-	const m = {}
-
-	m.settings = {
-		buttons: document.querySelectorAll('#page-container .find-buttons button')
+	const m = {
+		settings: {
+			buttons: document.querySelectorAll('#page-container .find-buttons button')
+		},
+		search: { url: null }
 	}
 
 	function findProfessor(e) {
@@ -34,6 +91,10 @@ const indexComponent = (function () {
 		e.preventDefault()
 
 		return false
+	}
+
+	function loadData() {
+
 	}
 
 	/**
@@ -110,6 +171,7 @@ const indexComponent = (function () {
 
 	m.init = () => {
 		bindUIEvents()
+		loadData()
 	}
 
 	return m
@@ -677,7 +739,6 @@ const schoolView = (function() {
 	return m
 }())
 
-
 /*
     |--------------------------------------------------------------------------
     | Search Results Module
@@ -858,5 +919,50 @@ const searchResults = (function () {
 		setPaginator()
 		document.querySelectorAll('.pagination .page-item')[1].classList.add('active')
 	}
+
+	return m
+}())
+
+/*
+    |--------------------------------------------------------------------------
+    | User Profile Module
+    |--------------------------------------------------------------------------
+    |
+    | This module is for all the operations performed on the search list page
+    | like the pagination
+    |
+    */
+const userProfile = (function() {
+	const m = {
+		message: { details: null, password: null }
+	}
+
+	function handleSubmit(e) {
+		common.handleSubmit(e)
+		.then(_ => {
+			if(e.target.password){
+				alert(m.message.password)
+				e.target.reset()
+			}else
+				alert(m.message.details)
+		})
+		.fail(res => common.displayErrors(e.target, res.responseJSON))
+	}
+
+	function bindUIEvents() {
+		document.querySelectorAll('form').forEach(form => form.addEventListener('submit', handleSubmit))
+		$('input').on('keydown change input', common.clearErrors)
+	}
+
+	m.init = (config) => {
+		if(config) {
+			Object.keys(config).forEach(key => {
+				if(m[key]) Object.assign(m[key], config[key])
+			})
+		}
+
+		bindUIEvents()
+	}
+
 	return m
 }())

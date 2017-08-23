@@ -21,11 +21,11 @@
                 <li class="nav-item dropdown btn-group">
                     <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{__('account')}}</a>
                     <div class="dropdown-menu dropdown-menu-right dropdown" aria-labelledby="dropdownMenu1">
-                        <a class="dropdown-item primary-hover">{{__('my profile')}}</a>
+                        <a href="{{ route('profile') }}" class="dropdown-item primary-hover">{{__('my profile')}}</a>
                         <a href="{{ route('logout') }}" class="dropdown-item primary-hover" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                                      {{__('log out')}}</a>
                         @if(Auth::user()->account_type == 'admin') 
-                            <a class="dropdown-item primary-hover">{{__('control panel')}} ({{__('admin')}})</a>
+                            <a href="{{route('admin.index')}}" class="dropdown-item primary-hover">{{__('control panel')}} ({{__('admin')}})</a>
                         @endif
                     </div>
                 </li>

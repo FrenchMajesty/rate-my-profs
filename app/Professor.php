@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class Professor extends Model {
-	protected $fillable = ['name', 'school_id', 'department_id'];
+	protected $fillable = ['name', 'lastname', 'school_id', 'department_id'];
 
 	public static function loadTopAtSchool($id) {
 

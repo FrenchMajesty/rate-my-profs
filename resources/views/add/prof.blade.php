@@ -22,7 +22,7 @@
 					    {{ csrf_field() }}
 					    	<div class="md-form">
 						        <i class="fa fa-graduation-cap prefix"></i>
-						        <input type="text" name="school" value="{{ old('school') }}" class="form-control" autocomplete="off" data-provide="typeahead" data-items="8">
+						        <input type="text" name="school" value="{{ old('school') }}" class="form-control" autocomplete="off" data-provide="typeahead" placeholder="{{__('school name')}}" data-items="8">
 						        <label>{{__('school name')}}</label>
 						    </div>
 
@@ -40,7 +40,7 @@
 
 						    <div class="md-form">
 						        <i class="fa fa-user prefix"></i>
-						        <input type="text" name="last" value="{{ old('last') }}" class="form-control" required>
+						        <input type="text" name="lastname" value="{{ old('last') }}" class="form-control" required>
 						        <label>{{__('last name')}}</label>
 						    </div>
 

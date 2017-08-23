@@ -18,7 +18,7 @@ class ProfessorController extends Controller
 
     	$first = $request->first;
     	$middle = $request->middle?: '';
-    	$last = $request->last;
+    	$lastname = $request->lastname;
         $directory = $request->directory;
         $department = $request->department;
     	$dept_id = $request->department_id;
@@ -27,7 +27,7 @@ class ProfessorController extends Controller
         $this->validate($request, [
             'first' => 'required|alpha_dash',
             'middle' => 'nullable|alpha_dash',
-            'last' => 'required|alpha_dash',
+            'lastname' => 'required|alpha_dash',
             'school' => 'required|string|exists:schools,name',
             'directory' => 'nullable|string|url',
             'department' => 'required|string|exists:school_departments,name'
@@ -35,7 +35,7 @@ class ProfessorController extends Controller
 
     	return Professor::create([
             'name' => $first . ' ' . $middle,
-            'lastname' => $last,
+            'lastname' => $lastname,
             'department_id' =>  $dept_id,
         	'directory_url' =>  $directory,
         	'school_id' =>  $school_id

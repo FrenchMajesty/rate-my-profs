@@ -18,7 +18,7 @@
                                         <label>{{__('in dept of')}}</label>
                                     </div>
                                 <hr>
-                                @if(count($suggestions) > 0)
+                                @if(isset($suggestions) && count($suggestions) > 0)
                                 <section class="sort row">
                                     <span style="line-height: 41px">{{__(':count profs found', ['count' => count($suggestions)])}}</span>
                                     <div class="btn-group col-md-6">

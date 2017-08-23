@@ -34,6 +34,7 @@
     <!-- JQuery -->
     <script type="text/javascript" src="{{asset('js/jquery-3.1.1.min.js')}}"></script>
     <!-- Bootstrap tooltips -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="{{asset('js/tether.min.js')}}"></script>
     <!-- Bootstrap core JavaScript -->
     <script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
@@ -42,6 +43,7 @@
     <script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/bootstrap-typeahead.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/custom.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/custom-modules.js')}}"></script>
     <script type="text/javascript">
         const SIDE_MODULE_URL = {
             url: {

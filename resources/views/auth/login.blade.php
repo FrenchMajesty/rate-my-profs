@@ -99,6 +99,7 @@
 @endsection
 
 @section ('js')
+<script type="text/javascript" src="{{asset('js/custom-auth.js')}}"></script>
 <script type="text/javascript">
     loginScript.init()
 </script>

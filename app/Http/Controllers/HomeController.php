@@ -25,7 +25,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $data = $this->fetchAll();
+        return view('index', compact('data'));
     }
 
     public function search(Request $request) {

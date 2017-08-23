@@ -15,9 +15,7 @@
 // - ENTIRE ADMIN PANEL
 // - USER PROFILE: test update on professor join account
 
-Route::get('/', function () {
-    return view('index');
-})->name('index');
+Route::get('/', 'HomeController@index')->name('index');
 
 Route::group(['middleware' => 'auth'], function() {
 

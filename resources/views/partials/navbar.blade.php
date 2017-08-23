@@ -8,6 +8,7 @@
     <div class="navbar-collapse">
         <form action="{{route('pages.search')}}" class="form-inline col-md-4 mx-auto" style="position: static">
             <input class="form-control search-bar" type="text" name="search" placeholder="{{__('search')}}" autocomplete="off">
+            <input type="hidden">
         </form>
         <ul class="navbar-nav">
             <li class="nav-item active">

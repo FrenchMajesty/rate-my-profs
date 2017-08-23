@@ -247,26 +247,76 @@ const searchBar = (function () {
         search: { data: null, fetchUrl: null }
     }
 
+    function handleSearch(e) {
+        // If no valid value ID
+        if ((e.target.pID && e.target.pID != -1) || (e.target.sID && e.target.sID != -1))
+            e.target.search.value = ''
+    }
+
+    /**
+     * Load data for the search bar
+     * @return {Void} 
+     * @async
+     */
     function loadData() {
         if(m.search.data)
             activateTypeahead(m.search.data)
         else
-            $.ajax(m.search.fetchUrl).then(activateTypeahead)
+            $.ajax(m.search.fetchUrl).then(response => {
+                activateTypeahead(response)
+                m.search.data = response
+            })
     }
 
+    /**
+     * Activate typeahead on search bar
+     * @param  {Array} data
+     * @return {Void}      
+     */
     function activateTypeahead(data) {
-        const template = `<a href="school/{{id}}">{{name}} - {{id}}</a>`
+        let template = `<a href="school/{{id}}">{{name}} - {{id}}</a>`,
+            hidden = document.querySelector('.navbar-collapse input[type="hidden"]'),
+            full = ''
 
         $('input[name="search"]').typeahead({
             source: data,
             minLength: 3,
             items: 7,
             displayText: function(item) {
-                const full = item.lastname ?
-                             `${item.lastname} - ${item.school}` : `(${item.nickname}), ${item.location}`
+                const full = item.lastname ? `${item.lastname} - ${item.school}`
+                            : `(${item.nickname}), ${item.location}` 
+
                 return item.name + ' ' + full
+            },
+            afterSelect: function(item) {
+                if(item.lastname) {
+                    full = `${item.lastname} - ${item.school}`
+                    hidden.name = 'pID'
+                }else {
+                    full = `(${item.nickname}), ${item.location}` 
+                    hidden.name = 'sID'
+                }
+                document.querySelector('.search-bar').setAttribute('data-name', item.name)
+                hidden.value = item.id
             }
         })
+    }
+
+    /**
+     * Remove Search ID when value is not pre-selected
+     * @param  {Event} e event 
+     * @return {Void}   
+     */
+    function removeSearchID(e) {
+        console.log(e.target.getAttribute('data-name'))
+        const isFound = m.search.data.filter(item => item.name == e.target.getAttribute('data-name'))
+        if(isFound.length == 0)
+            document.querySelector('.navbar-collapse input[type="hidden"]').value = '-1'   
+    }
+
+    function bindUIEvents() {
+        document.querySelector('.navbar-collapse form').addEventListener('submit', handleSearch)
+        $('.search-bar').on('blur', removeSearchID)
     }
 
     m.init = (config) => {
@@ -276,9 +326,10 @@ const searchBar = (function () {
             })
         }
 
-        // Resize typeahead
+        // Resize suggestions dropdown
         document.documentElement.style.setProperty('--searchBarTypeAheadWidth', $('.search-bar').width()+'px')
         loadData()
+        bindUIEvents()
     }
     return m
 }())

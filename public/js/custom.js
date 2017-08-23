@@ -9,62 +9,6 @@ $(document).ready(() => {
 })
 
 /*
-    ###########################################################################
-    ## Common
-    ###########################################################################
-    #
-    # This object is used for all basic and repetitive operations performed in
-    # the application to avoid code repeat
-    #
-    */
-const common =  {
-
-	/**
-	 * Handle the submit of a general form
-	 * @param  {Event} e 
-	 */
-	handleSubmit: (e) => {
-		e.preventDefault()
-
-		const url = e.target.getAttribute('action'),
-			  formData = new FormData(e.target)
-
-		return $.ajax(url, {
-			type: 'POST',
-			data: formData,
-			contentType: false,
-			processData: false
-		})
-	},
-
-	/**
-	 * Show errors in an element
-	 * @param  {Element} elem   
-	 * @param  {JSON} errors
-	 */
-	displayErrors: (elem, errors) => {
-		const errorDiv = elem.querySelector('.error')
-		errorDiv.classList.add('alert','alert-danger')
-
-		Object.keys(errors).forEach(key => {
-			if(typeof key == 'string') 
-				errorDiv.innerHTML += `<li>${errors[key]}</li>`
-			else
-				errors[key].forEach(err => errorDiv.innerHTML += `<li>${err}</li>`)
-		})	
-	},
-
-	/**
-	 * Clear the errors shown in a form if any
-	 * @param  {Event} e
-	 */
-	clearErrors: (e) => {
-		const errorDiv = $(e.target).parents('form').find('.error')
-		errorDiv.removeClass('alert alert-danger').html('')
-	}
-}
-
-/*
     |--------------------------------------------------------------------------
     | Index Component Module
     |--------------------------------------------------------------------------
@@ -78,23 +22,20 @@ const indexComponent = (function () {
 		settings: {
 			buttons: document.querySelectorAll('#page-container .find-buttons button')
 		},
-		search: { url: null }
-	}
-
-	function findProfessor(e) {
-		e.preventDefault()
-
-		return false
-	}
-
-	function findSchool(e) {
-		e.preventDefault()
-
-		return false
+		search: { url: null, fetchUrl: null, data: null }
 	}
 
 	function loadData() {
+		const conf = { searchUrl: m.search.url, dropdown: $('[data-type="location"] .dropdown-menu') }
 
+		if(!m.search.data){
+			$.ajax(m.search.fetchUrl).then(response => {
+				common().loadLocations(response, conf)
+				m.search.data = response
+			})
+		} else {
+			common().loadLocations(m.search.data, conf)	
+		}
 	}
 
 	/**
@@ -103,15 +44,16 @@ const indexComponent = (function () {
 	 */
 	function navigateView(name) {
 		const container = $('#page-container'),
-			  template = $(`div[data-view="${name}"]`),
+			  template = $(`div[data-id="${name}"]`),
 			  view = template.clone(true)
 
-		container.find('[data-view]').remove()
+		container.find('[data-id]').remove()
 		container.html(view)
 
 		const animation = name == 'index' ? 'slideInLeft' : 'slideInRight'
 		view.addClass(`animated ${animation}`)
 		bindEvents(view[0])
+		common().activateTypeahead(view, m.search.data)
 	}
 
 	/**
@@ -141,20 +83,17 @@ const indexComponent = (function () {
 	 * @param  {Element} view
 	 */
 	function bindEvents(view) {
-		const type = view.getAttribute('data-view')
+		const type = view.getAttribute('data-id')
 
 		if(type == 'schools') {
 			view.querySelectorAll('.switch').forEach(lever => lever.addEventListener('click', toggleSearchMode))
-			view.querySelectorAll('form').forEach(form => form.addEventListener('submit', findSchool))
 			view.querySelector('.nav-back').addEventListener('click',() => { navigateView('index') })
 
 		}else if (type == 'profs') {
 			view.querySelector('.nav-back').addEventListener('click',() => { navigateView('index') })
-			view.querySelector('form').addEventListener('submit', findProfessor)
 
 		}else if(type == 'review') {
 			view.querySelector('.nav-back').addEventListener('click',() => { navigateView('index') })
-			view.querySelector('form').addEventListener('submit', findProfessor)
 
 		}else if (type == 'index') {
 			view.querySelectorAll('button').forEach(btn => btn.addEventListener('click', (e) => {
@@ -170,6 +109,12 @@ const indexComponent = (function () {
 	}
 
 	m.init = () => {
+		if(config) {
+			Object.keys(config).forEach(key => {
+				if(m.hasOwnProperty(key)) Object.assign(m[key], config[key])
+ 			})
+		}
+
 		bindUIEvents()
 		loadData()
 	}

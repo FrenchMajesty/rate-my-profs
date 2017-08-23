@@ -9,7 +9,7 @@
         <div class="row">
             <div id="page-container" class="col-md-10 offset-md-1">
 
-                <div data-view="index" class="card-block">
+                <div data-id="index" class="card-block">
                   <h1 class="card-title text-center">{{__('find reviews of profs and schools')}}</h1>
                   <h5 class="text-center">{{__('by community of 1.3 mil stud')}}</h5>
                 
@@ -23,7 +23,7 @@
 
             </div>
             <div style="display: none">
-              <div data-view="index" class="card-block">
+              <div data-id="index" class="card-block">
                     <h1 class="card-title text-center">{{__('find reviews of profs and schools')}}</h1>
                     <h5 class="text-center">{{__('by community of 1.3 mil stud')}}</h5>
                   
@@ -34,7 +34,7 @@
                     </div>
               </div>
 
-              <div data-view="schools" class="card">
+              <div data-id="schools" class="card">
 
                       <!--Card content-->
                       <div class="card-block">
@@ -61,25 +61,24 @@
                                 </div>
                             </div>
                           </div>
-                          <form data-type="location" class="row" style="display: none">
+                          <form action="{{route('pages.search')}}" data-type="location" class="row" style="display: none">
                               <div class="col-md-12">
                                   <div class="btn-group offset-md-4 col-md-4">
                                       <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%">{{__('select state')}}</button>
 
                                       <div class="dropdown-menu" style="width: 100%">
-                                          <a class="dropdown-item" href="#">State here</a>
-                                          <a class="dropdown-item" href="#">Another state there</a>
-                                          <a class="dropdown-item" href="#">Something else here</a>
+                                        <a class="dropdown-item" href="#">{{__('no school yet')}}</a>
                                       </div>
                                   </div>
                               </div>
                           </form>
-                          <form data-type="name" class="row">
+                          <form action="{{route('pages.search')}}"  data-type="name" class="row">
                               <div class="col-md-10 offset-md-1">
                                   <div class="md-form input-group">
-                                      <input type="text" class="form-control" placeholder="{{__('school name')}}">
+                                      <input type="text" name="school" class="form-control" placeholder="{{__('school name')}}" autocomplete="off">
+                                      <input type="hidden" name="sID">
                                       <span class="input-group-btn">
-                                          <a class="btn btn-primary btn-sm"><i class="material-icons">search</i></a>
+                                          <button type="submit" class="btn btn-primary btn-sm"><i class="material-icons">search</i></button>
                                   </span>
                                   </div>
                               </div>
@@ -91,29 +90,31 @@
                       </div>
               </div>
 
-              <div data-view="profs" class="card">
+              <div data-id="profs" class="card">
                       <!--Card content-->
                       <div class="card-block">
                           <!--Title-->
                           <h4 class="card-title text-center marg-bottom-3">{{__('find your prof')}}</h4>
                           <!--Text-->
-                          <form>
+                          <form action="{{route('pages.search')}}">
                               <div class="row">
                                 <div class="col-md-6">
                                     <div class="md-form">
-                                        <input type="text" class="form-control" placeholder="{{__('school name')}}">
+                                        <input type="text" name="school" class="form-control" placeholder="{{__('school name')}}" autocomplete="off">
                                         <label>{{__('im a stud at')}}</label>
+                                        <input type="hidden" name="sID">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                 <div class="md-form">
-                                        <input type="text" class="form-control" placeholder="{{__('prof name')}}">
+                                        <input type="text" name="prof" class="form-control" placeholder="{{__('prof name')}}" autocomplete="off">
                                         <label>{{__('looking for prof')}}</label>
+                                        <input type="hidden" name="pID">
                                     </div>
                                 </div>
                               </div>
                               <div class="row">
-                                <button class="btn btn-primary primary mx-auto">{{__('search')}}</button>
+                                <button type="submit" class="btn btn-primary primary mx-auto">{{__('search')}}</button>
                               </div>
                           </form>
                       </div>
@@ -123,15 +124,16 @@
                       </div>
               </div>
 
-              <div data-view="review" class="card">
+              <div data-id="review" class="card">
                       <div class="card-block">
                           <h4 class="card-title text-center marg-bottom-3">{{__('rate your prof')}}</h4>
-                          <form>
+                          <form action="{{route('pages.search')}}">
                               <div class="row">
                                 <div class="col-md-6 offset-md-3">
                                 <div class="md-form">
-                                        <input type="text" class="form-control" placeholder="{{__('prof name')}}">
+                                        <input type="text" name="prof" class="form-control" placeholder="{{__('prof name')}}" autocomplete="off" data-format="full">
                                         <label>{{__('i want to rate')}}</label>
+                                        <input type="hidden" name="pID">
                                     </div>
                                 </div>
                               </div>
@@ -152,6 +154,9 @@
 
 @section ('js')
 <script type="text/javascript">
-  indexComponent.init()
+  const config = {
+      search: { data: JSON.parse('{!! $data !!}'), url : '{{route('pages.search')}}' }
+  }
+  indexComponent.init(config)
 </script>
 @endsection

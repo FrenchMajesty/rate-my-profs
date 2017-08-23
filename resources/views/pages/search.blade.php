@@ -21,8 +21,8 @@
 				</h4>
 				<section class="search-results marg-top-4">
 					<h4>{{__('dont see the prof or school you looking for?')}}</h4>
-					<h5><a href="#">{{__('add a prof')}} {{__('here')}}</a> {{__('or')}}
-					 <a href="#">{{__('add a school')}} {{__('here')}}</a></h5>
+					<h5><a href="{{route('add.prof')}}">{{__('add a prof')}} {{__('here')}}</a> {{__('or')}}
+					 <a href="{{route('add.prof')}}">{{__('add a school')}} {{__('here')}}</a></h5>
 					<div class="list-group">
 					<?$itemCounter = 1 ?>
 					@foreach($profs as $prof)

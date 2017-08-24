@@ -43,7 +43,7 @@ const t = (function() {
     |--------------------------------------------------------------------------
     |
     | This module is for all the operations performed on the dashboard page
-    | like form handling
+    | like form handling on the modals and data loading
     |
     */
    
@@ -104,10 +104,15 @@ const Dashboard = (function() {
                 itemRow = undefined,
                 itemID = undefined
 
-            if(formID != 'school-update') {
+            if(formID == 'school' || formID == 'prof') {
                 itemID = e.target.corrections_id.value
                 itemRow = $(`tr[data-correction="${itemID}"`)
-            }else {
+
+            }else if(formID == 'prof-update') {
+                itemID = e.target.id.value
+                itemRow = $(`#profs tr[data-item-id="${itemID}"]`)
+
+            }else if(formID == 'school-update') {
                 itemID = e.target.id.value
                 itemRow = $(`#schools tr[data-item-id="${itemID}"]`)
             }
@@ -162,7 +167,7 @@ const Dashboard = (function() {
         modal.removeAttribute('style')
         modal.id.value = row.find('a[data-id]').data('id') || row.data('item-id')
 
-        if(type == 'prof') { 
+        if(type == 'prof' || type == 'prof-update') { 
            const data = m.edit.data.filter(item => item.lastname && item.id == modal.id.value)
            if(data.length > 0) {
                 modal.firstname.value = data[0].name
@@ -207,7 +212,7 @@ const Dashboard = (function() {
      * @return {Void} 
      */
     function activateTypeahead() {
-        const inputContainer = $('#editPage form[data-id="prof"]')
+        const inputContainer = $('#editPage')
         common().activateTypeahead(inputContainer, m.edit.data)
     }
 
@@ -215,26 +220,67 @@ const Dashboard = (function() {
         $('.modal').on('shown.bs.modal', activateTypeahead)
         $('.modal input').on('change keydown input', common().clearErrors)
         document.querySelector('#viewReports form').addEventListener('submit', handleReportAction)
-        document.querySelectorAll('#profs button')
+        document.querySelectorAll('#profs form button')
                 .forEach(btn => btn.addEventListener('click', handleSubmission))
-        document.querySelectorAll('#schools button')
+        document.querySelectorAll('#schools form button')
                 .forEach(btn => btn.addEventListener('click', handleSubmission))
         document.querySelectorAll('form.delete')
                 .forEach(form => form.addEventListener('submit', handleDeleteSubmissions))
         document.querySelectorAll('button[data-id="edit"]')
                 .forEach(btn => btn.addEventListener('click', loadInfoToModal))
+        document.querySelectorAll('#schools button[data-type]')
+                .forEach(btn => btn.addEventListener('click', loadInfoToModal))
+        document.querySelectorAll('#profs button[data-type]')
+                .forEach(btn => btn.addEventListener('click', loadInfoToModal))
         document.querySelectorAll('#editPage form')
                 .forEach(form => form.addEventListener('submit', handlePageUpdate))
         document.querySelectorAll('button[data-id="reviewReports"]')
                 .forEach(btn => btn.addEventListener('click', loadRatingToModal))
-        document.querySelectorAll('#schools button[data-type]')
-                .forEach(btn => btn.addEventListener('click', loadInfoToModal))
         document.querySelector('#viewReports .modal-footer button[data-type="dismiss"]')
         .addEventListener('click', () => $('#viewReports form').find('[name="action"]').val('dismiss'))
         document.querySelector('#viewReports .modal-footer button[type="submit"]')
         .addEventListener('click', () => $('#viewReports form').find('[name="action"]').val('remove'))
         document.querySelector('.card-stats a[href="#submissions"]')
                 .addEventListener('click',() => $('.nav-tabs a[href="#submissions"]').click())
+    }
+
+    m.init = (config) => {
+        if(config) {
+            Object.keys(config).forEach(key => {
+                if(m.hasOwnProperty(key)) Object.assign(m[key], config[key])
+            })
+        }
+
+        bindUIEvents()
+    }
+
+    return m
+}())
+
+/*
+    |--------------------------------------------------------------------------
+    | Professor Manager Module
+    |--------------------------------------------------------------------------
+    |
+    | This module is for all the operations performed on the 
+    | 
+    |
+    */
+   
+const ProfessorManager = (function() {
+    const m = {}
+    
+    function handleDelete(e) {
+        if(!confirm(m.message.confirm)) return false
+
+        common().handleSubmit(e)
+        .then(_ => $(e.target).parents('tr').hide())
+        .fail(response => common().displayErrors(e.target, response.responseJSON))
+    }
+
+    function bindUIEvents() {
+        document.querySelectorAll('.td-actions form')
+                .forEach(form => form.addEventListener('submit', handleDelete))
     }
 
     m.init = (config) => {

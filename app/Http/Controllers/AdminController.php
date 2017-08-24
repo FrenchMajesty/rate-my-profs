@@ -47,12 +47,14 @@ class AdminController extends Controller
 
 	public function profs() {
 
-		return view('admin.profs');
+		$profs = Professor::findComplete()->where('professors.approved','1')->get();
+		return view('admin.profs', compact('profs'));
 	}
 
 	public function schools() {
 
-		return view('admin.schools');
+		$schools = School::findComplete()->where('schools.approved','1')->get();
+		return view('admin.schools', compact('schools'));
 	}
 
 	public function users() {
@@ -71,6 +73,27 @@ class AdminController extends Controller
 
 		$prof = Professor::find($request->id);
 		$prof->approved = $approve;
+		$prof->save();
+	}
+
+	public function approveProfViaUpdate(Request $request) {
+
+		$this->validate($request,[
+			'id' => 'required|numeric|exists:professors',
+			'firstname' => 'required|string',
+			'lastname' => 'required|string',
+			'directory' => 'nullable|url',
+			'sID' => 'required|numeric|exists:schools,id',
+			'dID' => 'required|numeric|exists:school_departments,id'
+		]);
+
+		$prof = Professor::find($request->id);
+		$prof->name = $request->firstname;
+		$prof->lastname = $request->lastname;
+		$prof->directory_url = $request->directory;
+		$prof->school_id = $request->sID;
+		$prof->department_id = $request->dID;
+		$prof->approved = true;
 		$prof->save();
 	}
 

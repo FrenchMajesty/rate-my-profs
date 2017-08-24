@@ -91,11 +91,15 @@ Route::group(['prefix' => '/admin', 'middleware' => '\App\Http\Middleware\IsAdmi
 	Route::post('/school/approve/update', 'AdminController@approveSchoolViaUpdate')
 			->name('admin.schools.approve.update');
 
+	Route::post('/prof/approve/update', 'AdminController@approveProfViaUpdate')
+			->name('admin.profs.approve.update');
+
 	Route::post('/prof/correction/update', 'AdminController@updateViaCorrection')
 			->name('admin.corrections.update');
 
-	Route::post('/prof/update', 'AdminController@updateProf')->name('admin.profs.update')
-	;
+	Route::post('/prof/update', 'AdminController@updateProf')->name('admin.profs.update');
+
+	Route::post('/prof/delete', 'AdminController@deleteProf')->name('admin.profs.delete');
 
 	Route::post('/corrections/delete', 'AdminController@deleteCorrection')->name('admin.corrections.delete');
 

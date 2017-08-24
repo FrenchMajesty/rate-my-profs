@@ -25,21 +25,10 @@ class AdminController extends Controller
 		$dateSince = (new \DateTime(date('Y-m-d')))->sub(new \DateInterval('P1M'));
 		$ratings = SchoolRating::where('created_at','>',$dateSince->format('Y-m-d'))->count() + 
 					ProfRating::whereDate('created_at','>',$dateSince->format('Y-m-d'))->count();
-
+		$data = $this->loadAllData();
 		$users = User::count();
-		$data = School::all();
-		$profs = Professor::findComplete()->get();
-		$departments = Department::select('id as departmentID','name')->get();
 		$profReports = Report::findComplete('prof')->get();
 		$schoolReports = Report::findComplete('school')->get();
-
-		// Merge collections
-		$profs->each(function($item) use ($data) {
-			$data->push($item); 
-		});
-		$departments->each(function($item) use ($data) {
-			$data->push($item);
-		});
 
 		return view('admin.index', compact('unverified','corrections', 'ratings', 'users', 'data', 'profReports',
 					'schoolReports','dateSince'));
@@ -47,8 +36,9 @@ class AdminController extends Controller
 
 	public function profs() {
 
+		$data = $this->loadAllData();
 		$profs = Professor::findComplete()->where('professors.approved','1')->get();
-		return view('admin.profs', compact('profs'));
+		return view('admin.profs', compact('profs', 'data'));
 	}
 
 	public function schools() {
@@ -115,6 +105,18 @@ class AdminController extends Controller
 		$prof->department_id = $request->dID;
 		$prof->school_id = $request->sID;
 		$prof->save();
+	}
+
+	public function deleteProf(Request $request) {
+		$this->validate($request, [
+			'id' => 'required|numeric|exists:professors'
+		]);
+
+		DB::table('ratings_votes')->where('prof_id', $request->id)->delete();
+		$rating = ProfRating::where('prof_id',$request->id);
+		Report::deleteInvalid();
+		Correction::where('prof_id',$request->id)->delete();
+		Professor::destroy($request->id);
 	}
 
 	public function approveSchool(Request $request) {
@@ -210,6 +212,22 @@ class AdminController extends Controller
 		}
 
 		DB::table('reports')->where('id', $request->reports_id)->delete();
+	}
+
+	private function loadAllData() {
+		$data = School::all();
+		$profs = Professor::findComplete()->get();
+		$departments = Department::select('id as departmentID','name')->get();
+
+		// Merge collections
+		$profs->each(function($item) use ($data) {
+			$data->push($item); 
+		});
+		$departments->each(function($item) use ($data) {
+			$data->push($item);
+		});
+
+		return $data;
 	}
 
 }

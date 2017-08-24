@@ -1,24 +1,24 @@
 <?php
 
-// - report anomality to admin in professor controller
-// - 'are you :professor'? link
-// -  add captcha and TOS on sign up, ratings, corrections, report
 // - Page for TOS, privacy policy
-// - Consider space for ads
+// - standardize first 3 module on custom.js and use common for side module js
 // - work on mobile version
-// - use query builder on School ORM, SchoolRating ORM, 
-// - fix animation on side module
-// - standardize first 3 module on custom.js
-// - change links color 
+// - Consider space for ads
+// - use query builder on School ORM, SchoolRating ORM,
+// -  add captcha and TOS on sign up, ratings, corrections, report
+// - 'are you :professor'? link
 // - re organize search results order
-// - connect index component
-// - ENTIRE ADMIN PANEL
+// - change links color 
 // - USER PROFILE: test update on professor join account
+// - Placeholders on inputs
+// - report anomality to admin in professor controller
+// - ENTIRE ADMIN PANEL
+
+Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('index');
 
 Route::group(['middleware' => 'auth'], function() {
-
 	Route::get('/profile','UserController@profile')->name('profile');
 
 	Route::post('/profile/password','UserController@updatePassword')->name('profile.password');
@@ -76,26 +76,15 @@ Route::post('/add/school', 'SchoolController@create')->name('add.school');
 
 Route::group(['prefix' => '/admin', 'middleware' => '\App\Http\Middleware\IsAdmin'], function() {
 
-	Route::get('/', function () {
-	    return view('admin.index');
-	})->name('admin.index');
+	Route::get('/', 'AdminController@home')->name('admin.index');
 
-	Route::get('/prof', function () {
-	    return view('admin.profs');
-	})->name('admin.profs');
+	Route::get('/prof', 'AdminController@profs')->name('admin.profs');
 
-	Route::get('/school', function () {
-	    return view('admin.schools');
-	})->name('admin.schools');
+	Route::get('/schools', 'AdminController@schools')->name('admin.schools');
 
-	Route::get('/users', function () {
-	    return view('admin.users');
-	})->name('admin.users');
+	Route::get('/users', 'AdminController@users')->name('admin.users');
 
+	Route::post('/prof/approve', 'AdminController@approveProf')->name('admin.profs.approve');
+
+	Route::post('/corrections/delete', 'AdminController@deleteCorrection')->name('admin.corrections.delete');
 });
-
-
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

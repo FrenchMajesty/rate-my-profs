@@ -7,15 +7,16 @@
     # the application to avoid code repeat
     #
     */
-const common = () => {
-    const _this = {}
+const common = function() {
+    const module = {},
+          _this = {}
 
     /**
      * Handle the submit of a general form
      * @param  {Event} e 
      * @return {Void}
      */
-    _this.handleSubmit = (e) => {
+    module.handleSubmit = (e) => {
         e.preventDefault()
 
         const url = e.target.getAttribute('action'),
@@ -35,7 +36,7 @@ const common = () => {
      * @param  {JSON} errors
      * @return {Void} 
      */
-    _this.displayErrors = (elem, errors) => {
+    module.displayErrors = (elem, errors) => {
         const errorDiv = elem.querySelector('.error')
         errorDiv.classList.add('alert','alert-danger')
 
@@ -52,9 +53,28 @@ const common = () => {
      * @param  {Event} e
      * @return {Void}
      */
-    _this.clearErrors = (e) => {
+    module.clearErrors = (e) => {
         const errorDiv = $(e.target).parents('form').find('.error')
         errorDiv.removeClass('alert alert-danger').html('')
+    }
+
+    /**
+     * Load location dropdown in search utilities
+     * @param  {Array} data    Schools data
+     * @param {Object} options Required params for the input
+     * @param {JQuery} options.dropdown Locations dropdown
+     * @param {String} options.searchUrl URL where to search on click
+     * @return {Void}         
+     */
+    module.loadLocations = (data, options) => {
+        let locations = data.filter(item => item.location)
+            locations = Array.from(new Set(locations))
+
+        if(locations.length > 0) options.dropdown.html('')
+        locations.forEach(itm => {
+            options.dropdown.append(`<a class="dropdown-item" href="${options.searchUrl}?search=${itm.location}">
+                                ${itm.location}</a>`)
+        })
     }
 
     /**
@@ -63,7 +83,7 @@ const common = () => {
      * @param {Array} data
      * @return {Void}
      */
-    _this.activateTypeahead = (card, data) => {
+    module.activateTypeahead = (card, data) => {
         const cardName = card.data('id')
         const content = {
             profs: data.filter(item => item.lastname),
@@ -143,24 +163,5 @@ const common = () => {
         profInput.typeahead(_this.TypeaheadSettings(card, 'prof',{profs: profs}))
     }
 
-    /**
-     * Load location dropdown in search utilities
-     * @param  {Array} data    Schools data
-     * @param {Object} options Required params for the input
-     * @param {JQuery} options.dropdown Locations dropdown
-     * @param {String} options.searchUrl URL where to search on click
-     * @return {Void}         
-     */
-    _this.loadLocations = (data, options) => {
-        let locations = data.filter(item => item.location)
-            locations = Array.from(new Set(locations))
-
-        if(locations.length > 0) options.dropdown.html('')
-        locations.forEach(itm => {
-            options.dropdown.append(`<a class="dropdown-item" href="${options.searchUrl}?search=${itm.location}">
-                                ${itm.location}</a>`)
-        })
-    }
-
-    return _this
+    return module
 }

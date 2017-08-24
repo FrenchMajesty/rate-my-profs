@@ -161,7 +161,7 @@
                     </tr></thead>
                     <tbody>
                       @foreach($unverified['prof'] as $prof)
-                      <tr data-id="{{$prof->id}}">
+                      <tr data-id="{{$prof->id}}" data-item-id="{{$prof->id}}">
                         <td>{{$prof->name}} {{$prof->lastname}}</td>
                         <td>
                           <a href="{{route('school.view',[$prof->schoolID])}}" target="_blank">
@@ -180,6 +180,9 @@
                         </td>
                         <td>{{date('M d, Y', strtotime($prof->created_at))}}</td>
                         <td class="td-actions text-right">
+                          <button type="button" data-type="prof-update" rel="tooltip" title="{{__('edit')}}" class="btn btn-primary btn-simple btn-xs" data-toggle="modal" data-target="#editPage">
+                            <i class="material-icons" data-type="prof-update">edit</i>
+                          </button>
                           <form method="POST" action="{{route('admin.profs.approve')}}">
                           {{ csrf_field() }}
                           <input type="hidden" name="id" value="{{$prof->id}}">
@@ -252,7 +255,7 @@
       </div>
      	<div class="row">
       		<div class="col-lg-6 col-md-12">
-			<div class="card">
+      			<div class="card">
                 <div class="card-header" data-background-color="orange">
                     <h4 class="title">{{__('ratings reported')}}</h4>
                     <p class="category">{{__('ratings marked for reviewing')}}</p>
@@ -273,8 +276,8 @@
                             	<td data-id="name">{{__($report->type).' '.$report->name.' '.$report->lastname}}</td>
                             	<td>{{__('anon')}}</td>
                             	<td class="td-actions"><button data-id="reviewReports" type="button" rel="tooltip" title="" class="btn btn-primary btn-simple btn-xs" data-original-title="{{__('review rating')}}" data-toggle="modal" data-target="#viewReports">
-																<i class="material-icons" data-id="reviewReports">assignment_late</i>
-															<div class="ripple-container"></div></button></td>
+      													<i class="material-icons" data-id="reviewReports">assignment_late</i>
+      												<div class="ripple-container"></div></button></td>
                             </tr>
                           @endforeach
                           @foreach($schoolReports as $report)
@@ -295,130 +298,13 @@
                     @endif
                 </div>
             </div>
-			</div>
+			     </div>
     	</div>
     </div>
 </div>
-<div class="modal fade" id="editPage" tabindex="-1" role="dialog" aria-labelledby="editPage" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{__('edit prof')}}
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </h5>
-      </div>
-      <form data-id="prof" method="POST" action="{{route('admin.corrections.update')}}" style="display: none">
-        <div class="modal-body">
-            {{ csrf_field() }}
-            <input type="hidden" name="type" value="prof">
-            <input type="hidden" name="corrections_id">
-            <input type="hidden" name="id">
-            <div class="row">
-                <section class="col-md-12">
-                   <div class="form-group">
-                      <label class="control-label">{{__('first name')}}</label>
-                          <input type="text" class="form-control" name="firstname" placeholder="{{__('prof first name')}}" required>
-                   </div>
-                   <div class="form-group">
-                      <label class="control-label">{{__('last name')}}</label>
-                          <input type="text" class="form-control" name="lastname" placeholder="{{__('prof last name')}}" required>
-                   </div>
-                   <div class="form-group">
-                      <label class="control-label">{{__('prof directory listing')}}</label>
-                          <input type="url" class="form-control" name="directory" placeholder="{{__('prof website')}}">
-                   </div>
-                   <div class="form-group">
-                      <label class="control-label">{{__('school name')}}</label>
-                          <input type="text" class="form-control" name="school" placeholder="{{__('school name')}}" autocomplete="off" required>
-                          <input type="hidden" name="sID">
-                   </div>
-                   <div class="form-group">
-                      <label class="control-label">{{__('Department')}}</label>
-                          <input type="text" class="form-control" name="department" placeholder="{{__('department name')}}" autocomplete="off" required>
-                          <input type="hidden" name="dID">
-                   </div>
-                </section>
-               </div><br>
-          <section class="error"></section>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('cancel')}}</button>
-          <button type="submit" class="btn btn-fill btn-success">{{__('update and remove submission')}}</button>
-        </div>
-      </form>
 
-      <form data-id="school" method="POST" action="{{route('admin.corrections.update')}}" style="display: none">
-        <div class="modal-body">
-            {{ csrf_field() }}
-            <input type="hidden" name="corrections_id">
-            <input type="hidden" name="type" value="school">
-            <input type="hidden" name="id">
-            <div class="row">
-                <section class="col-md-12">
-                   <div class="form-group">
-                      <label class="control-label">{{__('school name')}}</label>
-                      <input type="text" class="form-control" name="name" placeholder="{{__('school name')}}" required>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label">{{__('nick name')}}</label>
-                      <input type="text" class="form-control" name="nickname" placeholder="{{__('nick name')}}" required>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label">{{__('school location')}}</label>
-                      <input type="text" class="form-control" name="location" placeholder="{{__('location example')}}" required>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label">{{__('website')}}</label>
-                      <input type="url" class="form-control" name="website" placeholder="{{__('prof first name')}}" required>
-                    </div>
-                  </section>
-               </div><br>
-          <section class="error"></section>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('cancel')}}</button>
-          <button type="submit" class="btn btn-fill btn-success">{{__('update and remove submission')}}</button>
-        </div>
-      </form>
+@include ('partials.admin.editModal')
 
-      <form data-id="school-update" method="POST" action="{{route('admin.schools.approve.update')}}" style="display: none">
-        <div class="modal-body">
-            {{ csrf_field() }}
-            <input type="hidden" name="corrections_id">
-            <input type="hidden" name="type" value="school">
-            <input type="hidden" name="id">
-            <div class="row">
-                <section class="col-md-12">
-                   <div class="form-group">
-                      <label class="control-label">{{__('school name')}}</label>
-                      <input type="text" class="form-control" name="name" placeholder="{{__('school name')}}" required>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label">{{__('nick name')}}</label>
-                      <input type="text" class="form-control" name="nickname" placeholder="{{__('nick name')}}" required>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label">{{__('school location')}}</label>
-                      <input type="text" class="form-control" name="location" placeholder="{{__('location example')}}" required>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label">{{__('website')}}</label>
-                      <input type="url" class="form-control" name="website" placeholder="{{__('prof first name')}}" required>
-                    </div>
-                  </section>
-               </div><br>
-          <section class="error"></section>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('cancel')}}</button>
-          <button type="submit" class="btn btn-fill btn-success">{{__('update and approve')}}</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 <div class="modal fade" id="viewReports" tabindex="-1" role="dialog" aria-labelledby="viewReports" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

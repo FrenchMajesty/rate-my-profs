@@ -14,6 +14,7 @@
 
     <link href="{{asset('css/bootstrap3.min.css')}}" rel="stylesheet" />
     <link href="{{asset('css/material-dashboard.css')}}" rel="stylesheet" />
+    <link href="{{asset('css/panel.css')}}" rel="stylesheet" />
     <link href="{{asset('css/demo.css')}}" rel="stylesheet" />
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
@@ -57,6 +58,7 @@
   <script src="{{asset('js/material.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('js/chartist.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
+  <script src="{{asset('js/bootstrap-typeahead.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('js/material-dashboard.js')}}" type="text/javascript"></script>
   <script src="{{asset('js/common.js')}}" type="text/javascript"></script>
   <script src="{{asset('js/admin-panel.js')}}" type="text/javascript"></script>

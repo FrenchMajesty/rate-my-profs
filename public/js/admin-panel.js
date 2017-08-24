@@ -63,14 +63,14 @@ const Dashboard = (function() {
         if(!confirm(m.message.confirm)) return
         e.preventDefault()
 
-        const action = e.target.getAttribute('data-id'),
+        const action = e.target.getAttribute('data-action'),
               row = $(e.target).parents('tr'),
               form = $(e.target).parents('form')
 
         form.append(`<input type="hidden" name="action" value="${action}">`)
 
         const formData = new FormData(form[0])
-        $.ajax(m.url.approve, {
+        $.ajax(form.attr('action'), {
             type: 'POST',
             data: formData,
             processData: false,
@@ -82,7 +82,7 @@ const Dashboard = (function() {
 
      /**
      * Handle deleting submission and hiding row
-     * @param  {Event} e 
+     * @param  {Event} e event
      * @return {Void}   
      */
     function handleDeleteSubmissions(e) {
@@ -94,14 +94,23 @@ const Dashboard = (function() {
 
     /**
      * Handle update of profs/schools details
-     * @param  {Event} e form submit
+     * @param  {Event} e event
      * @return {Void}   
      */
     function handlePageUpdate(e) {
         common().handleSubmit(e)
         .then(_ => {
-            const correctionsID = $(e.target).find('input[name="corrections_id"]').val(),
-                  itemRow = $(`tr[data-correction="${correctionsID}"`)
+            let formID = e.target.getAttribute('data-id'),
+                itemRow = undefined,
+                itemID = undefined
+
+            if(formID != 'school-update') {
+                itemID = e.target.corrections_id.value
+                itemRow = $(`tr[data-correction="${itemID}"`)
+            }else {
+                itemID = e.target.id.value
+                itemRow = $(`#schools tr[data-item-id="${itemID}"]`)
+            }
             $(e.target).parents('.modal').modal('hide')
             itemRow.hide()
         })
@@ -109,8 +118,22 @@ const Dashboard = (function() {
     }
 
     /**
+     * Handle the submit of form to dismiss a report
+     * @param  {Event} e event
+     * @return {Void}   
+     */
+    function handleReportAction(e) {
+        common().handleSubmit(e)
+        .then(_ => {
+            $(e.target).parents('.modal').modal('hide')
+            $(`#reports tr[data-report="${e.target.reports_id.value}"]`).hide()
+        })
+        .fail(response => common().displayErrors(e.target, response.responseJSON))
+    }
+
+    /**
      * Extract and show errors
-     * @param  {JSON} errors 
+     * @param  {JSON} errors errors
      * @return {Void}        
      */
     function showErrors(errors) {
@@ -125,13 +148,19 @@ const Dashboard = (function() {
         alert(text)    
     }
 
-
+    /**
+     * Load page info into the modal opened
+     * @param  {Event} e event
+     * @return {Void}   
+     */
     function loadInfoToModal(e) {
         let row = $(e.target).parents('tr'),
             type = e.target.getAttribute('data-type'),
             modal = document.querySelector(`form[data-id="${type}"]`)
 
-        modal.id.value = row.find('a[data-id]').data('id')
+        $('#editPage form').css('display','none')
+        modal.removeAttribute('style')
+        modal.id.value = row.find('a[data-id]').data('id') || row.data('item-id')
 
         if(type == 'prof') { 
            const data = m.edit.data.filter(item => item.lastname && item.id == modal.id.value)
@@ -148,19 +177,47 @@ const Dashboard = (function() {
         }else {
             const data = m.edit.data.filter(item => item.location && item.id == modal.id.value)
             if(data.length > 0) {
-                modal.name = data[0].name
+                modal.name.value = data[0].name
+                modal.nickname.value = data[0].nickname
+                modal.location.value = data[0].location
+                modal.website.value = data[0].website
+                modal.corrections_id.value = row.data('correction')
             }
         }
     }
 
+    /**
+     * Load rating info into the modal opened
+     * @param  {Event} e event
+     * @return {Void}   
+     */
+    function loadRatingToModal(e) {
+        const row = $(e.target).parents('tr'),
+              modal = document.querySelector('#viewReports form')
+
+        modal.querySelector('#target').value = row.find('td[data-id="name"]').text()
+        modal.querySelector('#rating').innerText = row.find('input[name="comment"]').val()
+        modal.id.value = row.find('input[name="id"]').val()
+        modal.reports_id.value = row.data('report')
+        modal.type.value = row.data('type')
+    }  
+
+    /**
+     * Activate typeahead on professor update form
+     * @return {Void} 
+     */
     function activateTypeahead() {
-        common().activateTypeahead($('#editPage form[data-id="prof"]'), m.edit.data)
+        const inputContainer = $('#editPage form[data-id="prof"]')
+        common().activateTypeahead(inputContainer, m.edit.data)
     }
 
     function bindUIEvents() {
         $('.modal').on('shown.bs.modal', activateTypeahead)
         $('.modal input').on('change keydown input', common().clearErrors)
+        document.querySelector('#viewReports form').addEventListener('submit', handleReportAction)
         document.querySelectorAll('#profs button')
+                .forEach(btn => btn.addEventListener('click', handleSubmission))
+        document.querySelectorAll('#schools button')
                 .forEach(btn => btn.addEventListener('click', handleSubmission))
         document.querySelectorAll('form.delete')
                 .forEach(form => form.addEventListener('submit', handleDeleteSubmissions))
@@ -168,6 +225,16 @@ const Dashboard = (function() {
                 .forEach(btn => btn.addEventListener('click', loadInfoToModal))
         document.querySelectorAll('#editPage form')
                 .forEach(form => form.addEventListener('submit', handlePageUpdate))
+        document.querySelectorAll('button[data-id="reviewReports"]')
+                .forEach(btn => btn.addEventListener('click', loadRatingToModal))
+        document.querySelectorAll('#schools button[data-type]')
+                .forEach(btn => btn.addEventListener('click', loadInfoToModal))
+        document.querySelector('#viewReports .modal-footer button[data-type="dismiss"]')
+        .addEventListener('click', () => $('#viewReports form').find('[name="action"]').val('dismiss'))
+        document.querySelector('#viewReports .modal-footer button[type="submit"]')
+        .addEventListener('click', () => $('#viewReports form').find('[name="action"]').val('remove'))
+        document.querySelector('.card-stats a[href="#submissions"]')
+                .addEventListener('click',() => $('.nav-tabs a[href="#submissions"]').click())
     }
 
     m.init = (config) => {

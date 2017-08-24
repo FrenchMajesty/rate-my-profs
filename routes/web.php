@@ -86,9 +86,18 @@ Route::group(['prefix' => '/admin', 'middleware' => '\App\Http\Middleware\IsAdmi
 
 	Route::post('/prof/approve', 'AdminController@approveProf')->name('admin.profs.approve');
 
-	Route::post('/prof/correction/update', 'AdminController@updateViaCorrection')->name('admin.corrections.update');
+	Route::post('/school/approve', 'AdminController@approveSchool')->name('admin.schools.approve');
 
-	Route::post('/prof/update', 'AdminController@updateProf')->name('admin.profs.update');
+	Route::post('/school/approve/update', 'AdminController@approveSchoolViaUpdate')
+			->name('admin.schools.approve.update');
+
+	Route::post('/prof/correction/update', 'AdminController@updateViaCorrection')
+			->name('admin.corrections.update');
+
+	Route::post('/prof/update', 'AdminController@updateProf')->name('admin.profs.update')
+	;
 
 	Route::post('/corrections/delete', 'AdminController@deleteCorrection')->name('admin.corrections.delete');
+
+	Route::post('/reports/dismiss', 'AdminController@dismissReport')->name('admin.reports.dismiss');
 });

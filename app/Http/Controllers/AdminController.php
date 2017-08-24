@@ -9,6 +9,7 @@ use App\Correction;
 use App\Department;
 use App\SchoolRating;
 use App\ProfRating;
+use App\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
@@ -21,13 +22,18 @@ class AdminController extends Controller
 		$unverified['prof'] = Professor::findComplete()->whereNull('professors.approved')->get();
 		$unverified['school'] = School::whereNull('approved')->get();
 		$corrections = Correction::findComplete()->where('corrections.id','>','0')->get();
-		$ratings = SchoolRating::count() + ProfRating::count();
+		$dateSince = (new \DateTime(date('Y-m-d')))->sub(new \DateInterval('P1M'));
+		$ratings = SchoolRating::where('created_at','>',$dateSince->format('Y-m-d'))->count() + 
+					ProfRating::whereDate('created_at','>',$dateSince->format('Y-m-d'))->count();
+
 		$users = User::count();
-
-		$data = School::where('approved','1')->get();
-		$profs = Professor::findComplete()->where('professors.approved','1')->get();
+		$data = School::all();
+		$profs = Professor::findComplete()->get();
 		$departments = Department::select('id as departmentID','name')->get();
+		$profReports = Report::findComplete('prof')->get();
+		$schoolReports = Report::findComplete('school')->get();
 
+		// Merge collections
 		$profs->each(function($item) use ($data) {
 			$data->push($item); 
 		});
@@ -35,7 +41,8 @@ class AdminController extends Controller
 			$data->push($item);
 		});
 
-		return view('admin.index', compact('unverified','corrections', 'ratings', 'users', 'data'));
+		return view('admin.index', compact('unverified','corrections', 'ratings', 'users', 'data', 'profReports',
+					'schoolReports','dateSince'));
 	}
 
 	public function profs() {
@@ -87,13 +94,68 @@ class AdminController extends Controller
 		$prof->save();
 	}
 
+	public function approveSchool(Request $request) {
+
+		$this->validate($request,[
+			'id' => 'required|numeric|exists:schools',
+			'action' => 'required|string|min:5|max:10'
+		]);
+
+		$approve = $request->action == 'approve' ? true : false;
+
+		$school = School::find($request->id);
+		$school->approved = $approve;
+		$school->save();
+	}
+
+	public function approveSchoolViaUpdate(Request $request) {
+
+		$this->validate($request,[
+			'id' => 'required|numeric|exists:schools',
+			'name' => 'required|string|max:180',
+			'nickname' => 'required|string|max:10',
+			'location' => 'required|string|max:100',
+			'website' => 'required|url|max:150'
+		]);
+
+		$school = School::find($request->id);
+		$school->name = $request->name;
+		$school->nickname = $request->nickname;
+		$school->location = $request->location;
+		$school->website = $request->website;
+		$school->approved = true;
+		$school->save();
+	}
+
+	public function updateSchool(Request $request) {
+
+		$this->validate($request,[
+			'id' => 'required|numeric|exists:schools',
+			'name' => 'required|string|max:180',
+			'nickname' => 'required|string|max:10',
+			'location' => 'required|string|max:200',
+			'website' => 'required|url|max:100',
+		]);
+
+		$school = School::find($request->id);
+		$school->name = $request->name;
+		$school->nickname = $request->nickname;
+		$school->location = $request->location;
+		$school->website = $request->website;
+		$school->save();
+	}
+
 	public function updateViaCorrection(Request $request) {
 
-		$this->updateProf($request);
-
 		$this->validate($request, [
-			'corrections_id' => 'required|numeric|exists:corrections,id'
+			'corrections_id' => 'required|numeric|exists:corrections,id',
+			'type' => 'required|string'
 		]);
+
+		if($request->type == 'prof')
+			$this->updateProf($request);
+		else
+			$this->updateSchool($request);
 
 		Correction::destroy($request->corrections_id);
 	}	
@@ -105,6 +167,26 @@ class AdminController extends Controller
 		]);
 
 		Correction::destroy($request->id);
+	}
+
+	public function dismissReport(Request $request) {
+		return 'true';
+		$this->validate($request, [
+			'id' => 'required|numeric',
+			'reports_id' => 'required|numeric|exists:reports,id',
+			'action' => 'required|string|max:10',
+			'type' => 'required|string|max:10'
+		]);
+
+		if($request->action == 'remove' && $request->type == 'prof') {
+			$this->validate($request, ['id' => 'exists:prof_ratings']);
+			ProfRating::destroy($request->id);
+		}else if($request->action == 'remove' && $request->type == 'school') {
+			$this->validate($request, ['id' => 'exists:school_ratings']);
+			SchoolRating::destroy($request->id);
+		}
+
+		DB::table('reports')->where('id', $request->reports_id)->delete();
 	}
 
 }

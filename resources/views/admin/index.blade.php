@@ -31,7 +31,7 @@
             </div>
             <div class="card-footer">
               <div class="stats">
-                <i class="material-icons">date_range</i> {{__('since :date', ['date' => '05/05/2016'])}}
+                <i class="material-icons">date_range</i> {{__('since :date', ['date' => $dateSince->format('m/d/Y')])}}
               </div>
             </div>
           </div>
@@ -47,7 +47,7 @@
             </div>
             <div class="card-footer">
               <div class="stats">
-                <i class="material-icons">local_offer</i> <a href="#">{{__('view submissions')}}</a>
+                <i class="material-icons">local_offer</i> <a href="#submissions">{{__('view submissions')}}</a>
               </div>
             </div>
           </div>
@@ -80,9 +80,9 @@
                   <span class="nav-tabs-title">{{__('submissions')}}:</span>
                   <ul class="nav nav-tabs" data-tabs="tabs">
                     <li class="active">
-                      <a href="#profile" data-toggle="tab">
-                        <i class="material-icons">list</i>
-                        {{__('view all')}}
+                      <a href="#submissions" data-toggle="tab">
+                        <i class="material-icons">announcement</i>
+                        {{__('corrections')}}
                       <div class="ripple-container"></div></a>
                     </li>
                     <li class="">
@@ -92,7 +92,7 @@
                       <div class="ripple-container"></div></a>
                     </li>
                     <li class="">
-                      <a href="#settings" data-toggle="tab">
+                      <a href="#schools" data-toggle="tab">
                         <i class="material-icons">account_balance</i>
                         {{__('schools')}}
                       <div class="ripple-container"></div></a>
@@ -104,7 +104,7 @@
 
             <div class="card-content">
               <div class="tab-content">
-                <div class="tab-pane active" id="profile">
+                <div class="tab-pane active" id="submissions">
                   <table class="table">
                     <thead><tr>
                       <td>{{__('sent by')}}</td>
@@ -183,10 +183,10 @@
                           <form method="POST" action="{{route('admin.profs.approve')}}">
                           {{ csrf_field() }}
                           <input type="hidden" name="id" value="{{$prof->id}}">
-                          <button data-id="approve" type="button" rel="tooltip" title="{{__('approve')}}" class="btn btn-success btn-simple btn-xs">
-                            <i class="material-icons" data-id="approve">check_circle</i>
+                          <button data-action="approve" type="button" rel="tooltip" title="{{__('approve')}}" class="btn btn-success btn-simple btn-xs">
+                            <i class="material-icons" data-id="approve">check</i>
                           </button>
-                          <button data-id="reject" type="button" rel="tooltip" title="{{__('reject')}}" class="btn btn-danger btn-simple btn-xs">
+                          <button data-action="reject" type="button" rel="tooltip" title="{{__('reject')}}" class="btn btn-danger btn-simple btn-xs">
                             <i class="material-icons" data-id="reject">close</i>
                           </button>
                           </form>
@@ -199,7 +199,7 @@
                   <h4 class="text-center">{{__('no new prof yet')}}.</h4>
                 @endif
                 </div>
-                <div class="tab-pane" id="settings">
+                <div class="tab-pane" id="schools">
                 @if(count($unverified['school']) > 0)
                   <table class="table">
                     <thead><tr>
@@ -212,7 +212,7 @@
                     </tr></thead>
                     <tbody>
                       @foreach($unverified['school'] as $school)
-                      <tr>
+                      <tr data-item-id="{{$school->id}}">
                         <td>{{$school->name}}</td>
                         <td>{{$school->nickname}}</td>
                         <td>{{$school->location}}</td>
@@ -223,15 +223,19 @@
                         </td>
                         <td>{{date('M d, Y', strtotime($school->created_at))}}</td>
                         <td class="td-actions text-right">
-                          <button type="button" rel="tooltip" title="{{__('edit')}}" class="btn btn-primary btn-simple btn-xs">
-                            <i class="material-icons">edit</i>
+                          <button type="button" data-type="school-update" rel="tooltip" title="{{__('edit')}}" class="btn btn-primary btn-simple btn-xs" data-toggle="modal" data-target="#editPage">
+                            <i class="material-icons" data-type="school-update">edit</i>
                           </button>
-                          <button type="button" rel="tooltip" title="{{__('approve')}}" class="btn btn-success btn-simple btn-xs">
-                            <i class="material-icons">check</i>
+                          <form method="POST" action="{{route('admin.schools.approve')}}">
+                          {{ csrf_field() }}
+                          <input type="hidden" name="id" value="{{$school->id}}">
+                          <button type="button" data-action="approve" rel="tooltip" title="{{__('approve')}}" class="btn btn-success btn-simple btn-xs">
+                            <i class="material-icons" data-action="approve">check</i>
                           </button>
-                          <button type="button" rel="tooltip" title="{{__('reject')}}" class="btn btn-danger btn-simple btn-xs">
-                            <i class="material-icons">close</i>
+                          <button type="button" data-action="reject" rel="tooltip" title="{{__('reject')}}" class="btn btn-danger btn-simple btn-xs">
+                            <i class="material-icons" data-action="reject">close</i>
                           </button>
+                          </form>
                         </td>
                       </tr>
                       @endforeach
@@ -254,24 +258,41 @@
                     <p class="category">{{__('ratings marked for reviewing')}}</p>
                 </div>
                 <div class="card-content table-responsive">
-                    <table class="table table-hover">
+                  @if(count($profReports) + count($schoolReports) > 0)
+                    <table id="reports" class="table table-hover">
                         <thead class="text-warning">
-                            <tr><th>ID</th>
-                        	<th>{{__('review on')}}</th>
-                        	<th>{{__('author')}}</th>
+                          <th>{{__('rating on')}}</th>
+                        	<th>{{__('reported by')}}</th>
                         	<th>{{__('see more')}}</th>
                         </tr></thead>
                         <tbody>
-                            <tr>
-                            	<td>1</td>
-                            	<td>Professor Ford</td>
+                          @foreach($profReports as $report)
+                            <tr data-report="{{$report->id}}" data-type="{{$report->type}}">
+                              <input type="hidden" name="id" value="{{$report->ratingID}}">
+                              <input type="hidden" name="comment" value="{{$report->rating}}">
+                            	<td data-id="name">{{__($report->type).' '.$report->name.' '.$report->lastname}}</td>
                             	<td>{{__('anon')}}</td>
-                            	<td class="td-actions"><button type="button" rel="tooltip" title="" class="btn btn-primary btn-simple btn-xs" data-original-title="{{__('review rating')}}">
-																<i class="material-icons">assignment_late</i>
+                            	<td class="td-actions"><button data-id="reviewReports" type="button" rel="tooltip" title="" class="btn btn-primary btn-simple btn-xs" data-original-title="{{__('review rating')}}" data-toggle="modal" data-target="#viewReports">
+																<i class="material-icons" data-id="reviewReports">assignment_late</i>
 															<div class="ripple-container"></div></button></td>
                             </tr>
+                          @endforeach
+                          @foreach($schoolReports as $report)
+                            <tr data-report="{{$report->id}}" data-type="{{$report->type}}">
+                              <input type="hidden" name="id" value="{{$report->ratingID}}">
+                              <input type="hidden" name="comment" value="{{$report->rating}}">
+                              <td data-id="name">{{__($report->type).' '.$report->name}}</td>
+                              <td>{{__('anon')}}</td>
+                              <td class="td-actions"><button data-id="reviewReports" type="button" rel="tooltip" title="" class="btn btn-primary btn-simple btn-xs" data-original-title="{{__('review rating')}}" data-toggle="modal" data-target="#viewReports">
+                                <i class="material-icons" data-id="reviewReports">assignment_late</i>
+                              <div class="ripple-container"></div></button></td>
+                            </tr>
+                          @endforeach
                         </tbody>
                     </table>
+                    @else
+                      <h5 class="text-center">{{__('no reports')}}.</h5>
+                    @endif
                 </div>
             </div>
 			</div>
@@ -288,9 +309,10 @@
           </button>
         </h5>
       </div>
-      <form data-id="prof" method="POST" action="{{route('admin.corrections.update')}}">
+      <form data-id="prof" method="POST" action="{{route('admin.corrections.update')}}" style="display: none">
         <div class="modal-body">
             {{ csrf_field() }}
+            <input type="hidden" name="type" value="prof">
             <input type="hidden" name="corrections_id">
             <input type="hidden" name="id">
             <div class="row">
@@ -327,23 +349,108 @@
         </div>
       </form>
 
-      <form data-id="school" method="POST" action="" style="display: none">
-      <div class="modal-body">
-          {{ csrf_field() }}
-          <input type="hidden" name="id">
-          <div class="row">
-              <section class="col-md-12">
-                 <div class="form-group">
-                      <label class="control-label">{{__('first name')}}</label>
-                          <input type="text" class="form-control" name="firstname" placeholder="{{__('prof first name')}}" required>
-                   </div>
-                </section>
-             </div><br>
-        <section class="error"></section>
-      </div>
+      <form data-id="school" method="POST" action="{{route('admin.corrections.update')}}" style="display: none">
+        <div class="modal-body">
+            {{ csrf_field() }}
+            <input type="hidden" name="corrections_id">
+            <input type="hidden" name="type" value="school">
+            <input type="hidden" name="id">
+            <div class="row">
+                <section class="col-md-12">
+                   <div class="form-group">
+                      <label class="control-label">{{__('school name')}}</label>
+                      <input type="text" class="form-control" name="name" placeholder="{{__('school name')}}" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label">{{__('nick name')}}</label>
+                      <input type="text" class="form-control" name="nickname" placeholder="{{__('nick name')}}" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label">{{__('school location')}}</label>
+                      <input type="text" class="form-control" name="location" placeholder="{{__('location example')}}" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label">{{__('website')}}</label>
+                      <input type="url" class="form-control" name="website" placeholder="{{__('prof first name')}}" required>
+                    </div>
+                  </section>
+               </div><br>
+          <section class="error"></section>
+        </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('cancel')}}</button>
           <button type="submit" class="btn btn-fill btn-success">{{__('update and remove submission')}}</button>
+        </div>
+      </form>
+
+      <form data-id="school-update" method="POST" action="{{route('admin.schools.approve.update')}}" style="display: none">
+        <div class="modal-body">
+            {{ csrf_field() }}
+            <input type="hidden" name="corrections_id">
+            <input type="hidden" name="type" value="school">
+            <input type="hidden" name="id">
+            <div class="row">
+                <section class="col-md-12">
+                   <div class="form-group">
+                      <label class="control-label">{{__('school name')}}</label>
+                      <input type="text" class="form-control" name="name" placeholder="{{__('school name')}}" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label">{{__('nick name')}}</label>
+                      <input type="text" class="form-control" name="nickname" placeholder="{{__('nick name')}}" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label">{{__('school location')}}</label>
+                      <input type="text" class="form-control" name="location" placeholder="{{__('location example')}}" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label">{{__('website')}}</label>
+                      <input type="url" class="form-control" name="website" placeholder="{{__('prof first name')}}" required>
+                    </div>
+                  </section>
+               </div><br>
+          <section class="error"></section>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('cancel')}}</button>
+          <button type="submit" class="btn btn-fill btn-success">{{__('update and approve')}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="viewReports" tabindex="-1" role="dialog" aria-labelledby="viewReports" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{__('review rating')}}
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </h5>
+      </div>
+      <form data-id="prof" method="POST" action="{{route('admin.reports.dismiss')}}">
+        <div class="modal-body">
+            {{ csrf_field() }}
+            <input type="hidden" name="action" value="remove">
+            <input type="hidden" name="reports_id">
+            <input type="hidden" name="id">
+            <input type="hidden" name="type">
+            <div class="row">
+              <div class="col-md-5 form-group">
+                <label class="control-label">{{__('rating on')}}</label>
+                <input id="target" type="text" class="form-control" disabled>
+              </div>
+              <div class="col-md-6 offset-md-1 form-group">
+                <label class="control-label">{{__('rating')}}</label>
+                <textarea id="rating" class="form-control" disabled></textarea>
+              </div>
+            </div>
+          <section class="error"></section>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" data-type="dismiss" class="btn btn-secondary">{{__('dismiss report')}}</button>
+          <button type="submit" class="btn btn-fill btn-success">{{__('remove rating')}}</button>
         </div>
       </form>
     </div>
@@ -356,7 +463,6 @@
   $(document).ready(() => {
     $('.modal').appendTo('body')
     const config = {
-      url: { approve: '{{route('admin.profs.approve')}}' },
       message: { confirm: '{{__('are you sure')}}' },
       edit: { data: JSON.parse(`{!! $data !!}`) }
     }

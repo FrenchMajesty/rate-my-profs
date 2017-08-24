@@ -108,7 +108,7 @@ const indexComponent = (function () {
 		}))
 	}
 
-	m.init = () => {
+	m.init = (config) => {
 		if(config) {
 			Object.keys(config).forEach(key => {
 				if(m.hasOwnProperty(key)) Object.assign(m[key], config[key])

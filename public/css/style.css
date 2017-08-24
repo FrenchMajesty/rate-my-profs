@@ -54,6 +54,7 @@ body {
 }
 .marg-navbar {
 	margin-top: 4.5em;
+	min-height: 95vh;
 }
 .category {
 	padding-left: 1em;
@@ -62,6 +63,9 @@ body {
 	width: 70px;
     padding: .5rem 0.5rem!important;
     transition: .2s ease-out;
+}
+div[data-id="schools"] .typeahead, div[data-id="reviews"] .typeahead {
+	width: 100%;
 }
 #side-module {
 	margin-top: 0.5em;

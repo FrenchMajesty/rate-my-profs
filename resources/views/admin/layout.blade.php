@@ -6,10 +6,11 @@
   <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-  <title>Material Dashboard by Creative Tim</title>
+  <title>{{env('APP_NAME')}}</title>
 
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link href="{{asset('css/bootstrap3.min.css')}}" rel="stylesheet" />
     <link href="{{asset('css/material-dashboard.css')}}" rel="stylesheet" />
@@ -30,8 +31,8 @@
         -->
 
       <div class="logo">
-        <a href="#" class="simple-text">
-          Awesome Website
+        <a href="{{route('admin.index')}}" class="simple-text">
+          {{env('APP_NAME')}}
         </a>
       </div>
 
@@ -57,6 +58,8 @@
   <script src="{{asset('js/chartist.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
   <script src="{{asset('js/material-dashboard.js')}}" type="text/javascript"></script>
+  <script src="{{asset('js/common.js')}}" type="text/javascript"></script>
+  <script src="{{asset('js/admin-panel.js')}}" type="text/javascript"></script>
   <script src="{{asset('js/demo.js')}}" type="text/javascript"></script>
   @yield ('js')
   <!--  Google Maps Plugin    -->

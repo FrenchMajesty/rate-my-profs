@@ -1,0 +1,9 @@
+/* YOUR CUSTOM STYLES */
+:root {
+	--primaryCol: #a6dd2c;
+	--secCol: #67a9d8;
+	--searchBarTypeAheadWidth: 50%;
+}
+.modal .typeahead {
+	width: 100%;
+}

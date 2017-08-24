@@ -67,11 +67,13 @@ const common = () => {
         const cardName = card.data('id')
         const content = {
             profs: data.filter(item => item.lastname),
-            schools: data.filter(item => item.location)
+            schools: data.filter(item => item.location),
+            depts: data.filter(item => item.departmentID),
          }
 
         card.find('input[name="school"]:visible').typeahead(_this.TypeaheadSettings(card, 'school', content))
         card.find('input[name="prof"]:visible').typeahead(_this.TypeaheadSettings(card, 'prof', content))
+        card.find('input[name="department"]:visible').typeahead(_this.TypeaheadSettings(card, 'department', content))
     }
 
     /**
@@ -83,7 +85,8 @@ const common = () => {
      */
     _this.TypeaheadSettings = (card, input, data) => {
         const profID = card.find(`input[name="pID"]`),
-              schoolID = card.find(`input[name="sID"]`)
+              schoolID = card.find(`input[name="sID"]`),
+              deptID = card.find(`input[name="dID"]`)
 
         if(input == 'prof') {
             return {
@@ -106,10 +109,23 @@ const common = () => {
                     return `${item.name} (${item.nickname}), ${item.location}`
                 },
                 afterSelect: function (item) {
-                    schoolID.val(item.id)
+                    schoolID.val(item.departmentID)
                     if(card.data('id') == 'profs') _this.filterProfessorData(card, data.profs, item.id)
                 }
             }   
+        }else if(input == 'department') {
+            return {
+                source: data.depts, minLength: 3, items: 4,
+                displayText: function(item) {
+                    return `${item.name}`
+                },
+                afterSelect: function (item) {
+                    deptID.val(item.id)
+                    if(card.data('id') == 'profs') _this.filterProfessorData(card, data.profs, item.id)
+                }
+            }
+        } else {
+            console.warn('Typeahead input could not be loaded.')
         }
     }
 

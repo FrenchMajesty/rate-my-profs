@@ -39,6 +39,7 @@ const common = function() {
     module.displayErrors = (elem, errors) => {
         const errorDiv = elem.querySelector('.error')
         errorDiv.classList.add('alert','alert-danger')
+        errorDiv.innerHTML = ''
 
         Object.keys(errors).forEach(key => {
             if(typeof key == 'string') 
@@ -129,7 +130,7 @@ const common = function() {
                     return `${item.name} (${item.nickname}), ${item.location}`
                 },
                 afterSelect: function (item) {
-                    schoolID.val(item.departmentID)
+                    schoolID.val(item.id)
                     if(card.data('id') == 'profs') _this.filterProfessorData(card, data.profs, item.id)
                 }
             }   
@@ -140,7 +141,7 @@ const common = function() {
                     return `${item.name}`
                 },
                 afterSelect: function (item) {
-                    deptID.val(item.id)
+                    deptID.val(item.departmentID)
                     if(card.data('id') == 'profs') _this.filterProfessorData(card, data.profs, item.id)
                 }
             }

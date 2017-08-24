@@ -25,6 +25,27 @@ class Report extends Model {
 				->join('schools','school_ratings.school_id','=','schools.id')
 				->where('reports.type', $type);
 	}
+
+	public static function deleteInvalid() {
+
+		$toDelete = [];
+		$ratingIDs = self::select('id','rating_id')->where('type','school')->get();
+		$ratingIDs->each(function($row) {
+			if(!DB::table('school_ratings')->where('id', $row->rating_id)->get())
+				$toDelete[] = $row->id;
+		});
+		
+		$ratingIDs = self::select('id','rating_id')->where('type','prof')->get();
+		$ratingIDs->each(function($row) {
+			if(!DB::table('prof_ratings')->where('id', $row->rating_id)->get())
+				$toDelete[] = $row->id;
+		});
+
+		foreach ($toDelete as $id) {
+			self::destroy($id);
+		}
+
+	}
 }
 
 ?>

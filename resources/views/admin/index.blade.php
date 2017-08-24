@@ -180,8 +180,8 @@
                         </td>
                         <td>{{date('M d, Y', strtotime($prof->created_at))}}</td>
                         <td class="td-actions text-right">
-                          <button type="button" data-type="prof-update" rel="tooltip" title="{{__('edit')}}" class="btn btn-primary btn-simple btn-xs" data-toggle="modal" data-target="#editPage">
-                            <i class="material-icons" data-type="prof-update">edit</i>
+                          <button type="button" data-type="prof-approve" rel="tooltip" title="{{__('edit')}}" class="btn btn-primary btn-simple btn-xs" data-toggle="modal" data-target="#editPage">
+                            <i class="material-icons" data-type="prof-approve">edit</i>
                           </button>
                           <form method="POST" action="{{route('admin.profs.approve')}}">
                           {{ csrf_field() }}
@@ -226,8 +226,8 @@
                         </td>
                         <td>{{date('M d, Y', strtotime($school->created_at))}}</td>
                         <td class="td-actions text-right">
-                          <button type="button" data-type="school-update" rel="tooltip" title="{{__('edit')}}" class="btn btn-primary btn-simple btn-xs" data-toggle="modal" data-target="#editPage">
-                            <i class="material-icons" data-type="school-update">edit</i>
+                          <button type="button" data-type="school-approve" rel="tooltip" title="{{__('edit')}}" class="btn btn-primary btn-simple btn-xs" data-toggle="modal" data-target="#editPage">
+                            <i class="material-icons" data-type="school-approve">edit</i>
                           </button>
                           <form method="POST" action="{{route('admin.schools.approve')}}">
                           {{ csrf_field() }}

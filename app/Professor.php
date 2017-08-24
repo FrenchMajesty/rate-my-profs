@@ -19,6 +19,16 @@ class Professor extends Model {
             ORDER BY average DESC
             LIMIT 3", [$id]);
 	}
+
+      public static function findComplete() {
+
+            return self::select('professors.id','professors.name','professors.lastname',
+                  'professors.school_id','professors.department_id','professors.directory_url',
+                  'professors.created_at','schools.id as schoolID','schools.name as school',
+                  'school_departments.id as deptID', 'school_departments.name as department')
+                  ->leftJoin('schools','professors.school_id','=','schools.id')
+                  ->leftJoin('school_departments','professors.department_id','=','school_departments.id');
+      }
 }
 
 ?>

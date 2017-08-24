@@ -7,6 +7,93 @@ $(document).ready(() => {
 })
 
 /*
+    ###########################################################################
+    ## CommonPanel
+    ###########################################################################
+    #
+    # This object is used for all basic and repetitive operations performed in
+    # the application's admin panel to avoid code repeat
+    #
+    */
+const commonPanel = function() {
+    const module = {},
+          _this = {}
+
+     /**
+     * Load professor/school data into the modal opened
+     * @param  {Event} e event
+     * @param {JSON} allData content data
+     * @return {Void}   
+     */
+     module.loadInfoToModal = (e, allData) => {
+        let row = $(e.target).parents('tr'),
+            type = e.target.getAttribute('data-type'),
+            modal = document.querySelector(`form[data-id="${type}"]`)
+
+        $('#editPage form').css('display','none')
+        modal.removeAttribute('style')
+        modal.id.value = row.find('a[data-id]').data('id') || row.data('item-id')
+
+        if(type == 'prof' || type == 'prof-approve' || type == 'prof-update') { 
+           const data = allData.filter(item => item.lastname && item.id == modal.id.value)
+           if(data.length > 0) {
+                modal.firstname.value = data[0].name
+                modal.lastname.value = data[0].lastname
+                modal.directory.value = data[0].directory_url
+                modal.dID.value = data[0].deptID
+                modal.department.value = data[0].department
+                modal.school.value = data[0].school
+                modal.sID.value = data[0].schoolID
+                if(!type.match(/-/)) // If is a correction
+                    modal.corrections_id.value = row.data('correction')
+           }
+        }else {
+            const data = allData.filter(item => item.location && item.id == modal.id.value)
+            if(data.length > 0) {
+                modal.name.value = data[0].name
+                modal.nickname.value = data[0].nickname
+                modal.location.value = data[0].location
+                modal.website.value = data[0].website
+                if(!type.match(/-/)) // If is a correction
+                    modal.corrections_id.value = row.data('correction')
+            }
+        }
+    }
+
+    /**
+     * Handle update of profs/schools details
+     * @param  {Event} e event
+     * @return {Void}   
+     */
+    module.handlePageUpdate = (e) => {
+        common().handleSubmit(e)
+        .then(_ => {
+            let formID = e.target.getAttribute('data-id'),
+                itemRow = undefined,
+                itemID = undefined
+
+            if(formID == 'school' || formID == 'prof') {
+                itemID = e.target.corrections_id.value
+                itemRow = $(`tr[data-correction="${itemID}"`)
+
+            }else if(formID == 'prof-approve') {
+                itemID = e.target.id.value
+                itemRow = $(`#profs tr[data-item-id="${itemID}"]`)
+
+            }else if(formID == 'school-approve') {
+                itemID = e.target.id.value
+                itemRow = $(`#schools tr[data-item-id="${itemID}"]`)
+            }
+            $(e.target).parents('.modal').modal('hide')
+            itemRow.hide()
+        })
+        .fail(response => common().displayErrors(e.target, response.responseJSON))
+    }
+
+    return module
+}
+
+/*
     |--------------------------------------------------------------------------
     | - Module
     |--------------------------------------------------------------------------
@@ -87,39 +174,10 @@ const Dashboard = (function() {
      */
     function handleDeleteSubmissions(e) {
         if(!confirm(m.message.confirm)) return
+
         common().handleSubmit(e)
         .then(_ => $(e.target).parents('tr').hide())
         .fail(response => showErrors(response.responseJSON))
-    }
-
-    /**
-     * Handle update of profs/schools details
-     * @param  {Event} e event
-     * @return {Void}   
-     */
-    function handlePageUpdate(e) {
-        common().handleSubmit(e)
-        .then(_ => {
-            let formID = e.target.getAttribute('data-id'),
-                itemRow = undefined,
-                itemID = undefined
-
-            if(formID == 'school' || formID == 'prof') {
-                itemID = e.target.corrections_id.value
-                itemRow = $(`tr[data-correction="${itemID}"`)
-
-            }else if(formID == 'prof-update') {
-                itemID = e.target.id.value
-                itemRow = $(`#profs tr[data-item-id="${itemID}"]`)
-
-            }else if(formID == 'school-update') {
-                itemID = e.target.id.value
-                itemRow = $(`#schools tr[data-item-id="${itemID}"]`)
-            }
-            $(e.target).parents('.modal').modal('hide')
-            itemRow.hide()
-        })
-        .fail(response => common().displayErrors(e.target, response.responseJSON))
     }
 
     /**
@@ -151,44 +209,6 @@ const Dashboard = (function() {
                 errors[key].forEach(err => text += `${err}\n`)
         })
         alert(text)    
-    }
-
-    /**
-     * Load page info into the modal opened
-     * @param  {Event} e event
-     * @return {Void}   
-     */
-    function loadInfoToModal(e) {
-        let row = $(e.target).parents('tr'),
-            type = e.target.getAttribute('data-type'),
-            modal = document.querySelector(`form[data-id="${type}"]`)
-
-        $('#editPage form').css('display','none')
-        modal.removeAttribute('style')
-        modal.id.value = row.find('a[data-id]').data('id') || row.data('item-id')
-
-        if(type == 'prof' || type == 'prof-update') { 
-           const data = m.edit.data.filter(item => item.lastname && item.id == modal.id.value)
-           if(data.length > 0) {
-                modal.firstname.value = data[0].name
-                modal.lastname.value = data[0].lastname
-                modal.directory.value = data[0].directory_url
-                modal.dID.value = data[0].deptID
-                modal.department.value = data[0].department
-                modal.school.value = data[0].school
-                modal.sID.value = data[0].schoolID
-                modal.corrections_id.value = row.data('correction')
-           }
-        }else {
-            const data = m.edit.data.filter(item => item.location && item.id == modal.id.value)
-            if(data.length > 0) {
-                modal.name.value = data[0].name
-                modal.nickname.value = data[0].nickname
-                modal.location.value = data[0].location
-                modal.website.value = data[0].website
-                modal.corrections_id.value = row.data('correction')
-            }
-        }
     }
 
     /**
@@ -227,13 +247,13 @@ const Dashboard = (function() {
         document.querySelectorAll('form.delete')
                 .forEach(form => form.addEventListener('submit', handleDeleteSubmissions))
         document.querySelectorAll('button[data-id="edit"]')
-                .forEach(btn => btn.addEventListener('click', loadInfoToModal))
+                .forEach(btn => btn.addEventListener('click',(e) => { commonPanel().loadInfoToModal(e, m.edit.data) }))
         document.querySelectorAll('#schools button[data-type]')
-                .forEach(btn => btn.addEventListener('click', loadInfoToModal))
+                .forEach(btn => btn.addEventListener('click',(e) => { commonPanel().loadInfoToModal(e, m.edit.data) }))
         document.querySelectorAll('#profs button[data-type]')
-                .forEach(btn => btn.addEventListener('click', loadInfoToModal))
+                .forEach(btn => btn.addEventListener('click',(e) => { commonPanel().loadInfoToModal(e, m.edit.data) }))
         document.querySelectorAll('#editPage form')
-                .forEach(form => form.addEventListener('submit', handlePageUpdate))
+                .forEach(form => form.addEventListener('submit', commonPanel().handlePageUpdate))
         document.querySelectorAll('button[data-id="reviewReports"]')
                 .forEach(btn => btn.addEventListener('click', loadRatingToModal))
         document.querySelector('#viewReports .modal-footer button[data-type="dismiss"]')
@@ -268,19 +288,44 @@ const Dashboard = (function() {
     */
    
 const ProfessorManager = (function() {
-    const m = {}
+    const m = {
+        message: { confirm: null },
+        edit: { data: null, fetchUrl: null }
+    }
     
     function handleDelete(e) {
-        if(!confirm(m.message.confirm)) return false
+        if(!confirm(m.message.confirm)) return
 
-        common().handleSubmit(e)
+        const form = $(e.target).parents('form'),
+              formData = new FormData(form[0])
+
+        $.ajax(form.attr('action'), {
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false
+        })
         .then(_ => $(e.target).parents('tr').hide())
         .fail(response => common().displayErrors(e.target, response.responseJSON))
     }
 
+    /**
+     * Activate typeahead on professor update form
+     * @return {Void} 
+     */
+    function activateTypeahead() {
+        const inputContainer = $('#editPage')
+        common().activateTypeahead(inputContainer, m.edit.data)
+    }
+
     function bindUIEvents() {
-        document.querySelectorAll('.td-actions form')
-                .forEach(form => form.addEventListener('submit', handleDelete))
+        $('.modal').on('shown.bs.modal', activateTypeahead)
+        document.querySelectorAll('.td-actions form button')
+                .forEach(btn => btn.addEventListener('click', handleDelete))
+        document.querySelectorAll('.td-actions [data-type]')
+                .forEach(btn => btn.addEventListener('click',(e) => { commonPanel().loadInfoToModal(e, m.edit.data) }))
+        document.querySelectorAll('#editPage form')
+                .forEach(form => form.addEventListener('submit', commonPanel().handlePageUpdate))
     }
 
     m.init = (config) => {

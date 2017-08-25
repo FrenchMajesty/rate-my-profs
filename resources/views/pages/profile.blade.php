@@ -78,7 +78,6 @@
 
 @section ('js')
 <script type="text/javascript">
-	$(document).ready(() => {
 		const config = {
 			message: { 
 				details: '{{__('profile successfully updated')}}', 
@@ -86,6 +85,5 @@
 			}
 		}
 		userProfile.init(config)
-	})
 </script>
 @endsection

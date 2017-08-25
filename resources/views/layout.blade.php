@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>RATEMYPROF</title>
+    <title>{{env('APP_NAME')}}</title>
     <!-- Font Awesome -->
     <link href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/css/compiled.min.css?ver=4.3.2" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
@@ -57,7 +57,7 @@
             const config = {
                 search: { fetchUrl: '{{route('fetch.all')}}' }
             }
-        if(document.querySelector('.search-bar')) searchBar.init(config)
+            if(document.querySelector('.search-bar')) searchBar.init(config)
         })
     </script>
     @yield ('js')

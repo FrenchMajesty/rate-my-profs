@@ -323,7 +323,6 @@
 
 @section ('js')
     <script type="text/javascript">
-    $(document).ready(() => {
         const config = {
             successRate: {
                 message: '{{__('rating successfully sent')}}'
@@ -334,6 +333,5 @@
         }
         schoolView.init(config)
         sideModule.init('school', SIDE_MODULE_URL)
-    })
     </script>
 @endsection

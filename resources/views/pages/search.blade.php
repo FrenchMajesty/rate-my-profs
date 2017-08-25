@@ -75,12 +75,10 @@
 
 @section ('js')
 <script type="text/javascript">
-	$(document).ready(() => {
 		const config = {
 			settings: { pageLength: 15, maxPagination: 3 }
 		}
 		sideModule.init(null, SIDE_MODULE_URL)
 		searchResults.init(config)
-	})
 </script>
 @endsection

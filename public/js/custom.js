@@ -252,10 +252,11 @@ const addProfessor = (function() {
 
 	m.init = (config) => {
 
-		// Configs
-		Object.keys(config).forEach(key => {
-			if(m.hasOwnProperty(key)) Object.assign(m[key], config[key])
- 		})
+		if(config) {
+			Object.keys(config).forEach(key => {
+				if(m.hasOwnProperty(key)) Object.assign(m[key], config[key])
+	 		})
+ 		}
 
 		loadSchoolData()
 		loadDepartmentsData()

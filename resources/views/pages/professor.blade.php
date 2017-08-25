@@ -174,7 +174,7 @@
                         </div>
                     </section>
                 </div>
-                <div class="alert alert-danger" style="display: none"></div>
+                <section class="error"></section>
 
                 <!-- Add captcha here -->
                 <div class="modal-footer justify-content-center">
@@ -215,7 +215,7 @@
                         </div>
                     </section>
                 </div>
-                <div class="alert alert-danger" style="display: none"></div>
+                <section class="error"></section>
 
                 <!-- Add captcha here -->
                 <div class="modal-footer justify-content-center">
@@ -304,7 +304,7 @@
                             <textarea type="text" name="comment" class="md-textarea" length="350" maxlength="350" required>{{old('comment')}}</textarea>
                             <label>{{__('your chance to be more specific')}}</label>
                         </div>
-                        <div class="alert alert-danger" style="display: none"></div>
+                        <section class="error"></section>
                     </section>
                 </div>
 
@@ -327,7 +327,6 @@
 
 @section ('js')
     <script type="text/javascript">
-    $(document).ready(() => {
         const config = {
             successRate: {
                 message: '{{__('rating successfully sent')}}',
@@ -337,8 +336,7 @@
                 voteUrl: '{{route('prof.rateRating')}}'
             }
         }
-        professorView.init(config)
+        //professorView.init(config)
         sideModule.init('{{count($suggestions) > 0 ? 'similar' : 'profs'}}', SIDE_MODULE_URL)
-    })
     </script>
 @endsection

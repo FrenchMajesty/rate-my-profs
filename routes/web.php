@@ -4,6 +4,7 @@
 // - standardize first 3 module on custom.js and use common for side module js
 // - work on mobile version
 // - Consider space for ads
+// - test relative deletes for schools and prof
 // - use query builder on School ORM, SchoolRating ORM,
 // -  add captcha and TOS on sign up, ratings, corrections, report
 // - 'are you :professor'? link
@@ -97,9 +98,13 @@ Route::group(['prefix' => '/admin', 'middleware' => '\App\Http\Middleware\IsAdmi
 	Route::post('/prof/correction/update', 'AdminController@updateViaCorrection')
 			->name('admin.corrections.update');
 
-	Route::post('/prof/update', 'AdminController@updateProf')->name('admin.profs.update');
+	Route::post('/prof/update', 'AdminController@updateProf')->name('admin.profs.update')
+	;
+	Route::post('/school/update', 'AdminController@updateSchool')->name('admin.schools.update');
 
 	Route::post('/prof/delete', 'AdminController@deleteProf')->name('admin.profs.delete');
+
+	Route::post('/school/delete', 'AdminController@deleteSchool')->name('admin.schools.delete');
 
 	Route::post('/corrections/delete', 'AdminController@deleteCorrection')->name('admin.corrections.delete');
 

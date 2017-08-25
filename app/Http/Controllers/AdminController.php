@@ -43,13 +43,17 @@ class AdminController extends Controller
 
 	public function schools() {
 
-		$schools = School::findComplete()->where('schools.approved','1')->get();
-		return view('admin.schools', compact('schools'));
+		$data = $this->loadAllData();
+		$schools = School::where('schools.approved','1')->get();
+		return view('admin.schools', compact('schools', 'data'));
 	}
 
 	public function users() {
 
-		return view('admin.users');
+		$data = $this->loadAllData();
+		$users = User::findComplete()->get();
+
+		return view('admin.users', compact('data','users'));
 	}
 
 	public function approveProf(Request $request) {
@@ -168,6 +172,19 @@ class AdminController extends Controller
 		$school->location = $request->location;
 		$school->website = $request->website;
 		$school->save();
+	}
+
+	public function deleteSchool(Request $request) {
+		$this->validate($request, [
+			'id' => 'required|numeric|exists:schools'
+		]);
+
+		DB::table('ratings_votes')->where('school_id', $request->id)->delete();
+		$rating = SchoolRating::where('school_id',$request->id);
+		Correction::where('school_id',$request->id)->delete();
+		Professor::where('school_id', $request->id)->delete();
+		School::destroy($request->id);
+		Report::deleteInvalid();
 	}
 
 	public function updateViaCorrection(Request $request) {

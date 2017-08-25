@@ -375,54 +375,24 @@ const professorView = (function() {
 	}
 
 	function handleSubmitRating(e) {
-		e.preventDefault()
-
-		const url = e.target.getAttribute('action'),
-			   formData = new FormData(e.target)
-
-		$.ajax(url, {
-			type: 'POST',
-			data: formData,
-			contentType: false,
-			processData: false
-		})
+		common().handleSubmit(e)
 		.then(response => {
 			alert(m.successRate.message)
 			window.location.replace(m.successRate.redirectUrl)
 		})
-		.fail(response => displayErrors(e.target, response.responseJSON))
+		.fail(response => common().displayErrors(e.target, response.responseJSON))
 	}
 
 	function handleSubmitCorrection(e) {
-		e.preventDefault()
-
-		const formData = new FormData(e.target),
-			  url = e.target.getAttribute('action')
-
-		$.ajax(url, {
-			type: 'POST',
-			data: formData,
-			contentType: false,
-			processData: false
-		})
+		common().handleSubmit(e)
 		.then(_ => $('#submitCorrection').modal('hide'))
-		.fail(response => displayErrors(e.target, response.responseJSON))
+		.fail(response => common().displayErrors(e.target, response.responseJSON))
 	}
 
 	function handleReportRating(e) {
-		e.preventDefault()
-
-		const formData = new FormData(e.target),
-			  url = e.target.getAttribute('action')
-
-		$.ajax(url, {
-			type: 'POST',
-			data: formData,
-			contentType: false,
-			processData: false
-		})
+		common().handleSubmit(e)
 		.then(_ => $('#reportRating').modal('hide'))
-		.fail(response => displayErrors(e.target, response.responseJSON))
+		.fail(response => common().displayErrors(e.target, response.responseJSON))
 	}
 
 	function handleVote(e) {
@@ -463,52 +433,25 @@ const professorView = (function() {
 		e.target.setAttribute('value', e.target.value)
 	}
 
-	/**
-	 * Display AJAX form errors on page
-	 * @param {Element} elem
-	 * @param  {JSON} errors
-	 */
-	function displayErrors(elem, errors) {
-		const errorDiv = elem.querySelector('.alert-danger')
-			  errorDiv.removeAttribute('style')
-
-		Object.keys(errors).forEach(err => {
-			errors[err].forEach(err => errorDiv.innerHTML += `<li>${err}</li>`)
-		})
-	}
-
-	/**
-	 * Clear the errors on form
-	 * @param {Element} elem
-	 */
-	function clearErrors(elem) {
-		const errorDiv = elem.querySelector('.alert-danger')
-			  errorDiv.setAttribute('style', 'display: none')
-			  errorDiv.innerHTML = ''
-	}
-
 	function bindUIEvents() {
 		m.settings.form.rating.addEventListener('submit', handleSubmitRating)
 		m.settings.form.correction.addEventListener('submit', handleSubmitCorrection)
 		m.settings.form.report.addEventListener('submit', handleReportRating)
 		m.slider.forEach(ranger => ranger.addEventListener('input', updateSlider))
-		document.querySelectorAll('a[data-id="report"]').forEach(link => link.addEventListener('click', prepareReportModal))
+		document.querySelectorAll('a[data-id="report"]')
+				.forEach(link => link.addEventListener('click', prepareReportModal))
 		$('.vote-up, .vote-down').on('click', handleVote)
-		$(m.settings.form.correction).find('input, textarea')
-				.on('change keydown keypress',() => { clearErrors(m.settings.form.correction) })
-		$(m.settings.form.rating).find('input, textarea')
-				.on('change keydown keypress input', () => { clearErrors(m.settings.form.rating) })
-		$(m.settings.form.report).find('input, textarea')
-				.on('change keydown keypress input', () => { clearErrors(m.settings.form.report) })
+		$('section').find('input, textarea').on('change keydown keypress input', common().clearErrors)
 	}
 
 	m.init = (config) => {
 		bindUIEvents()
 
-		// Configs
-		Object.keys(config).forEach(key => {
-			if(m[key]) Object.assign(m[key], config[key])
-		})
+		if(config) {
+			Object.keys(config).forEach(key => {
+				if(m[key]) Object.assign(m[key], config[key])
+			})
+		}
 	}
 
 	return m
@@ -665,11 +608,11 @@ const schoolView = (function() {
 		document.querySelectorAll('a[data-id="report"]').forEach(link => link.addEventListener('click', prepareReportModal))
 		$('.vote-up, .vote-down').on('click', handleVote)
 		$(m.settings.form.correction).find('input, textarea')
-				.on('change keydown keypress',() => { clearErrors(m.settings.form.correction) })
+				.on('change keydown keypress', common().clearErrors)
 		$(m.settings.form.rating).find('input, textarea')
-				.on('change keydown keypress input', () => { clearErrors(m.settings.form.rating) })
+				.on('change keydown keypress input', common().clearErrors)
 		$(m.settings.form.report).find('input, textarea')
-				.on('change keydown keypress input', () => { clearErrors(m.settings.form.report) })
+				.on('change keydown keypress input', common().clearErrors)
 	}
 
 	m.init = (config) => {

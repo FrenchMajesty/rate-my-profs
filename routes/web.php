@@ -13,7 +13,6 @@
 // - USER PROFILE: test update on professor join account
 // - Placeholders on inputs
 // - report anomality to admin in professor controller
-// - ENTIRE ADMIN PANEL
 
 Auth::routes();
 
@@ -48,10 +47,6 @@ Route::post('/prof/rating/report', ['as' =>'prof.reportRating', 'uses' => 'Ratin
 Route::post('/school/rating/rate', ['as' => 'school.rateRating', 'uses' => 'RatingController@rateSchoolReview']);
 
 Route::post('/school/rating/report', ['as' =>'school.reportRating', 'uses' => 'RatingController@reportRating']);
-
-Route::get('/account', function () {
-    return view('account.profile');
-});
 
 Route::get('/add/prof', function () {
     return view('add.prof');

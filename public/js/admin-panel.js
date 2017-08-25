@@ -279,22 +279,23 @@ const Dashboard = (function() {
 
 /*
     |--------------------------------------------------------------------------
-    | Professor Manager Module
+    | Content Manager Module
     |--------------------------------------------------------------------------
     |
-    | This module is for all the operations performed on the 
-    | 
+    | This module is for all the operations performed on the content managers
+    | pages like form handling for editing and the modals
     |
     */
-   
-const ProfessorManager = (function() {
+const ContentManager = (function() {
     const m = {
-        message: { confirm: null },
+        message: { confirm: null, warning: null },
         edit: { data: null, fetchUrl: null }
     }
     
     function handleDelete(e) {
         if(!confirm(m.message.confirm)) return
+        // Extra warning for deleting schools
+        if($('#schools')[0] && !confirm(m.message.warning)) return
 
         const form = $(e.target).parents('form'),
               formData = new FormData(form[0])
@@ -320,6 +321,7 @@ const ProfessorManager = (function() {
 
     function bindUIEvents() {
         $('.modal').on('shown.bs.modal', activateTypeahead)
+        $('input').on('change input keydown', common().clearErrors)
         document.querySelectorAll('.td-actions form button')
                 .forEach(btn => btn.addEventListener('click', handleDelete))
         document.querySelectorAll('.td-actions [data-type]')

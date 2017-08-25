@@ -26,4 +26,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public static function findComplete() {
+        return self::select('users.id','users.name','users.email','users.account_type','users.school_id',
+                'users.created_at','schools.id as schoolID','schools.name as school')
+                ->leftJoin('schools','users.school_id','=','schools.id');
+    }
 }

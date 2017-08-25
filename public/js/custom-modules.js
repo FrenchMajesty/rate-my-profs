@@ -222,7 +222,7 @@ const sideModule = (function(){
         bindUIEvents()
         loadData()
         .then(() => {
-            if(card.length > 0 && card != 'none')
+            if(card && card != 'none')
                 showSideCard(card)
             else
                 showSideCard(module.settings.defaultCard)
@@ -248,7 +248,7 @@ const searchBar = (function () {
     }
 
     function handleSearch(e) {
-        // If no valid value ID
+        // If element ID found, clear search query
         if ((e.target.pID && e.target.pID != -1) || (e.target.sID && e.target.sID != -1))
             e.target.search.value = ''
     }
@@ -274,8 +274,7 @@ const searchBar = (function () {
      * @return {Void}      
      */
     function activateTypeahead(data) {
-        let template = `<a href="school/{{id}}">{{name}} - {{id}}</a>`,
-            hidden = document.querySelector('.navbar-collapse input[type="hidden"]'),
+        let hidden = document.querySelector('.navbar-collapse input[type="hidden"]'),
             full = ''
 
         $('input[name="search"]').typeahead({

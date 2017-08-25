@@ -14,7 +14,7 @@ const signUp = (function () {
         switcher : document.querySelector('.switch'),
         signUpContainer: $('#signup-container'),
         defaultCard: $('.card[data-card="student"]'),
-        successRegisterRedirectUrl: './account'
+        successRegisterRedirectUrl: './profile'
     }
 
     function handleSubmit(e) {
@@ -37,6 +37,7 @@ const signUp = (function () {
      * Display AJAX form errors in card
      * @param  {Element} elem
      * @param  {JSON} errors
+     * @return {Void} 
      */
     function displayErrors(elem, errors) {
         const errorDiv = elem.querySelector('.alert-danger')
@@ -50,6 +51,7 @@ const signUp = (function () {
     /**
      * Clear the errors in card
      * @param  {Element} elem
+     * @return {Void} 
      */
     function clearErrors(elem) {
         const errorDiv = elem.querySelector('.alert-danger')
@@ -72,6 +74,7 @@ const signUp = (function () {
     /**
      * Replace the current sign up card
      * @param  {Element} new card
+     * @return {Void} 
      */
     function replaceSignup(card) {
         m.settings.signUpContainer.children().first().remove()
@@ -81,7 +84,7 @@ const signUp = (function () {
         card.find('input').on('change keydown keypress',(e) => clearErrors(card[0]))
 
         // Hide all, show the one wanted
-        document.querySelectorAll('ul[data-id]').forEach(list => $(list).css('display','none'))
+        $('ul[data-id]').css('display','none')
         $(`ul[data-id="${card.attr('data-card')}"]`).css('display','')
     }
 
@@ -89,7 +92,13 @@ const signUp = (function () {
         m.settings.switcher.addEventListener('click', changeSignup)
     }
 
-    m.init = () => {
+    m.init = (config) => {
+        if(config) {
+            Object.keys(config).forEach(key => {
+                if(m[key]) Object.assign(m[key], config[key])
+            })
+        }
+
         bindUIEvents()
         replaceSignup(m.settings.defaultCard.clone(true))
     }
@@ -214,6 +223,12 @@ const loginScript = (function() {
     }
 
     m.init = (config) => {
+        if(config) {
+            Object.keys(config).forEach(key => {
+                if(m[key]) Object.assign(m[key], config[key])
+            })
+        }
+
         setVue('login')
     }
 
@@ -284,7 +299,13 @@ const resetPasswordScript = (function() {
         $(m.settings.form).find('input').on('change keypress keydown', clearErrors)
     }
 
-    m.init = () => {
+    m.init = (config) => {
+        if(config) {
+            Object.keys(config).forEach(key => {
+                if(m[key]) Object.assign(m[key], config[key])
+            })
+        }
+
         bindUIEvents()
     }
 

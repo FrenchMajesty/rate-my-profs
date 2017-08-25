@@ -11,6 +11,7 @@
                     <p class="category">{{__('view and edit')}} {{__('profs')}}</p>
                 </div>
                 <div class="card-content table-responsive">
+                @if(count($profs) > 0)
                     <table class="table table-hover">
                         <thead class="text-warning"><tr>
                         	<th>{{__('name')}}</th>
@@ -44,6 +45,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    @else
+                      <h6 class="text-center">{{__('no new prof yet')}}.</h6>
+                    @endif
                 </div>
       		</div>
       	</div>
@@ -63,7 +67,7 @@
       message: { confirm: '{{__('are you sure')}}' },
       edit: { data: JSON.parse('{!! $data !!}') }
     }
-    ProfessorManager.init(config)
+    ContentManager.init(config)
   })
 </script>
 @endsection

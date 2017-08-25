@@ -105,6 +105,7 @@
             <div class="card-content">
               <div class="tab-content">
                 <div class="tab-pane active" id="submissions">
+                @if(count($corrections) > 0)
                   <table class="table">
                     <thead><tr>
                       <td>{{__('sent by')}}</td>
@@ -147,6 +148,9 @@
                     @endforeach
                     </tbody>
                   </table>
+                  @else
+                    <h6 class="text-center">{{__('no new school yet')}}.</h6>
+                  @endif
                 </div>
                 <div class="tab-pane" id="profs">
                 @if(count($unverified['prof']) > 0)
@@ -199,7 +203,7 @@
                     </tbody>
                   </table>
                 @else
-                  <h4 class="text-center">{{__('no new prof yet')}}.</h4>
+                  <h5 class="text-center">{{__('no new prof yet')}}.</h5>
                 @endif
                 </div>
                 <div class="tab-pane" id="schools">
@@ -245,7 +249,7 @@
                     </tbody>
                   </table>
                 @else
-                  <h4 class="text-center">{{__('no new school yet')}}.</h4>
+                  <h6 class="text-center">{{__('no new school yet')}}.</h6>
                 @endif
                 </div>
               </div>

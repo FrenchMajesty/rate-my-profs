@@ -45,7 +45,7 @@
                         </tbody>
                     </table>
                     @else
-                      <h6 class="text-center">{{__('no new school yet')}}.</h6>
+                      <h6 class="text-center">{{__('no users yet')}}.</h6>
                     @endif
                 </div>
       		</div>

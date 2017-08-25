@@ -11,9 +11,11 @@
                     <p class="category">{{__('view and edit')}} {{__('schools')}}</p>
                 </div>
                 <div class="card-content table-responsive">
+                @if(count($schools) > 0)
                     <table id="schools" class="table table-hover">
                         <thead class="text-success"><tr>
-                        	<th>{{__('school')}}</th>
+                          <th>{{__('school')}}</th>
+                        	<th>{{__('nickname')}}</th>
                           <th>{{__('location')}}</th>
                         	<th>{{__('website')}}</th>
                         	<th>{{__('date added')}}</th>
@@ -44,6 +46,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    @else
+                      <h6 class="text-center">{{__('no new school yet')}}.</h6>
+                    @endif
                 </div>
       		</div>
       	</div>

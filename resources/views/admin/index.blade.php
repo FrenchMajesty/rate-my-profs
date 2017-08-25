@@ -203,7 +203,7 @@
                     </tbody>
                   </table>
                 @else
-                  <h5 class="text-center">{{__('no new prof yet')}}.</h5>
+                  <h6 class="text-center">{{__('no new prof yet')}}.</h6>
                 @endif
                 </div>
                 <div class="tab-pane" id="schools">
@@ -298,7 +298,7 @@
                         </tbody>
                     </table>
                     @else
-                      <h5 class="text-center">{{__('no reports')}}.</h5>
+                      <h6 class="text-center">{{__('no reports')}}.</h6>
                     @endif
                 </div>
             </div>

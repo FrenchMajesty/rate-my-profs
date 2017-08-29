@@ -14,12 +14,12 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <!-- Bootstrap core CSS -->
-    <link href="{{asset('/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('public/css/bootstrap.min.css')}}" rel="stylesheet">
     <!-- Material Design Bootstrap -->
-    <link href="{{asset('css/mdb.min.css')}}" rel="stylesheet">
+    <link href="{{asset('public/css/mdb.min.css')}}" rel="stylesheet">
     <!-- Your custom styles (optional) -->
-    <link href="{{asset('css/style.css')}}" rel="stylesheet">
-    <link href="{{asset('css/animate.css')}}" rel="stylesheet">
+    <link href="{{asset('public/css/style.css')}}" rel="stylesheet">
+    <link href="{{asset('public/css/animate.css')}}" rel="stylesheet">
 </head>
 
 <body>
@@ -32,19 +32,19 @@
 
     <!-- SCRIPTS -->
     <!-- JQuery -->
-    <script type="text/javascript" src="{{asset('js/jquery-3.1.1.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('public/js/jquery-3.1.1.min.js')}}"></script>
     <!-- Bootstrap tooltips -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="{{asset('js/tether.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('public/js/tether.min.js')}}"></script>
     <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('public/js/bootstrap.min.js')}}"></script>
     <!-- MDB core JavaScript -->
-    <script type="text/javascript" sr="{{asset('js/compiled.min.js')}}"></script>
-    <script type="text/javascript" src="{{asset('js/mdb.min.js')}}"></script>
-    <script type="text/javascript" src="{{asset('js/bootstrap-typeahead.min.js')}}"></script>
-    <script type="text/javascript" src="{{asset('js/common.js')}}"></script>
-    <script type="text/javascript" src="{{asset('js/custom.js')}}"></script>
-    <script type="text/javascript" src="{{asset('js/custom-modules.js')}}"></script>
+    <script type="text/javascript" sr="{{asset('public/js/compiled.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('public/js/mdb.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('public/js/bootstrap-typeahead.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('public/js/common.js')}}"></script>
+    <script type="text/javascript" src="{{asset('public/js/custom.js')}}"></script>
+    <script type="text/javascript" src="{{asset('public/js/custom-modules.js')}}"></script>
     <script type="text/javascript">
         const SIDE_MODULE_URL = {
             url: {

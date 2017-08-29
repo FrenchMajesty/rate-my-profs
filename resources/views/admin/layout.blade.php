@@ -12,10 +12,10 @@
     <meta name="viewport" content="width=device-width" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link href="{{asset('css/bootstrap3.min.css')}}" rel="stylesheet" />
-    <link href="{{asset('css/material-dashboard.css')}}" rel="stylesheet" />
-    <link href="{{asset('css/panel.css')}}" rel="stylesheet" />
-    <link href="{{asset('css/demo.css')}}" rel="stylesheet" />
+    <link href="{{asset('public/css/bootstrap3.min.css')}}" rel="stylesheet" />
+    <link href="{{asset('public/css/material-dashboard.css')}}" rel="stylesheet" />
+    <link href="{{asset('public/css/panel.css')}}" rel="stylesheet" />
+    <link href="{{asset('public/css/demo.css')}}" rel="stylesheet" />
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
 </head>
@@ -24,7 +24,7 @@
 
   <div class="wrapper">
 
-      <div class="sidebar" data-color="purple" data-image="{{asset('img/sidebar-1.jpg')}}">
+      <div class="sidebar" data-color="purple" data-image="{{asset('public/img/sidebar-1.jpg')}}">
       <!--
             Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
 
@@ -53,16 +53,16 @@
 </body>
 
   <!--   Core JS Files   -->
-  <script src="{{asset('js/jquery-3.1.1.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('js/bootstrap3.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('js/material.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('js/chartist.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
-  <script src="{{asset('js/bootstrap-typeahead.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('js/material-dashboard.js')}}" type="text/javascript"></script>
-  <script src="{{asset('js/common.js')}}" type="text/javascript"></script>
-  <script src="{{asset('js/admin-panel.js')}}" type="text/javascript"></script>
-  <script src="{{asset('js/demo.js')}}" type="text/javascript"></script>
+  <script src="{{asset('public/js/jquery-3.1.1.min.js')}}" type="text/javascript"></script>
+  <script src="{{asset('public/js/bootstrap3.min.js')}}" type="text/javascript"></script>
+  <script src="{{asset('public/js/material.min.js')}}" type="text/javascript"></script>
+  <script src="{{asset('public/js/chartist.min.js')}}" type="text/javascript"></script>
+  <script src="{{asset('public/js/bootstrap-notify.js')}}" type="text/javascript"></script>
+  <script src="{{asset('public/js/bootstrap-typeahead.min.js')}}" type="text/javascript"></script>
+  <script src="{{asset('public/js/material-dashboard.js')}}" type="text/javascript"></script>
+  <script src="{{asset('public/js/common.js')}}" type="text/javascript"></script>
+  <script src="{{asset('public/js/admin-panel.js')}}" type="text/javascript"></script>
+  <script src="{{asset('public/js/demo.js')}}" type="text/javascript"></script>
   @yield ('js')
   <!--  Google Maps Plugin    -->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>

@@ -1,12 +1,12 @@
-<nav class="navbar navbar-toggleable-md navbar-dark bg-primary fixed-top primary">
+<nav class="navbar navbar-toggleable-md navbar-dark bg-primary fixed-top primary" style="overflow: visible;">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav1" aria-controls="navbarNav1" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="{{ route('index') }}">
         <strong>{{env('APP_NAME')}}</strong>
     </a>
-    <div class="navbar-collapse">
-        <form action="{{route('pages.search')}}" class="form-inline col-md-4 mx-auto" style="position: static">
+    <div class="navbar-collapse" style="overflow: visible;">
+        <form action="{{route('pages.search')}}" class="form-inline col-md-4 mx-auto" style="position: unset;">
             <input class="form-control search-bar" type="text" name="search" placeholder="{{__('search')}}" autocomplete="off">
             <input type="hidden">
         </form>

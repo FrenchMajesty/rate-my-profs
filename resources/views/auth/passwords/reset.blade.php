@@ -46,7 +46,7 @@
 @endsection
 
 @section ('js')
-<script type="text/javascript" src="{{asset('js/custom-auth.js')}}"></script>
+<script type="text/javascript" src="{{asset('public/js/custom-auth.js')}}"></script>
 <script type="text/javascript">
     resetPasswordScript.init()
 </script>

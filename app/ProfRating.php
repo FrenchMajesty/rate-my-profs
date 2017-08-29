@@ -19,7 +19,7 @@ class ProfRating extends Model {
             FROM prof_ratings r 
             LEFT OUTER JOIN ratings_votes v 
             ON r.id=v.rating_id 
-            WHERE r.prof_id = ?
+            WHERE r.prof_id = ? AND r.validated = 1
             GROUP BY r.id, r.prof_id, r.overall_rating, r.difficulty_rating, r.class_details, r.comment, r.created_at
             ORDER BY r.id DESC", [$id]);
 	}

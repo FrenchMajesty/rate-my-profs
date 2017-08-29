@@ -10,7 +10,9 @@ class Professor extends Model {
 
 	public static function loadTopAtSchool($id) {
 
-		return DB::select("SELECT p.id, p.name, p.lastname, AVG(r.overall_rating) AS average, COUNT(r.overall_rating) AS reviews_count
+		return DB::select("SELECT p.id, p.name, p.lastname,
+             AVG(CASE WHEN r.validated = 1 THEN r.overall_rating ELSE NULL END) AS average,
+              COUNT(CASE WHEN r.validated = 1 THEN r.overall_rating ELSE NULL END) AS reviews_count
             FROM professors p 
             LEFT OUTER JOIN prof_ratings r 
             ON p.id=r.prof_id 

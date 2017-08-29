@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class SchoolController extends Controller
 {
-    protected $ratingsTable = 'school_ratings';
 
     public function create(Request $request) {
 
@@ -63,7 +62,7 @@ class SchoolController extends Controller
 
         $top = Professor::loadTopAtSchool($id);
 
-        $ratings2 = DB::table($this->ratingsTable)->where('school_id', $school->id)->get();
+        $ratings2 = SchoolRating::where('school_id', $school->id)->where('validated','1')->get();
         $ratings = SchoolRating::getAllRatings($school->id);
 
         if($ratings2->count() > 0) {

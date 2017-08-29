@@ -18,7 +18,7 @@ class SchoolRating extends Model {
                 FROM school_ratings r 
                 LEFT OUTER JOIN ratings_votes v 
                 ON r.id=v.rating_id 
-                WHERE r.school_id = ?
+                WHERE r.school_id = ? AND r.validated = 1
                 GROUP BY r.id, r.school_id, r.overall_rating, r.location, r.facility, r.opportunity, r.social, r.comment, r.created_at
                 ORDER BY r.id DESC", [$id]);
 	}

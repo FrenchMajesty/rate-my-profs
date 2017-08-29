@@ -56,7 +56,7 @@ class ProfessorController extends Controller
         $count['school'] = $query->count() -1;
         $count['dept'] = $query->where('department_id', $prof->department_id)->count() -1;
 
-        $ratings2 = ProfRating::where('prof_id', $prof->id);
+        $ratings2 = ProfRating::where('prof_id', $prof->id)->where('validated','1');
         $ratings = ProfRating::getAllRatings($prof->id);
 
         if($ratings2->count() > 0) {

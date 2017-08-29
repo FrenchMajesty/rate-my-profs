@@ -26,12 +26,14 @@ class AdminController extends Controller
 		$ratings = SchoolRating::where('created_at','>',$dateSince->format('Y-m-d'))->count() + 
 					ProfRating::whereDate('created_at','>',$dateSince->format('Y-m-d'))->count();
 		$data = $this->loadAllData();
-		$users = User::count();
+		$usersCount = User::count();
 		$profReports = Report::findComplete('prof')->get();
 		$schoolReports = Report::findComplete('school')->get();
+		$profRatings = ProfRating::whereNull('validated')->get();
+		$schoolRatings = SchoolRating::whereNull('validated')->get();
 
-		return view('admin.index', compact('unverified','corrections', 'ratings', 'users', 'data', 'profReports',
-					'schoolReports','dateSince'));
+		return view('admin.index', compact('unverified','corrections', 'ratings', 'usersCount', 'data',
+			'profReports','schoolReports','dateSince','profRatings','schoolRatings'));
 	}
 
 	public function profs() {
@@ -68,6 +70,20 @@ class AdminController extends Controller
 		$prof = Professor::find($request->id);
 		$prof->approved = $approve;
 		$prof->save();
+	}
+
+	public function approveRatingRating(Request $request) {
+
+		$this->validate($request,[
+			'id' => 'required|numeric|exists:prof_ratings',
+			'action' => 'required|string|min:5|max:10'
+		]);
+
+		$approve = $request->action == 'approve' ? true : false;
+
+		$school = ProfRating::find($request->id);
+		$school->validated = $approve;
+		$school->save();
 	}
 
 	public function approveProfViaUpdate(Request $request) {
@@ -134,6 +150,20 @@ class AdminController extends Controller
 
 		$school = School::find($request->id);
 		$school->approved = $approve;
+		$school->save();
+	}
+
+	public function approveSchoolRating(Request $request) {
+
+		$this->validate($request,[
+			'id' => 'required|numeric|exists:school_ratings',
+			'action' => 'required|string|min:5|max:10'
+		]);
+
+		$approve = $request->action == 'approve' ? true : false;
+
+		$school = SchoolRating::find($request->id);
+		$school->validated = $approve;
 		$school->save();
 	}
 

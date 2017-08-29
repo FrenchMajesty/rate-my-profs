@@ -60,7 +60,7 @@
             </div>
             <div class="card-content">
               <p class="category">{{__('new users')}}</p>
-              <h3 class="title">+{{number_format($users,0)}}</h3>
+              <h3 class="title">+{{number_format($usersCount,0)}}</h3>
             </div>
             <div class="card-footer">
               <div class="stats">
@@ -257,53 +257,155 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-12">
+          <div class="card card-nav-tabs">
+            <div class="card-header" data-background-color="blue">
+              <div class="nav-tabs-navigation">
+                <div class="nav-tabs-wrapper">
+                  <span class="nav-tabs-title">{{__('ratings')}}:</span>
+                  <ul class="nav nav-tabs" data-tabs="tabs">
+                    <li class="active">
+                      <a href="#profRating" data-toggle="tab">
+                        <i class="material-icons">announcement</i>
+                        {{__('prof ratings')}}
+                      <div class="ripple-container"></div></a>
+                    </li>
+                    <li class="">
+                      <a href="#schoolRating" data-toggle="tab">
+                        <i class="material-icons">face</i>
+                        {{__('school ratings')}}
+                      <div class="ripple-container"></div></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-content">
+              <div class="tab-content">
+                <div class="tab-pane active" id="profRating">
+                @if(count($profRatings) > 0)
+                  <table class="table">
+                    <thead><tr>
+                      <td>{{__('sent by')}}</td>
+                      <td>{{__('rating sent')}}</td>
+                      <td>{{__('date sent')}}</td>
+                      <td>{{__('controls')}}</td>
+                    </tr></thead>
+                    <tbody>
+                    @foreach($profRatings as $rating)
+                      <tr data-item-id={{$rating->id}}>
+                        <td>{{$rating->user ?: __('anon')}}</td>
+                        <td>{{$rating->comment}}</td>
+                        <td>{{date('M d, Y', strtotime($rating->created_at))}}</td>
+                        <td class="td-actions text-right">
+                          <form method="POST" action="{{route('admin.profs.ratings.approve')}}">
+                          {{ csrf_field() }}
+                          <input type="hidden" name="id" value="{{$rating->id}}">
+                          <button data-action="approve" type="button" rel="tooltip" title="{{__('approve')}}" class="btn btn-success btn-simple btn-xs">
+                            <i class="material-icons" data-id="approve">check</i>
+                          </button>
+                          <button data-action="reject" type="button" rel="tooltip" title="{{__('reject')}}" class="btn btn-danger btn-simple btn-xs">
+                            <i class="material-icons" data-id="reject">close</i>
+                          </button>
+                          </form>
+                        </td>
+                      </tr>
+                    @endforeach
+                    </tbody>
+                  </table>
+                  @else
+                    <h6 class="text-center">{{__('no prof ratings')}}.</h6>
+                  @endif
+                </div>
+                <div class="tab-pane" id="schoolRating">
+                @if(count($schoolRatings) > 0)
+                  <table class="table">
+                    <thead><tr>
+                      <td>{{__('sent by')}}</td>
+                      <td>{{__('rating sent')}}</td>
+                      <td>{{__('date sent')}}</td>
+                      <td>{{__('controls')}}</td>
+                    </tr></thead>
+                    <tbody>
+                      @foreach($schoolRatings as $rating)
+                      <tr data-item-id="{{$rating->id}}">
+                        <td>{{$rating->user ?: __('anon')}}</td>
+                        <td>{{$rating->comment}}</td>
+                        <td>{{date('M d, Y', strtotime($rating->created_at))}}</td>
+                        <td class="td-actions text-right">
+                          <form method="POST" action="{{route('admin.schools.ratings.approve')}}">
+                          {{ csrf_field() }}
+                          <input type="hidden" name="id" value="{{$rating->id}}">
+                          <button data-action="approve" type="button" rel="tooltip" title="{{__('approve')}}" class="btn btn-success btn-simple btn-xs">
+                            <i class="material-icons" data-id="approve">check</i>
+                          </button>
+                          <button data-action="reject" type="button" rel="tooltip" title="{{__('reject')}}" class="btn btn-danger btn-simple btn-xs">
+                            <i class="material-icons" data-id="reject">close</i>
+                          </button>
+                          </form>
+                        </td>
+                      </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                @else
+                  <h6 class="text-center">{{__('no school ratings')}}.</h6>
+                @endif
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
      	<div class="row">
       		<div class="col-lg-6 col-md-12">
-      			<div class="card">
-                <div class="card-header" data-background-color="orange">
-                    <h4 class="title">{{__('ratings reported')}}</h4>
-                    <p class="category">{{__('ratings marked for reviewing')}}</p>
-                </div>
-                <div class="card-content table-responsive">
-                  @if(count($profReports) + count($schoolReports) > 0)
-                    <table id="reports" class="table table-hover">
-                        <thead class="text-warning">
-                          <th>{{__('rating on')}}</th>
-                        	<th>{{__('reported by')}}</th>
-                        	<th>{{__('see more')}}</th>
-                        </tr></thead>
-                        <tbody>
-                          @foreach($profReports as $report)
-                            <tr data-report="{{$report->id}}" data-type="{{$report->type}}">
-                              <input type="hidden" name="id" value="{{$report->ratingID}}">
-                              <input type="hidden" name="comment" value="{{$report->rating}}">
-                            	<td data-id="name">{{__($report->type).' '.$report->name.' '.$report->lastname}}</td>
-                            	<td>{{__('anon')}}</td>
-                            	<td class="td-actions"><button data-id="reviewReports" type="button" rel="tooltip" title="" class="btn btn-primary btn-simple btn-xs" data-original-title="{{__('review rating')}}" data-toggle="modal" data-target="#viewReports">
-      													<i class="material-icons" data-id="reviewReports">assignment_late</i>
-      												<div class="ripple-container"></div></button></td>
-                            </tr>
-                          @endforeach
-                          @foreach($schoolReports as $report)
-                            <tr data-report="{{$report->id}}" data-type="{{$report->type}}">
-                              <input type="hidden" name="id" value="{{$report->ratingID}}">
-                              <input type="hidden" name="comment" value="{{$report->rating}}">
-                              <td data-id="name">{{__($report->type).' '.$report->name}}</td>
-                              <td>{{__('anon')}}</td>
-                              <td class="td-actions"><button data-id="reviewReports" type="button" rel="tooltip" title="" class="btn btn-primary btn-simple btn-xs" data-original-title="{{__('review rating')}}" data-toggle="modal" data-target="#viewReports">
-                                <i class="material-icons" data-id="reviewReports">assignment_late</i>
-                              <div class="ripple-container"></div></button></td>
-                            </tr>
-                          @endforeach
-                        </tbody>
-                    </table>
-                    @else
-                      <h6 class="text-center">{{__('no reports')}}.</h6>
-                    @endif
-                </div>
-            </div>
+        			<div class="card">
+                  <div class="card-header" data-background-color="orange">
+                      <h4 class="title">{{__('ratings reported')}}</h4>
+                      <p class="category">{{__('ratings marked for reviewing')}}</p>
+                  </div>
+                  <div class="card-content table-responsive">
+                    @if(count($profReports) + count($schoolReports) > 0)
+                      <table id="reports" class="table table-hover">
+                          <thead class="text-warning">
+                            <th>{{__('rating on')}}</th>
+                          	<th>{{__('reported by')}}</th>
+                          	<th>{{__('see more')}}</th>
+                          </tr></thead>
+                          <tbody>
+                            @foreach($profReports as $report)
+                              <tr data-report="{{$report->id}}" data-type="{{$report->type}}">
+                                <input type="hidden" name="id" value="{{$report->ratingID}}">
+                                <input type="hidden" name="comment" value="{{$report->rating}}">
+                              	<td data-id="name">{{__($report->type).' '.$report->name.' '.$report->lastname}}</td>
+                              	<td>{{__('anon')}}</td>
+                              	<td class="td-actions"><button data-id="reviewReports" type="button" rel="tooltip" title="" class="btn btn-primary btn-simple btn-xs" data-original-title="{{__('review rating')}}" data-toggle="modal" data-target="#viewReports">
+        													<i class="material-icons" data-id="reviewReports">assignment_late</i>
+        												<div class="ripple-container"></div></button></td>
+                              </tr>
+                            @endforeach
+                            @foreach($schoolReports as $report)
+                              <tr data-report="{{$report->id}}" data-type="{{$report->type}}">
+                                <input type="hidden" name="id" value="{{$report->ratingID}}">
+                                <input type="hidden" name="comment" value="{{$report->rating}}">
+                                <td data-id="name">{{__($report->type).' '.$report->name}}</td>
+                                <td>{{__('anon')}}</td>
+                                <td class="td-actions"><button data-id="reviewReports" type="button" rel="tooltip" title="" class="btn btn-primary btn-simple btn-xs" data-original-title="{{__('review rating')}}" data-toggle="modal" data-target="#viewReports">
+                                  <i class="material-icons" data-id="reviewReports">assignment_late</i>
+                                <div class="ripple-container"></div></button></td>
+                              </tr>
+                            @endforeach
+                          </tbody>
+                      </table>
+                      @else
+                        <h6 class="text-center">{{__('no reports')}}.</h6>
+                      @endif
+                  </div>
+              </div>
 			     </div>
-    	</div>
+      </div>
     </div>
 </div>
 

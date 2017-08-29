@@ -84,6 +84,12 @@ Route::group(['prefix' => '/admin', 'middleware' => '\App\Http\Middleware\IsAdmi
 
 	Route::post('/school/approve', 'AdminController@approveSchool')->name('admin.schools.approve');
 
+	Route::post('/prof/rating/approve', 'AdminController@approveProfRating')
+			->name('admin.profs.ratings.approve');
+
+	Route::post('/school/rating/approve', 'AdminController@approveSchoolRating')
+			->name('admin.schools.ratings.approve');
+
 	Route::post('/school/approve/update', 'AdminController@approveSchoolViaUpdate')
 			->name('admin.schools.approve.update');
 
@@ -93,8 +99,8 @@ Route::group(['prefix' => '/admin', 'middleware' => '\App\Http\Middleware\IsAdmi
 	Route::post('/prof/correction/update', 'AdminController@updateViaCorrection')
 			->name('admin.corrections.update');
 
-	Route::post('/prof/update', 'AdminController@updateProf')->name('admin.profs.update')
-	;
+	Route::post('/prof/update', 'AdminController@updateProf')->name('admin.profs.update');
+
 	Route::post('/school/update', 'AdminController@updateSchool')->name('admin.schools.update');
 
 	Route::post('/prof/delete', 'AdminController@deleteProf')->name('admin.profs.delete');

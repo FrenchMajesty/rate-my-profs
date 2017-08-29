@@ -53,7 +53,7 @@ body {
     padding-left: 10px;
 }
 .marg-navbar {
-	margin-top: 4.5em;
+	padding-top: 4.5em;
 	min-height: 95vh;
 }
 .category {
